@@ -27,6 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fi.joonas.veikkaus.dao.UserDao;
 import fi.joonas.veikkaus.jpaentity.User;
+import fi.joonas.veikkaus.jpaentity.UserRole;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -39,7 +40,8 @@ public class UserDaoTest {
 
     @Test
     public void testFindByLastName() {
-        User user = new User("first", "last");
+    	UserRole userRole = new UserRole("ADMIN");
+        User user = new User("first", "last", "password", userRole);
         entityManager.persist(user);
 
         User findByEmail = userDao.findByEmail(user.getEmail());
