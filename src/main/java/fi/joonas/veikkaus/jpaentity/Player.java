@@ -15,15 +15,22 @@ public class Player {
     private Long id;
     
     private String firstName;
-    private String lastName;
+
+	private String lastName;
  
     public Player() {}
     
-    public Player(Long id) {
+    /*public Player(Long id) {
     	this.id = id;
-    }
+    }*/
     
-	public Long getId() {
+    public Player(Long id, String firstName, String lastName) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+
+    public Long getId() {
 		return id;
 	}
 

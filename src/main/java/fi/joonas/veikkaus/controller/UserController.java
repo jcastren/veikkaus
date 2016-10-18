@@ -11,6 +11,7 @@ import fi.joonas.veikkaus.dao.UserDao;
 import fi.joonas.veikkaus.jpaentity.User;
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
 
 	@Autowired

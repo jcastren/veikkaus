@@ -35,15 +35,11 @@ import static fi.joonas.veikkaus.util.JUnitTestUtil.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserDaoTest {
+public class UserRoleTest {
 	
-    @Autowired
-    private UserDao userDao;
-    
     @Autowired
     private UserRoleDao userRoleDao;
     
-    private User user;
     private UserRole userRole;
     
     private String ROLENAME_ADMIN = "ADMIN";
@@ -51,45 +47,15 @@ public class UserDaoTest {
     @Before
     public void setup() {
     	if (CLEAN_BEFORE_RUN_JUNIT_TESTS) {
-    		userDao.deleteAll();
     		userRoleDao.deleteAll();
     	}
-    	
     	userRole = new UserRole(ROLENAME_ADMIN);
     	userRoleDao.save(userRole);
-    	
-    	user = new User("email", "name", "password", userRole);
-    }
+  }
     
     @After
     public void clean() {
-    	userDao.delete(user.getId());
     	userRoleDao.delete(userRole.getId());
-    }
-
-    @Test
-    public void testFindByEmail() {
-    	String email = user.getEmail();
-        userDao.save(user);
-
-        User findByEmail = userDao.findByEmail(email);
-
-        assertThat(findByEmail.getEmail().equals(email));
-        assertThat(findByEmail.getEmail().equals(email));
-    }
-    
-    @Test
-    public void testModifyUser() {
-        User userDb = userDao.save(user);
-        
-        String email = userDb.getEmail();
-        
-        String newEmail = email + "_new";
-        user.setEmail(newEmail);
-        
-        userDb = userDao.save(user);
-        
-        assertThat(userDb.getEmail().equals(newEmail));
     }
 
 }
