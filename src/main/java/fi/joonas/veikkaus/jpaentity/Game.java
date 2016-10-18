@@ -4,58 +4,58 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table
-public class BetResult {
+public class Game {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     
-    @ManyToOne
-    private User user;
-
-    @ManyToOne
-    private Game game;
-
+    @OneToOne
+    private TournamentTeam homeTeam;
+    
+    @OneToOne
+    private TournamentTeam awayTeam;
+    
     private int homeScore;
 	private int awayScore;
     
-    public BetResult() {}
+    public Game() {}
     
-    public BetResult(Long id) {
+    public Game(Long id) {
     	this.id = id;
     }
 
-	public BetResult(User user, Game game, int homeScore, int awayScore) {
+	public Game(TournamentTeam homeTeam, TournamentTeam awayTeam, int homeScore, int awayScore) {
 		super();
-		this.user = user;
-		this.game = game;
+		this.homeTeam = homeTeam;
+		this.awayTeam = awayTeam;
 		this.homeScore = homeScore;
 		this.awayScore = awayScore;
-	}
+	}	
 
 	public Long getId() {
 		return id;
 	}
 
-	public User getUser() {
-		return user;
+	public TournamentTeam getHomeTeam() {
+		return homeTeam;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setHomeTeam(TournamentTeam homeTeam) {
+		this.homeTeam = homeTeam;
 	}
 
-	public Game getGame() {
-		return game;
+	public TournamentTeam getAwayTeam() {
+		return awayTeam;
 	}
 
-	public void setGame(Game game) {
-		this.game = game;
+	public void setAwayTeam(TournamentTeam awayTeam) {
+		this.awayTeam = awayTeam;
 	}
 
 	public int getHomeScore() {
@@ -73,6 +73,6 @@ public class BetResult {
 	public void setAwayScore(int awayScore) {
 		this.awayScore = awayScore;
 	}
-	
+
 }
 

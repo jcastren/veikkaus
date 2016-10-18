@@ -18,35 +18,59 @@ package fi.joonas.veikkaus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import fi.joonas.veikkaus.dao.UserDao;
+import fi.joonas.veikkaus.dao.UserRoleDao;
 import fi.joonas.veikkaus.jpaentity.User;
 import fi.joonas.veikkaus.jpaentity.UserRole;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
+@SpringBootTest
 public class UserDaoTest {
-    @Autowired
-    private TestEntityManager entityManager;
-
+	public boolean CLEAN_BEFORE_RUN = true;
+	
     @Autowired
     private UserDao userDao;
+    
+    @Autowired
+    private UserRoleDao userRoleDao;
+    
+    private User user;
+    private UserRole userRole;
+    
+    private String ROLENAME_ADMIN = "ADMIN";
+    
+    @Before
+    public void setup() {
+    	if (CLEAN_BEFORE_RUN) {
+    		userDao.deleteAll();
+    		userRoleDao.deleteAll();
+    	}
+    	
+    	userRole = new UserRole(ROLENAME_ADMIN);
+    	userRoleDao.save(userRole);
+    }
+    
+    @After
+    public void clean() {
+    	userDao.delete(user.getId());
+    	userRoleDao.delete(userRole.getId());
+    }
 
     @Test
     public void testFindByLastName() {
-    	UserRole userRole = new UserRole("ADMIN");
-        User user = new User("first", "last", "password", userRole);
-        entityManager.persist(user);
+        user = new User("first", "last", "password", userRole);
+        userDao.save(user);
 
         User findByEmail = userDao.findByEmail(user.getEmail());
 
-        //assertThat(findByLastName).extracting(User::getLastName).containsOnly(user.getLastName());
         assertThat(findByEmail.getEmail().equals(user.getEmail()));
     }
 }
