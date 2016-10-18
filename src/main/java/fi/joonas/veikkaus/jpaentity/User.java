@@ -4,11 +4,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name="users")
+//@Table(name="users")
+@Table
+//public class User {//extends JpaDomainBaseClass<User, Long> {
 public class User {
 
     @Id
@@ -21,16 +24,24 @@ public class User {
     @NotNull
     private String name;
 
-    public User() {}
+    private String password;
+    
+    @ManyToOne
+    private UserRole role;
+
+    public User(String email, String name, String password, UserRole role) {
+		super();
+		this.email = email;
+		this.name = name;
+		this.password = password;
+		this.role = role;
+	}
+
+	public User() {}
     
     public User(Long id) {
     	this.id = id;
     }
-
-	public User(String email, String name) {
-		setEmail(email);
-		setName(name);
-	}
 
 	public Long getId() {
 		return id;
@@ -50,6 +61,22 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public UserRole getRole() {
+		return role;
+	}
+
+	public void setRole(UserRole role) {
+		this.role = role;
 	}
 
 }
