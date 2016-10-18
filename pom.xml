@@ -16,17 +16,33 @@
 
     <properties>
         <java.version>1.8</java.version>
-    </properties>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	<start-class>fi.joonas.veikkaus.Application</start-class>
+    	<java.version>1.8</java.version>
+	</properties>
 
     <dependencies>
+    	<!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <dependency>
+    	<!-- MySQL -->
+    	<dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <!-- <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
+        -->
+        
+        <!-- TEST PHASE -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
