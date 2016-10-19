@@ -20,17 +20,12 @@ public class Player {
  
     public Player() {}
     
-    /*public Player(Long id) {
-    	this.id = id;
-    }*/
-    
-    public Player(Long id, String firstName, String lastName) {
-		this.id = id;
+    public Player(String firstName, String lastName) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
 
-    public Long getId() {
+	public Long getId() {
 		return id;
 	}
 

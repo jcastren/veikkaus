@@ -7,15 +7,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import fi.joonas.veikkaus.dao.UserDao;
 import fi.joonas.veikkaus.jpaentity.User;
+import fi.joonas.veikkaus.service.UserService;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
 	@Autowired
-	private UserDao userDao;
+	private UserService userService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -24,12 +24,10 @@ public class UserController {
 	 */
 	@RequestMapping("/create")
 	@ResponseBody
-	public String create(String email, String name, String password) {
-		String userId = "";
+	public String create(String email, String name, String password, String userRoleId) {
+		Long userId = null;
 		try {
-			User user = new User(email, name, password, null);
-			userDao.save(user);
-			userId = String.valueOf(user.getId());
+			userId = userService.insert(email, name, password, userRoleId);
 		} catch (Exception ex) {
 			logger.error("Error creating the user: ", ex);
 			return "Error creating the user: " + ex.toString();
@@ -42,10 +40,9 @@ public class UserController {
 	 */
 	@RequestMapping("/delete")
 	@ResponseBody
-	public String delete(long id) {
+	public String delete(String id) {
 		try {
-			User user = new User(id);
-			userDao.delete(user);
+			userService.delete(id);
 		} catch (Exception ex) {
 			logger.error("Error deleting the user: ", ex);
 			return "Error deleting the user:" + ex.toString();
@@ -61,7 +58,7 @@ public class UserController {
 	public String getByEmail(String email) {
 		String userId = "";
 		try {
-			User user = userDao.findByEmail(email);
+			User user = userService.findByEmail(email);
 			userId = String.valueOf(user.getId());
 		} catch (Exception ex) {
 			logger.error("User not found: ", ex);
@@ -71,17 +68,14 @@ public class UserController {
 	}
 
 	/**
-	 * GET /update --> Update the email and the name for the user in the
-	 * database having the passed id.
+	 * GET /update --> Update the email, name, password and user role for the
+	 * user in the database having the passed id.
 	 */
 	@RequestMapping("/update")
 	@ResponseBody
-	public String updateUser(long id, String email, String name) {
+	public String updateUser(long id, String email, String name, String password, String userRoleId) {
 		try {
-			User user = userDao.findOne(id);
-			user.setEmail(email);
-			user.setName(name);
-			userDao.save(user);
+			userService.modify(id, email, name, password, userRoleId);
 		} catch (Exception ex) {
 			logger.error("Error updating the user: ", ex);
 			return "Error updating the user: " + ex.toString();

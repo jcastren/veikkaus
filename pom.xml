@@ -7,6 +7,7 @@
 	<groupId>fi.joonas</groupId>
 	<artifactId>veikkaus</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -43,7 +44,7 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-
+ 
 		<!-- TEST PHASE -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

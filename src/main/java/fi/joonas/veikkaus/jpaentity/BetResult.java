@@ -25,10 +25,6 @@ public class BetResult {
 	private int awayScore;
     
     public BetResult() {}
-    
-    public BetResult(Long id) {
-    	this.id = id;
-    }
 
 	public BetResult(User user, Game game, int homeScore, int awayScore) {
 		super();

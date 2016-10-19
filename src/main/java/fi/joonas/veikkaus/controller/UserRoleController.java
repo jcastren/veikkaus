@@ -7,15 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import fi.joonas.veikkaus.dao.UserRoleDao;
-import fi.joonas.veikkaus.jpaentity.UserRole;
+import fi.joonas.veikkaus.service.UserRoleService;
 
 @Controller
 @RequestMapping("/userrole")
 public class UserRoleController {
 
 	@Autowired
-	private UserRoleDao userRoleDao;
+	private UserRoleService userRoleService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserRoleController.class);
 
@@ -24,17 +23,15 @@ public class UserRoleController {
 	 */
 	@RequestMapping("/create")
 	@ResponseBody
-	public String create(String roleName) {
-		String userRoleId = "";
+	public String create(String roleName) {		
+		Long userRoleId = null;
 		try {
-			UserRole userRole = new UserRole(roleName);
-			userRoleDao.save(userRole);
-			userRoleId = String.valueOf(userRole.getId());
+			userRoleId = userRoleService.insert(roleName);
 		} catch (Exception ex) {
 			logger.error("Error creating the user role: ", ex);
 			return "Error creating the user role: " + ex.toString();
 		}
-		return "User succesfully created with id = " + userRoleId;
+		return "User role succesfully created with id = " + userRoleId;
 	}
 
 	/**
@@ -42,10 +39,9 @@ public class UserRoleController {
 	 */
 	@RequestMapping("/delete")
 	@ResponseBody
-	public String delete(long id) {
+	public String delete(String id) {
 		try {
-			UserRole userRole = new UserRole(id);
-			userRoleDao.delete(userRole);
+			userRoleService.delete(id);
 		} catch (Exception ex) {
 			logger.error("Error deleting the user role: ", ex);
 			return "Error deleting the user role:" + ex.toString();

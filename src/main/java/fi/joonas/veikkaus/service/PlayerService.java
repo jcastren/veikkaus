@@ -13,15 +13,14 @@ public class PlayerService {
 	PlayerDao playerDao;
 	
 	public Long insert(String firstName, String lastName) {
-		Player player = new Player(null, firstName, lastName);
-		Player playerDb = playerDao.save(player);
-		return playerDb.getId();
+		return playerDao.save(new Player(firstName, lastName)).getId();
 	}
 	
 	public Long modify(String id, String firstName, String lastName) {
-		Player player = new Player(Long.valueOf(id), firstName, lastName);
-		Player playerDb = playerDao.save(player);
-		return playerDb.getId();
+		Player player = playerDao.findOne(Long.valueOf(id));
+		player.setFirstName(firstName);
+		player.setLastName(lastName);
+		return playerDao.save(player).getId();
 	}
 	
 	public boolean delete(String id) {
@@ -30,6 +29,5 @@ public class PlayerService {
 		succeed = true;
 		return succeed;
 	}
-	
 
 }

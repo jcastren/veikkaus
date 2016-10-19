@@ -9,9 +9,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-//@Table(name="users")
 @Table
-//public class User {//extends JpaDomainBaseClass<User, Long> {
 public class User {
 
     @Id
@@ -29,15 +27,15 @@ public class User {
     @ManyToOne
     private UserRole role;
 
+    public User() {}
+    
     public User(String email, String name, String password, UserRole role) {
 		super();
 		this.email = email;
 		this.name = name;
 		this.password = password;
 		this.role = role;
-	}
-
-	public User() {}
+    }
     
     public User(Long id) {
     	this.id = id;
