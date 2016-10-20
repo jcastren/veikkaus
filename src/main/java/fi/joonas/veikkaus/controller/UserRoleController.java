@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import fi.joonas.veikkaus.service.UserRoleService;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
-@RequestMapping("/userrole")
+@RequestMapping(USER_ROLE)
 public class UserRoleController {
 
 	@Autowired
@@ -21,7 +22,7 @@ public class UserRoleController {
 	/**
 	 * GET /create --> Create a new user role and save it in the database.
 	 */
-	@RequestMapping("/create")
+	@RequestMapping(URL_CREATE)
 	@ResponseBody
 	public String create(String roleName) {		
 		Long userRoleId = null;
@@ -37,7 +38,7 @@ public class UserRoleController {
 	/**
 	 * GET /delete --> Delete the user role having the passed id.
 	 */
-	@RequestMapping("/delete")
+	@RequestMapping(URL_DELETE)
 	@ResponseBody
 	public String delete(String id) {
 		try {
@@ -47,6 +48,22 @@ public class UserRoleController {
 			return "Error deleting the user role:" + ex.toString();
 		}
 		return "User role succesfully deleted!";
+	}
+	
+	/**
+	 * GET /modify --> Update the roleName for the
+	 * user role in the database having the passed id.
+	 */
+	@RequestMapping(URL_MODIFY)
+	@ResponseBody
+	public String updateUserRole(String id, String roleName) {
+		try {
+			userRoleService.modify(id, roleName);
+		} catch (Exception ex) {
+			logger.error("Error updating the user role: ", ex);
+			return "Error updating the user role: " + ex.toString();
+		}
+		return "User role succesfully updated for id = " + id;
 	}
 
 }

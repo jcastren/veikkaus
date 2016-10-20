@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import fi.joonas.veikkaus.jpaentity.User;
 import fi.joonas.veikkaus.service.UserService;
 
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+
 @Controller
-@RequestMapping("/user")
+@RequestMapping(USER)
 public class UserController {
 
 	@Autowired
@@ -22,7 +24,7 @@ public class UserController {
 	/**
 	 * GET /create --> Create a new user and save it in the database.
 	 */
-	@RequestMapping("/create")
+	@RequestMapping(URL_CREATE)
 	@ResponseBody
 	public String create(String email, String name, String password, String userRoleId) {
 		Long userId = null;
@@ -38,7 +40,7 @@ public class UserController {
 	/**
 	 * GET /delete --> Delete the user having the passed id.
 	 */
-	@RequestMapping("/delete")
+	@RequestMapping(URL_DELETE)
 	@ResponseBody
 	public String delete(String id) {
 		try {
@@ -53,13 +55,13 @@ public class UserController {
 	/**
 	 * GET /get-by-email --> Return the id for the user having the passed email.
 	 */
-	@RequestMapping("/get-by-email")
+	@RequestMapping(URL_GET_BY_EMAIL)
 	@ResponseBody
 	public String getByEmail(String email) {
 		String userId = "";
 		try {
 			User user = userService.findByEmail(email);
-			userId = String.valueOf(user.getId());
+			userId = user.getId().toString();
 		} catch (Exception ex) {
 			logger.error("User not found: ", ex);
 			return "User not found";
@@ -68,19 +70,19 @@ public class UserController {
 	}
 
 	/**
-	 * GET /update --> Update the email, name, password and user role for the
+	 * GET /modify --> Update the email, name, password and user role for the
 	 * user in the database having the passed id.
 	 */
-	@RequestMapping("/update")
+	@RequestMapping(URL_MODIFY)
 	@ResponseBody
-	public String updateUser(long id, String email, String name, String password, String userRoleId) {
+	public String updateUser(String id, String email, String name, String password, String userRoleId) {
 		try {
 			userService.modify(id, email, name, password, userRoleId);
 		} catch (Exception ex) {
 			logger.error("Error updating the user: ", ex);
 			return "Error updating the user: " + ex.toString();
 		}
-		return "User succesfully updated!";
+		return "User succesfully updated for id = " + id;
 	}
 
 }

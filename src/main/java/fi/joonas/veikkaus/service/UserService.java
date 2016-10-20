@@ -27,7 +27,7 @@ public class UserService {
 		return userDao.save(new User(email, name, password, userRole)).getId();
 	}
 	
-	public Long modify(long id, String email, String name, String password, String userRoleId) throws VeikkausDaoException {
+	public Long modify(String id, String email, String name, String password, String userRoleId) throws VeikkausDaoException {
 		User user = userDao.findOne(Long.valueOf(id));
 		
 		if (user == null) {

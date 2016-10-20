@@ -13,10 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import fi.joonas.veikkaus.dao.BetDao;
+import fi.joonas.veikkaus.dao.StatusDao;
 import fi.joonas.veikkaus.dao.UserDao;
 import fi.joonas.veikkaus.dao.UserRoleDao;
+import fi.joonas.veikkaus.jpaentity.Bet;
+import fi.joonas.veikkaus.jpaentity.Status;
 import fi.joonas.veikkaus.jpaentity.User;
 import fi.joonas.veikkaus.jpaentity.UserRole;
+
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 public abstract class JUnitTestUtil {
 	
@@ -27,9 +33,15 @@ public abstract class JUnitTestUtil {
 	
 	@Autowired
 	private UserRoleDao userRoleDao;
+	
 	@Autowired
 	private UserDao userDao;
-	//@Autowired BetDao betDao;
+	
+	@Autowired
+	private BetDao betDao;
+	
+	@Autowired
+	private StatusDao statusDao;
 	
 	/*
 	tournamentDao.deleteAll();
@@ -152,6 +164,25 @@ public abstract class JUnitTestUtil {
 		Long userRoleId = userDao.findOne(Long.valueOf(userId)).getRole().getId();
 		userDao.delete(Long.valueOf(userId));
 		userRoleDao.delete(userRoleId);
+	}
+	
+	public String addStatus() throws Exception {
+		String description = "statuksen kuvaus";
+		return statusDao.save(new Status(STATUS_UNDER_WORK, description)).getId().toString();
+	}
+	
+	public void deleteStatus(String statusId) throws Exception {
+		statusDao.delete(Long.valueOf(statusId));
+	}
+	
+	public String addBet() throws Exception {
+		Status status = statusDao.findOne(Long.valueOf(addStatus()));
+		User user = userDao.findOne(Long.valueOf(addUser()));
+		return betDao.save(new Bet(user, status)).getId().toString();
+	}
+	
+	public void deleteBet(String betId) throws Exception {
+		betDao.delete(Long.valueOf(betId));
 	}
 	
 }
