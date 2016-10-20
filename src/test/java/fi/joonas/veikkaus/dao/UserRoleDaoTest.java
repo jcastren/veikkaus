@@ -1,6 +1,5 @@
 package fi.joonas.veikkaus.dao;
 
-import static fi.joonas.veikkaus.util.JUnitTestUtil.CLEAN_BEFORE_RUN_JUNIT_TESTS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
@@ -11,10 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import fi.joonas.veikkaus.jpaentity.UserRole;
+import fi.joonas.veikkaus.util.JUnitTestUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserRoleDaoTest {
+public class UserRoleDaoTest extends JUnitTestUtil {
 
 	@Autowired
 	private UserRoleDao userRoleDao;
@@ -24,11 +24,8 @@ public class UserRoleDaoTest {
 	private String ROLENAME_ADMIN = "ADMIN";
 
 	@Before
-	public void setup() {
-		if (CLEAN_BEFORE_RUN_JUNIT_TESTS) {
-			userRoleDao.deleteAll();
-		}
-
+	public void setup() throws Exception {
+		cleanDb();
 	}
 
 	@Test

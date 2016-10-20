@@ -1,6 +1,12 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_EMAIL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_NAME;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_PASSWORD;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_USER_ROLE_ID;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_CREATE_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_DELETE_URL;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -8,15 +14,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import fi.joonas.veikkaus.dao.UserDao;
-import fi.joonas.veikkaus.dao.UserRoleDao;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
 
 @RunWith(SpringRunner.class)
@@ -24,29 +27,22 @@ import fi.joonas.veikkaus.util.JUnitTestUtil;
 @WebAppConfiguration
 public class UserControllerTest extends JUnitTestUtil {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserControllerTest.class);
+	//private static final Logger logger = LoggerFactory.getLogger(UserControllerTest.class);
 
 	@Autowired
 	private UserDao userDao;
 
-	@Autowired
-	private UserRoleDao userRoleDao;
-	
-	private String paramValueRoleName = "ADMIN";
 	private String userRoleId;
 
 	@Before
 	public void setup() throws Exception {
-		String query = String.format(getFormattedStr(1), PARAM_NAME_ROLENAME, getEncodedStr(paramValueRoleName));
-		String url = USER_ROLE_CREATE_URL + "?" + query;
-		userRoleId = callUrl(url, true);
+		cleanDb();
+		userRoleId = addUserRole();
 	}
 	
 	@After
 	public void destroy() throws Exception {
-		String query = String.format(getFormattedStr(1), PARAM_NAME_ID, getEncodedStr(userRoleId));
-		String url = USER_ROLE_DELETE_URL + "?" + query;
-		callUrl(url, false);
+		deleteUserRole(userRoleId);
 	}
 	
 	@Test

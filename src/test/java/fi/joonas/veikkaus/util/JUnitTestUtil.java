@@ -11,6 +11,12 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import fi.joonas.veikkaus.dao.UserDao;
+import fi.joonas.veikkaus.dao.UserRoleDao;
+import fi.joonas.veikkaus.jpaentity.User;
+import fi.joonas.veikkaus.jpaentity.UserRole;
 
 public abstract class JUnitTestUtil {
 	
@@ -18,6 +24,23 @@ public abstract class JUnitTestUtil {
 	
 	public static final boolean CLEAN_BEFORE_RUN_JUNIT_TESTS = true;
 	public static final String CHARSET = java.nio.charset.StandardCharsets.UTF_8.name();
+	
+	@Autowired
+	private UserRoleDao userRoleDao;
+	@Autowired
+	private UserDao userDao;
+	//@Autowired BetDao betDao;
+	
+	/*
+	tournamentDao.deleteAll();
+	teamDao.deleteAll();
+	tournamentTeamDao.deleteAll();
+	playerDao.deleteAll();
+	tournamentPlayerDao.deleteAll();
+	scorerDao.deleteAll();
+	gameDao.deleteAll();
+	betResultDao.deleteAll();
+	betDao.deleteAll();*/
 	
 	/**
 	 * 
@@ -45,7 +68,7 @@ public abstract class JUnitTestUtil {
 		}
 
 		if (getId) {
-			Pattern p = Pattern.compile("(\\d.)");
+			Pattern p = Pattern.compile("(\\d+)");
 			Matcher matcher = p.matcher(str);
 
 			if (matcher.find()) {
@@ -87,4 +110,48 @@ public abstract class JUnitTestUtil {
 		String ret = URLEncoder.encode(str, CHARSET);
 		return ret;
 	}
+	
+	public void cleanDb() throws Exception {
+		if (CLEAN_BEFORE_RUN_JUNIT_TESTS) {
+			/*
+			tournamentDao.deleteAll();
+			teamDao.deleteAll();
+			tournamentTeamDao.deleteAll();
+			playerDao.deleteAll();
+			tournamentPlayerDao.deleteAll();
+			scorerDao.deleteAll();
+			gameDao.deleteAll();
+			betResultDao.deleteAll();
+			betDao.deleteAll();
+			*/
+    		userDao.deleteAll();
+    		userRoleDao.deleteAll();
+    	}
+	}
+	
+	public String addUserRole() throws Exception {
+		String roleName = "ADMIN";
+		UserRole userRole = new UserRole(roleName);
+		return userRoleDao.save(userRole).getId().toString();
+	}
+	
+	public void deleteUserRole(String userRoleId) throws Exception {
+		userRoleDao.delete(Long.valueOf(userRoleId));
+	}
+	
+	public String addUser() throws Exception {
+		UserRole userRole = userRoleDao.findOne(Long.valueOf(addUserRole()));
+		String email = "eemeli";
+		String name = "nimi";
+		String password = "salainensana";
+		
+		return userDao.save(new User(email, name, password, userRole)).getId().toString();
+	}
+	
+	public void deleteUser(String userId) throws Exception {
+		Long userRoleId = userDao.findOne(Long.valueOf(userId)).getRole().getId();
+		userDao.delete(Long.valueOf(userId));
+		userRoleDao.delete(userRoleId);
+	}
+	
 }

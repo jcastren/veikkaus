@@ -10,16 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import fi.joonas.veikkaus.dao.UserDao;
-import fi.joonas.veikkaus.dao.UserRoleDao;
 import fi.joonas.veikkaus.jpaentity.User;
 import fi.joonas.veikkaus.jpaentity.UserRole;
-
-import static fi.joonas.veikkaus.util.JUnitTestUtil.*;
+import fi.joonas.veikkaus.util.JUnitTestUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserDaoTest {
+public class UserDaoTest extends JUnitTestUtil {
 	
     @Autowired
     private UserDao userDao;
@@ -33,12 +30,8 @@ public class UserDaoTest {
     private String ROLENAME_ADMIN = "ADMIN";
     
     @Before
-    public void setup() {
-    	if (CLEAN_BEFORE_RUN_JUNIT_TESTS) {
-    		userDao.deleteAll();
-    		userRoleDao.deleteAll();
-    	}
-    	
+    public void setup() throws Exception {
+    	cleanDb();
     	userRole = new UserRole(ROLENAME_ADMIN);
     	userRoleDao.save(userRole);
     	
