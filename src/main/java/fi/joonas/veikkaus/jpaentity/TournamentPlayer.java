@@ -16,29 +16,32 @@ public class TournamentPlayer {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     
+    @ManyToOne
+    private TournamentTeam tournamentTeam;
+    
     @OneToOne
     private Player player;
     
     private int goals;
     
-    @ManyToOne
-    private TournamentTeam tournamentTeam;
-    
     public TournamentPlayer() {}
-    
-    public TournamentPlayer(Long id) {
-    	this.id = id;
-    }
 
-	public TournamentPlayer(Player player, int goals, TournamentTeam tournamentTeam) {
-		super();
+	public TournamentPlayer(TournamentTeam tournamentTeam, Player player, int goals) {
+		this.tournamentTeam = tournamentTeam;
 		this.player = player;
 		this.goals = goals;
-		this.tournamentTeam = tournamentTeam;
 	}
     
 	public Long getId() {
 		return id;
+	}
+
+	public TournamentTeam getTournamentTeam() {
+		return tournamentTeam;
+	}
+
+	public void setTournamentTeam(TournamentTeam tournamentTeam) {
+		this.tournamentTeam = tournamentTeam;
 	}
 
 	public Player getPlayer() {
@@ -55,14 +58,6 @@ public class TournamentPlayer {
 
 	public void setGoals(int goals) {
 		this.goals = goals;
-	}
-
-	public TournamentTeam getTournamentTeam() {
-		return tournamentTeam;
-	}
-
-	public void setTournamentTeam(TournamentTeam tournamentTeam) {
-		this.tournamentTeam = tournamentTeam;
 	}
 
 }
