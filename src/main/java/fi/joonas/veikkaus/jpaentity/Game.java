@@ -1,5 +1,7 @@
 package fi.joonas.veikkaus.jpaentity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,19 +25,16 @@ public class Game {
     
     private int homeScore;
 	private int awayScore;
+	private Date gameDate;
     
     public Game() {}
-    
-    public Game(Long id) {
-    	this.id = id;
-    }
 
-	public Game(TournamentTeam homeTeam, TournamentTeam awayTeam, int homeScore, int awayScore) {
-		super();
+	public Game(TournamentTeam homeTeam, TournamentTeam awayTeam, int homeScore, int awayScore, Date gameDate) {
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
 		this.homeScore = homeScore;
 		this.awayScore = awayScore;
+		this.gameDate = gameDate;
 	}	
 
 	public Long getId() {
@@ -74,5 +73,12 @@ public class Game {
 		this.awayScore = awayScore;
 	}
 
-}
+	public Date getGameDate() {
+		return gameDate;
+	}
 
+	public void setGameDate(Date gameDate) {
+		this.gameDate = gameDate;
+	}
+
+}
