@@ -24,7 +24,6 @@ public class Tournament {
     }
     
 	public Tournament(String name, int year) {
-		super();
 		this.name = name;
 		this.year = year;
 	}
