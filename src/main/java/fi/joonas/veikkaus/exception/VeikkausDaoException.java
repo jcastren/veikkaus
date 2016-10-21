@@ -1,4 +1,4 @@
-package exception;
+package fi.joonas.veikkaus.exception;
 
 public class VeikkausDaoException extends Exception {
 

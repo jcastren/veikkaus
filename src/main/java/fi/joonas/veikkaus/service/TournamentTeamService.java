@@ -4,10 +4,10 @@ package fi.joonas.veikkaus.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import exception.VeikkausDaoException;
 import fi.joonas.veikkaus.dao.TeamDao;
 import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.dao.TournamentTeamDao;
+import fi.joonas.veikkaus.exception.VeikkausDaoException;
 import fi.joonas.veikkaus.jpaentity.Team;
 import fi.joonas.veikkaus.jpaentity.Tournament;
 import fi.joonas.veikkaus.jpaentity.TournamentTeam;
