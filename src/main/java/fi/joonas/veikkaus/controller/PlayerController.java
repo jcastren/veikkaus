@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import fi.joonas.veikkaus.service.PlayerService;
 
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+
 @Controller
-@RequestMapping("/player")
+@RequestMapping(PLAYER)
 public class PlayerController {
 
 	@Autowired
@@ -21,7 +23,7 @@ public class PlayerController {
 	/**
 	 * GET /create --> Create a new player and save it in the database.
 	 */
-	@RequestMapping("/create")
+	@RequestMapping(URL_CREATE)
 	@ResponseBody
 	public String create(String firstName, String lastName) {
 		Long playerId = null;
@@ -37,7 +39,7 @@ public class PlayerController {
 	/**
 	 * GET /delete --> Delete the player having the passed id.
 	 */
-	@RequestMapping("/delete")
+	@RequestMapping(URL_DELETE)
 	@ResponseBody
 	public String delete(String id) {
 		try {
@@ -53,7 +55,7 @@ public class PlayerController {
 	 * GET /update --> Update the firstName and lastName for the player in the
 	 * database having the passed id.
 	 */
-	@RequestMapping("/update")
+	@RequestMapping(URL_MODIFY)
 	@ResponseBody
 	public String updatePlayer(String id, String firstName, String lastName) {
 		try {
