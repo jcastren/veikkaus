@@ -17,13 +17,8 @@ public class Team {
     private String name;
     
     public Team() {}
-    
-    public Team(Long id) {
-    	this.id = id;
-    }
 
 	public Team(String name) {
-		super();
 		this.name = name;
 	}
 

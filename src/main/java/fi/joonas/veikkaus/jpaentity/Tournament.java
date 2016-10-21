@@ -19,10 +19,6 @@ public class Tournament {
     
     public Tournament() {}
     
-    public Tournament(Long id) {
-    	this.id = id;
-    }
-    
 	public Tournament(String name, int year) {
 		this.name = name;
 		this.year = year;
