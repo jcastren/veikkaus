@@ -24,12 +24,7 @@ public class Scorer {
     
 	public Scorer() {}
 
-	public Scorer(Long id) {
-		this.id = id;
-	}
-
     public Scorer(TournamentPlayer tournamentPlayer, Game game) {
-		super();
 		this.tournamentPlayer = tournamentPlayer;
 		this.game = game;
 	}
