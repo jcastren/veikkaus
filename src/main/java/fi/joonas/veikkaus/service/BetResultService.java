@@ -1,51 +1,60 @@
 package fi.joonas.veikkaus.service;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import exception.VeikkausDaoException;
+import fi.joonas.veikkaus.dao.BetDao;
 import fi.joonas.veikkaus.dao.BetResultDao;
 import fi.joonas.veikkaus.dao.GameDao;
-import fi.joonas.veikkaus.dao.UserDao;
+import fi.joonas.veikkaus.jpaentity.Bet;
+import fi.joonas.veikkaus.jpaentity.BetResult;
 import fi.joonas.veikkaus.jpaentity.Game;
-import fi.joonas.veikkaus.jpaentity.User;
 
 @Service
 public class BetResultService {
 	
-	/*
 	@Autowired
-	UserDao userDao;
+	BetResultDao betResultDao;
+	
+	@Autowired
+	BetDao betDao;
 	
 	@Autowired
 	GameDao gameDao;
 	
-	@Autowired
-	BetResultDao betResultDao;
-	
-	public String save(String userId, String gameId, String homeScore, String awayScore) {
-		String retVal = null;
+	public Long insert(String betId, String gameId, String homeScore, String awayScore) throws VeikkausDaoException {
 		
-		User userDb = userDao.findOne(Long.valueOf(userId));
+		Bet bet = betDao.findOne(Long.valueOf(betId));
+		if (bet == null) {
+			throw new VeikkausDaoException("bet with id: " + betId + " wasn't found, insert failed");
+		}
 		
-		return retVal;
+		Game game = gameDao.findOne(Long.valueOf(gameId));
+		if (game == null) {
+			throw new VeikkausDaoException("game with id: " + gameId + " wasn't found, insert failed");
+		}
+
+		return betResultDao.save(new BetResult(bet, game, Integer.valueOf(homeScore), Integer.valueOf(awayScore))).getId();
 	}
 	
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
-    
-    @ManyToOne
-    private User user;
+	public Long modify(String id, String homeScore, String awayScore) throws VeikkausDaoException {
+		BetResult betResult = betResultDao.findOne(Long.valueOf(id));
+		
+		if (betResult == null) {
+			throw new VeikkausDaoException("betResult with id: " + id + " wasn't found, modify failed");
+		}
 
-    @ManyToOne
-    private Game game;
-
-    private int homeScore;
-	private int awayScore;*/
-
+		betResult.setHomeScore(Integer.valueOf(homeScore));
+		betResult.setAwayScore(Integer.valueOf(awayScore));
+		return betResultDao.save(betResult).getId();
+	}
+	
+	public boolean delete(String id) {
+		boolean succeed = false;
+		betResultDao.delete(Long.valueOf(id));
+		succeed = true;
+		return succeed;
+	}
+	
 }

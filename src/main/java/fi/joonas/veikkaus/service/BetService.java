@@ -27,13 +27,13 @@ public class BetService {
 		User user = userDao.findOne(Long.valueOf(userId));
 
 		if (user == null) {
-			throw new VeikkausDaoException("user with id: " + userId + " wasn't found, modify failed");
+			throw new VeikkausDaoException("user with id: " + userId + " wasn't found, insert failed");
 		}
 		
 		Status status = statusDao.findOne(Long.valueOf(statusId));
 
 		if (status == null) {
-			throw new VeikkausDaoException("status with id: " + statusId + " wasn't found, modify failed");
+			throw new VeikkausDaoException("status with id: " + statusId + " wasn't found, insert failed");
 		}
 		
 		return betDao.save(new Bet(user, status)).getId();

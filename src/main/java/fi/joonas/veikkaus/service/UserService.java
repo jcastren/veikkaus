@@ -22,7 +22,7 @@ public class UserService {
 		UserRole userRole = userRoleDao.findOne(Long.valueOf(userRoleId));
 
 		if (userRole == null) {
-			throw new VeikkausDaoException("userRole with id: " + userRoleId + " wasn't found, modify failed");
+			throw new VeikkausDaoException("userRole with id: " + userRoleId + " wasn't found, insert failed");
 		}
 		return userDao.save(new User(email, name, password, userRole)).getId();
 	}

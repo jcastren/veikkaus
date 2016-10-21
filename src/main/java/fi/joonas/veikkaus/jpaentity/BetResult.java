@@ -15,8 +15,8 @@ public class BetResult {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     
-    //@ManyToOne
-    //private Bet bet;
+    @ManyToOne
+    private Bet bet;
 
     @ManyToOne
     private Game game;
@@ -26,8 +26,8 @@ public class BetResult {
     
     public BetResult() {}
 
-	public BetResult(/*Bet bet, */Game game, int homeScore, int awayScore) {
-		//this.bet = bet;
+	public BetResult(Bet bet, Game game, int homeScore, int awayScore) {
+		this.bet = bet;
 		this.game = game;
 		this.homeScore = homeScore;
 		this.awayScore = awayScore;
@@ -37,13 +37,13 @@ public class BetResult {
 		return id;
 	}
 
-	/*public Bet getBet() {
+	public Bet getBet() {
 		return bet;
 	}
 
 	public void setBet(Bet bet) {
 		this.bet = bet;
-	}*/
+	}
 
 	public Game getGame() {
 		return game;
