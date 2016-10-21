@@ -16,33 +16,20 @@ public class TournamentTeam {
     private Long id;
     
     @OneToOne
-    private Team team;
-    
-    @OneToOne
     private Tournament tournament;
     
-    public TournamentTeam() {}
+    @OneToOne
+    private Team team;
     
-    public TournamentTeam(Long id) {
-    	this.id = id;
-    }
+    public TournamentTeam() {}
 
-	public TournamentTeam(Team team, Tournament tournament) {
-		super();
-		this.team = team;
+	public TournamentTeam(Tournament tournament, Team team) {
 		this.tournament = tournament;
+		this.team = team;
 	}
 
 	public Long getId() {
 		return id;
-	}
-
-	public Team getTeam() {
-		return team;
-	}
-
-	public void setTeam(Team team) {
-		this.team = team;
 	}
 
 	public Tournament getTournament() {
@@ -53,7 +40,11 @@ public class TournamentTeam {
 		this.tournament = tournament;
 	}
 
+	public Team getTeam() {
+		return team;
+	}
 
-
+	public void setTeam(Team team) {
+		this.team = team;
+	}
 }
-
