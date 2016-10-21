@@ -60,7 +60,7 @@ public class GameController {
 	 */
 	@RequestMapping(URL_MODIFY)
 	@ResponseBody
-	public String updategame(String id, String homeTeamId, String awayTeamId, String homeScore, String awayScore, String gameDate) {
+	public String updateGame(String id, String homeTeamId, String awayTeamId, String homeScore, String awayScore, String gameDate) {
 		try {
 			gameService.modify(id, homeTeamId, awayTeamId, homeScore,  awayScore, gameDate);
 		} catch (Exception ex) {

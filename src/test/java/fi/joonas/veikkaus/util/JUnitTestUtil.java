@@ -26,6 +26,7 @@ import fi.joonas.veikkaus.dao.TournamentTeamDao;
 import fi.joonas.veikkaus.dao.UserDao;
 import fi.joonas.veikkaus.dao.UserRoleDao;
 import fi.joonas.veikkaus.jpaentity.Bet;
+import fi.joonas.veikkaus.jpaentity.Player;
 import fi.joonas.veikkaus.jpaentity.Status;
 import fi.joonas.veikkaus.jpaentity.Tournament;
 import fi.joonas.veikkaus.jpaentity.User;
@@ -214,6 +215,16 @@ public abstract class JUnitTestUtil {
 	
 	public void deleteTournament(String tournamentId) throws Exception {
 		tournamentDao.delete(Long.valueOf(tournamentId));
+	}
+	
+	public String addPlayer() throws Exception {
+		String firstName = "Eric";
+		String lastName = "Cantona";
+		return playerDao.save(new Player(firstName, lastName)).getId().toString();
+	}
+	
+	public void deletePlayer(String playerId) throws Exception {
+		playerDao.delete(Long.valueOf(playerId));
 	}
 	
 }
