@@ -14,11 +14,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import fi.joonas.veikkaus.dao.BetDao;
+import fi.joonas.veikkaus.dao.BetResultDao;
+import fi.joonas.veikkaus.dao.GameDao;
+import fi.joonas.veikkaus.dao.PlayerDao;
+import fi.joonas.veikkaus.dao.ScorerDao;
 import fi.joonas.veikkaus.dao.StatusDao;
+import fi.joonas.veikkaus.dao.TeamDao;
+import fi.joonas.veikkaus.dao.TournamentDao;
+import fi.joonas.veikkaus.dao.TournamentPlayerDao;
+import fi.joonas.veikkaus.dao.TournamentTeamDao;
 import fi.joonas.veikkaus.dao.UserDao;
 import fi.joonas.veikkaus.dao.UserRoleDao;
 import fi.joonas.veikkaus.jpaentity.Bet;
 import fi.joonas.veikkaus.jpaentity.Status;
+import fi.joonas.veikkaus.jpaentity.Tournament;
 import fi.joonas.veikkaus.jpaentity.User;
 import fi.joonas.veikkaus.jpaentity.UserRole;
 
@@ -38,21 +47,34 @@ public abstract class JUnitTestUtil {
 	private UserDao userDao;
 	
 	@Autowired
+	private StatusDao statusDao;
+	
+	@Autowired
 	private BetDao betDao;
 	
 	@Autowired
-	private StatusDao statusDao;
+	private TournamentDao tournamentDao;
 	
-	/*
-	tournamentDao.deleteAll();
-	teamDao.deleteAll();
-	tournamentTeamDao.deleteAll();
-	playerDao.deleteAll();
-	tournamentPlayerDao.deleteAll();
-	scorerDao.deleteAll();
-	gameDao.deleteAll();
-	betResultDao.deleteAll();
-	betDao.deleteAll();*/
+	@Autowired
+	private TeamDao teamDao;
+	
+	@Autowired
+	private TournamentTeamDao tournamentTeamDao;
+	
+	@Autowired
+	private PlayerDao playerDao;
+	
+	@Autowired
+	private TournamentPlayerDao tournamentPlayerDao;
+	
+	@Autowired
+	private GameDao gameDao;
+	
+	@Autowired
+	private ScorerDao scorerDao;
+	
+	@Autowired
+	private BetResultDao betResultDao;
 	
 	/**
 	 * 
@@ -125,17 +147,16 @@ public abstract class JUnitTestUtil {
 	
 	public void cleanDb() throws Exception {
 		if (CLEAN_BEFORE_RUN_JUNIT_TESTS) {
-			/*
-			tournamentDao.deleteAll();
-			teamDao.deleteAll();
-			tournamentTeamDao.deleteAll();
-			playerDao.deleteAll();
-			tournamentPlayerDao.deleteAll();
+			betResultDao.deleteAll();
 			scorerDao.deleteAll();
 			gameDao.deleteAll();
-			betResultDao.deleteAll();
+			tournamentPlayerDao.deleteAll();
+			playerDao.deleteAll();
+			tournamentTeamDao.deleteAll();
+			teamDao.deleteAll();
+			tournamentDao.deleteAll();
 			betDao.deleteAll();
-			*/
+			statusDao.deleteAll();
     		userDao.deleteAll();
     		userRoleDao.deleteAll();
     	}
@@ -183,6 +204,16 @@ public abstract class JUnitTestUtil {
 	
 	public void deleteBet(String betId) throws Exception {
 		betDao.delete(Long.valueOf(betId));
+	}
+	
+	public String addTournament() throws Exception {
+		String name = "Brazil World Cup";
+		int year = 2014;
+		return tournamentDao.save(new Tournament(name, year)).getId().toString();
+	}
+	
+	public void deleteTournament(String tournamentId) throws Exception {
+		tournamentDao.delete(Long.valueOf(tournamentId));
 	}
 	
 }
