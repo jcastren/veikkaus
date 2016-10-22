@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,6 +41,8 @@ public abstract class JUnitTestUtil {
 	
 	public static final boolean CLEAN_BEFORE_RUN_JUNIT_TESTS = true;
 	public static final String CHARSET = java.nio.charset.StandardCharsets.UTF_8.name();
+	
+	public Map<String, String> paramMap;
 	
 	@Autowired
 	private UserRoleDao userRoleDao;
@@ -114,22 +117,7 @@ public abstract class JUnitTestUtil {
 		return id;
 	}
 
-	/*
-	 * private String getQuery(String...strings) { String query = null; if
-	 * (strings != null) {
-	 * 
-	 * String formattedStr;
-	 * 
-	 * for (String str : strings) {
-	 * 
-	 * }
-	 * 
-	 * query = String.format("email=%s&name=%s&password=%s&userRoleId=%s",
-	 * URLEncoder.encode(email, charset), URLEncoder.encode(name, charset),
-	 * URLEncoder.encode(password, charset), URLEncoder.encode(userRoleId,
-	 * charset)); } return query; }
-	 */
-
+	@Deprecated
 	public static String getFormattedStr(int val) {
 		String str = "";
 		for (int i = 1; i <= val; i++) {
@@ -141,9 +129,19 @@ public abstract class JUnitTestUtil {
 		return str;
 	}
 
+	@Deprecated
 	public static String getEncodedStr(String str) throws UnsupportedEncodingException {
 		String ret = URLEncoder.encode(str, CHARSET);
 		return ret;
+	}
+	
+	public String getQuery(Map<String, String> paramMap) throws UnsupportedEncodingException {
+		String str = "?";
+		for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+			str += String.format("%s=%s&", entry.getKey(), URLEncoder.encode(entry.getValue(), CHARSET));
+		}
+		str = str.substring(0, str.length()-1);
+		return str;
 	}
 	
 	public void cleanDb() throws Exception {
