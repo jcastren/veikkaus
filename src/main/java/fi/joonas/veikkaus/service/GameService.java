@@ -6,9 +6,9 @@ import java.sql.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import exception.VeikkausDaoException;
 import fi.joonas.veikkaus.dao.GameDao;
 import fi.joonas.veikkaus.dao.TournamentTeamDao;
+import fi.joonas.veikkaus.exception.VeikkausDaoException;
 import fi.joonas.veikkaus.jpaentity.Game;
 import fi.joonas.veikkaus.jpaentity.TournamentTeam;
 

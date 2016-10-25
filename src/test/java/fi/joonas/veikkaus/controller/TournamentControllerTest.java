@@ -79,7 +79,7 @@ public class TournamentControllerTest extends JUnitTestUtil {
 		assertThat(dbTournament.getName() == name);
 		assertThat(dbTournament.getYear() == Integer.parseInt(year));
 	
-		deleteTournament(tournamentId);
+		deleteTournament(dbTournament);
 	}
 
 }

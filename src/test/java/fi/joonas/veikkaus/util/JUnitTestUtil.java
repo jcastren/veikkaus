@@ -174,8 +174,8 @@ public abstract class JUnitTestUtil {
 		return userRoleDao.save(userRole);
 	}
 	
-	public void deleteUserRole(String userRoleId) throws Exception {
-		userRoleDao.delete(Long.valueOf(userRoleId));
+	public void deleteUserRole(UserRole userRole) throws Exception {
+		userRoleDao.delete(userRole.getId());
 	}
 	
 	public User addUser() throws Exception {
@@ -187,9 +187,9 @@ public abstract class JUnitTestUtil {
 		return userDao.save(new User(email, name, password, userRole));
 	}
 	
-	public void deleteUser(String userId) throws Exception {
-		Long userRoleId = userDao.findOne(Long.valueOf(userId)).getRole().getId();
-		userDao.delete(Long.valueOf(userId));
+	public void deleteUser(User user) throws Exception {
+		Long userRoleId = userDao.findOne(user.getId()).getRole().getId();
+		userDao.delete(Long.valueOf(user.getId().toString()));
 		userRoleDao.delete(userRoleId);
 	}
 	
@@ -198,8 +198,8 @@ public abstract class JUnitTestUtil {
 		return statusDao.save(new Status(STATUS_UNDER_WORK, description));
 	}
 	
-	public void deleteStatus(String statusId) throws Exception {
-		statusDao.delete(Long.valueOf(statusId));
+	public void deleteStatus(Status status) throws Exception {
+		statusDao.delete(status.getId());
 	}
 	
 	public Bet addBet() throws Exception {
@@ -208,8 +208,8 @@ public abstract class JUnitTestUtil {
 		return betDao.save(new Bet(user, status));
 	}
 	
-	public void deleteBet(String betId) throws Exception {
-		betDao.delete(Long.valueOf(betId));
+	public void deleteBet(Bet bet) throws Exception {
+		betDao.delete(bet.getId());
 	}
 	
 	public Tournament addTournament() throws Exception {
@@ -218,8 +218,8 @@ public abstract class JUnitTestUtil {
 		return tournamentDao.save(new Tournament(name, year));
 	}
 	
-	public void deleteTournament(String tournamentId) throws Exception {
-		tournamentDao.delete(Long.valueOf(tournamentId));
+	public void deleteTournament(Tournament tournament) throws Exception {
+		tournamentDao.delete(tournament.getId());
 	}
 	
 	public Team addTeam() throws Exception {
@@ -227,8 +227,8 @@ public abstract class JUnitTestUtil {
 		return teamDao.save(new Team(name));
 	}
 	
-	public void deleteTeam(String teamId) throws Exception {
-		teamDao.delete(Long.valueOf(teamId));
+	public void deleteTeam(Team team) throws Exception {
+		teamDao.delete(team.getId());
 	}
 	
 	public TournamentTeam addTournamentTeam() throws Exception {
@@ -237,8 +237,8 @@ public abstract class JUnitTestUtil {
 		return tournamentTeamDao.save(new TournamentTeam(tournament, team));
 	}
 	
-	public void deleteTournamentTeam(String tournamentTeamId) throws Exception {
-		tournamentTeamDao.delete(Long.valueOf(tournamentTeamId));
+	public void deleteTournamentTeam(TournamentTeam tournamentTeam) throws Exception {
+		tournamentTeamDao.delete(tournamentTeam.getId());
 	}
 
 	public Player addPlayer() throws Exception {
@@ -247,8 +247,8 @@ public abstract class JUnitTestUtil {
 		return playerDao.save(new Player(firstName, lastName));
 	}
 	
-	public void deletePlayer(String playerId) throws Exception {
-		playerDao.delete(Long.valueOf(playerId));
+	public void deletePlayer(Player player) throws Exception {
+		playerDao.delete(player.getId());
 	}
 	
 	public TournamentPlayer addTournamentPlayer() throws Exception {
@@ -258,8 +258,8 @@ public abstract class JUnitTestUtil {
 		return tournamentPlayerDao.save(new TournamentPlayer(tournamentTeam, player, goals));
 	}
 	
-	public void deleteTournamentPlayer(String tournamentPlayerId) throws Exception {
-		tournamentPlayerDao.delete(Long.valueOf(tournamentPlayerId));
+	public void deleteTournamentPlayer(TournamentPlayer tournamentPlayer) throws Exception {
+		tournamentPlayerDao.delete(tournamentPlayer.getId());
 	}
 	
 	public Game addGame() throws Exception {
@@ -275,8 +275,8 @@ public abstract class JUnitTestUtil {
 		return gameDao.save(new Game(homeTeam, awayTeam, homeScore, awayScore, gameDate));
 	}
 	
-	public void deleteGame(String gameId) throws Exception {
-		gameDao.delete(Long.valueOf(gameId));
+	public void deleteGame(Game game) throws Exception {
+		gameDao.delete(game.getId());
 	}
 	
 	public Scorer addScorer() throws Exception {
@@ -285,8 +285,8 @@ public abstract class JUnitTestUtil {
 		return scorerDao.save(new Scorer(tournamentPlayer, game));
 	}
 	
-	public void deleteScorer(String scorerId) throws Exception {
-		scorerDao.delete(Long.valueOf(scorerId));
+	public void deleteScorer(Scorer scorer) throws Exception {
+		scorerDao.delete(scorer.getId());
 	}
 	
 	public BetResult addBetResult() throws Exception {
@@ -298,8 +298,8 @@ public abstract class JUnitTestUtil {
 		return betResultDao.save(new BetResult(bet, game, homeScore, awayScore));
 	}
 	
-	public void deleteBetResult(String betResultId) throws Exception {
-		betResultDao.delete(Long.valueOf(betResultId));
+	public void deleteBetResult(BetResult betResult) throws Exception {
+		betResultDao.delete(betResult.getId());
 	}
 	
 }

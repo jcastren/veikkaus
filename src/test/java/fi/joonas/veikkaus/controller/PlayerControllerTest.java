@@ -77,7 +77,7 @@ public class PlayerControllerTest extends JUnitTestUtil {
 		assertThat(dbPlayer.getFirstName().equals(firstName));
 		assertThat(dbPlayer.getLastName().equals(lastName));
 
-		deletePlayer(dbPlayerId);
+		deletePlayer(dbPlayer);
 	}
 
 }

@@ -31,8 +31,6 @@ import fi.joonas.veikkaus.util.JUnitTestUtil;
 @WebAppConfiguration
 public class StatusControllerTest extends JUnitTestUtil {
 
-	//private static final Logger logger = LoggerFactory.getLogger(StatusControllerTest.class);
-
 	@Autowired
 	private StatusDao statusDao;
 	
@@ -76,7 +74,7 @@ public class StatusControllerTest extends JUnitTestUtil {
 		assertThat(dbStatus.getStatusNumber() == STATUS_COMPLETED);
 		assertThat(dbStatus.getDescription().equals(description));
 
-		deleteStatus(dbStatusId);
+		deleteStatus(dbStatus);
 	}
 
 }

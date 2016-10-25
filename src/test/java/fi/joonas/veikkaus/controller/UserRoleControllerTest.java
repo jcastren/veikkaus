@@ -65,7 +65,7 @@ public class UserRoleControllerTest extends JUnitTestUtil {
 		assertThat(userRoleId.equals(dbUserRoleId));
 		assertThat(dbUserRole.getName().equals(paramValueName));
 
-		deleteUserRole(dbUserRoleId);
+		deleteUserRole(dbUserRole);
 	}
 
 }

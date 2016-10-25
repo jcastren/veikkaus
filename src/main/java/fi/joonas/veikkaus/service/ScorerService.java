@@ -3,10 +3,10 @@ package fi.joonas.veikkaus.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import exception.VeikkausDaoException;
 import fi.joonas.veikkaus.dao.GameDao;
 import fi.joonas.veikkaus.dao.ScorerDao;
 import fi.joonas.veikkaus.dao.TournamentPlayerDao;
+import fi.joonas.veikkaus.exception.VeikkausDaoException;
 import fi.joonas.veikkaus.jpaentity.Game;
 import fi.joonas.veikkaus.jpaentity.Scorer;
 import fi.joonas.veikkaus.jpaentity.TournamentPlayer;

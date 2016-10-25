@@ -40,7 +40,7 @@ public class UserControllerTest extends JUnitTestUtil {
 	
 	@After
 	public void destroy() throws Exception {
-		deleteUserRole(userRole.getId().toString());
+		deleteUserRole(userRole);
 	}
 	
 	@Test
@@ -57,12 +57,17 @@ public class UserControllerTest extends JUnitTestUtil {
 				.build();
 		
 		String userId = callUrl(USER_CREATE_URL + getQuery(paramMap), true);
-		assertNotNull(userDao.findOne(Long.valueOf(userId)));
+		User dbUser = userDao.findOne(Long.valueOf(userId));
+		assertNotNull(dbUser);
+		assertThat(dbUser.getId().equals(Long.valueOf(userId)));
+		assertThat(dbUser.getEmail().equals(email));
+		assertThat(dbUser.getName().equals(name));
+		assertThat(dbUser.getPassword().equals(password));
+		assertThat(dbUser.getRole().getId().equals(userRole.getId()));
 		
 		paramMap = ImmutableMap.<String, String>builder()
 				.put(PARAM_NAME_ID, userId)
 				.build();
-		
 		callUrl(USER_DELETE_URL + getQuery(paramMap), false);
 		assertNull(userDao.findOne(Long.valueOf(userId)));
 	}
@@ -98,7 +103,7 @@ public class UserControllerTest extends JUnitTestUtil {
 		assertThat(dbUser.getPassword().equals(password));
 		assertThat(dbUser.getRole().getId().equals(userRoleId));
 
-		deleteUser(dbUserId);
+		deleteUser(dbUser);
 	}
 	
 }

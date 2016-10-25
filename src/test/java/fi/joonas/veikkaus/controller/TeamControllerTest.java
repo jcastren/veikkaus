@@ -68,7 +68,7 @@ public class TeamControllerTest extends JUnitTestUtil {
 		assertThat(teamId.equals(dbTeamId));
 		assertThat(dbTeam.getName() == name);
 
-		deleteTeam(dbTeamId);
+		deleteTeam(dbTeam);
 	}
 
 }
