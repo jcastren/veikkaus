@@ -1,6 +1,10 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_NAME;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_ROLE_CREATE_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_ROLE_DELETE_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_ROLE_MODIFY_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -16,7 +20,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.google.common.collect.ImmutableMap;
 
 import fi.joonas.veikkaus.dao.UserRoleDao;
-import fi.joonas.veikkaus.jpaentity.Tournament;
 import fi.joonas.veikkaus.jpaentity.UserRole;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
 
