@@ -1,6 +1,10 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_NAME;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.TEAM_CREATE_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.TEAM_DELETE_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.TEAM_MODIFY_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -15,9 +19,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.google.common.collect.ImmutableMap;
 
-import fi.joonas.veikkaus.dao.StatusDao;
 import fi.joonas.veikkaus.dao.TeamDao;
-import fi.joonas.veikkaus.jpaentity.Status;
 import fi.joonas.veikkaus.jpaentity.Team;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
 
