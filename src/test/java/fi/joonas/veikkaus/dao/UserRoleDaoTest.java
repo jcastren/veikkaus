@@ -21,7 +21,7 @@ public class UserRoleDaoTest extends JUnitTestUtil {
 
 	private UserRole userRole;
 
-	private String ROLENAME_ADMIN = "ADMIN";
+	private String NAME_ADMIN = "ADMIN";
 
 	@Before
 	public void setup() throws Exception {
@@ -30,14 +30,29 @@ public class UserRoleDaoTest extends JUnitTestUtil {
 
 	@Test
 	public void testCreateAndDelete() throws Exception {
-		userRole = new UserRole(ROLENAME_ADMIN);
+		userRole = new UserRole(NAME_ADMIN);
 		UserRole dbUserRole = userRoleDao.save(userRole);
 		assertThat(dbUserRole.getId() > 0);
-		assertThat(userRole.getRoleName().equals(dbUserRole.getRoleName()));
+		assertThat(userRole.getName().equals(dbUserRole.getName()));
 		assertThat(userRoleDao.findOne(dbUserRole.getId()) != null);
 
 		userRoleDao.delete(dbUserRole);
 		assertThat(userRoleDao.findOne(dbUserRole.getId()) == null);
+	}
+	
+	@Test
+	public void testUpdate() throws Exception {
+		userRole = new UserRole(NAME_ADMIN);
+		UserRole dbUserRole = userRoleDao.save(userRole);
+
+		String newName = NAME_ADMIN + "_new";
+		dbUserRole.setName(newName);
+		UserRole newDbUserRole = userRoleDao.save(dbUserRole);
+		assertThat(userRoleDao.findOne(newDbUserRole.getId()) == null);
+		assertThat(dbUserRole.getId().equals(newDbUserRole.getId()));
+		assertThat(dbUserRole.getName().equals(newDbUserRole.getName()));
+		
+		userRoleDao.delete(newDbUserRole);
 	}
 
 }

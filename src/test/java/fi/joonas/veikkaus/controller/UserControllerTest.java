@@ -7,8 +7,7 @@ import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_PASSWORD
 import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_USER_ROLE_ID;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_CREATE_URL;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_DELETE_URL;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -39,7 +38,7 @@ public class UserControllerTest extends JUnitTestUtil {
 	@Before
 	public void setup() throws Exception {
 		cleanDb();
-		userRoleId = addUserRole();
+		userRoleId = addUserRole().getId().toString();
 	}
 	
 	@After
@@ -69,6 +68,12 @@ public class UserControllerTest extends JUnitTestUtil {
 		
 		callUrl(USER_DELETE_URL + getQuery(paramMap), false);
 		assertNull(userDao.findOne(Long.valueOf(userId)));
+	}
+	
+	@Test
+	public void testModify() throws Exception {
+		/** TODO */
+		assertTrue(true);
 	}
 	
 }

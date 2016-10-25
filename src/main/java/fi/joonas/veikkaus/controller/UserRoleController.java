@@ -24,10 +24,10 @@ public class UserRoleController {
 	 */
 	@RequestMapping(URL_CREATE)
 	@ResponseBody
-	public String create(String roleName) {		
+	public String create(String name) {		
 		Long userRoleId = null;
 		try {
-			userRoleId = userRoleService.insert(roleName);
+			userRoleId = userRoleService.insert(name);
 		} catch (Exception ex) {
 			logger.error("Error creating the user role: ", ex);
 			return "Error creating the user role: " + ex.toString();
@@ -56,9 +56,9 @@ public class UserRoleController {
 	 */
 	@RequestMapping(URL_MODIFY)
 	@ResponseBody
-	public String updateUserRole(String id, String roleName) {
+	public String updateUserRole(String id, String name) {
 		try {
-			userRoleService.modify(id, roleName);
+			userRoleService.modify(id, name);
 		} catch (Exception ex) {
 			logger.error("Error updating the user role: ", ex);
 			return "Error updating the user role: " + ex.toString();

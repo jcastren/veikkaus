@@ -57,7 +57,7 @@ public class TournamentControllerTest extends JUnitTestUtil {
 	
 	@Test
 	public void testModify() throws Exception {
-		String tournamentId = addTournament();
+		String tournamentId = addTournament().getId().toString();
 		
 		String name = "Mexico World Cup";
 		String year = "1986";

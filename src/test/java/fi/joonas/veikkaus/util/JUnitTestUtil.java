@@ -161,23 +161,23 @@ public abstract class JUnitTestUtil {
     	}
 	}
 	
-	public String addUserRole() throws Exception {
-		String roleName = "ADMIN";
-		UserRole userRole = new UserRole(roleName);
-		return userRoleDao.save(userRole).getId().toString();
+	public UserRole addUserRole() throws Exception {
+		String name = "ADMIN";
+		UserRole userRole = new UserRole(name);
+		return userRoleDao.save(userRole);
 	}
 	
 	public void deleteUserRole(String userRoleId) throws Exception {
 		userRoleDao.delete(Long.valueOf(userRoleId));
 	}
 	
-	public String addUser() throws Exception {
-		UserRole userRole = userRoleDao.findOne(Long.valueOf(addUserRole()));
+	public User addUser() throws Exception {
+		UserRole userRole = addUserRole();
 		String email = "eemeli";
 		String name = "nimi";
 		String password = "salainensana";
 		
-		return userDao.save(new User(email, name, password, userRole)).getId().toString();
+		return userDao.save(new User(email, name, password, userRole));
 	}
 	
 	public void deleteUser(String userId) throws Exception {
@@ -186,39 +186,39 @@ public abstract class JUnitTestUtil {
 		userRoleDao.delete(userRoleId);
 	}
 	
-	public String addStatus() throws Exception {
+	public Status addStatus() throws Exception {
 		String description = "statuksen kuvaus";
-		return statusDao.save(new Status(STATUS_UNDER_WORK, description)).getId().toString();
+		return statusDao.save(new Status(STATUS_UNDER_WORK, description));
 	}
 	
 	public void deleteStatus(String statusId) throws Exception {
 		statusDao.delete(Long.valueOf(statusId));
 	}
 	
-	public String addBet() throws Exception {
-		Status status = statusDao.findOne(Long.valueOf(addStatus()));
-		User user = userDao.findOne(Long.valueOf(addUser()));
-		return betDao.save(new Bet(user, status)).getId().toString();
+	public Bet addBet() throws Exception {
+		Status status = addStatus();
+		User user = addUser();
+		return betDao.save(new Bet(user, status));
 	}
 	
 	public void deleteBet(String betId) throws Exception {
 		betDao.delete(Long.valueOf(betId));
 	}
 	
-	public String addTournament() throws Exception {
+	public Tournament addTournament() throws Exception {
 		String name = "Brazil World Cup";
 		int year = 2014;
-		return tournamentDao.save(new Tournament(name, year)).getId().toString();
+		return tournamentDao.save(new Tournament(name, year));
 	}
 	
 	public void deleteTournament(String tournamentId) throws Exception {
 		tournamentDao.delete(Long.valueOf(tournamentId));
 	}
 	
-	public String addPlayer() throws Exception {
+	public Player addPlayer() throws Exception {
 		String firstName = "Eric";
 		String lastName = "Cantona";
-		return playerDao.save(new Player(firstName, lastName)).getId().toString();
+		return playerDao.save(new Player(firstName, lastName));
 	}
 	
 	public void deletePlayer(String playerId) throws Exception {

@@ -35,8 +35,8 @@ public class BetControllerTest extends JUnitTestUtil {
 	@Before
 	public void setup() throws Exception {
 		cleanDb();
-		userId = addUser();
-		statusId = addStatus();
+		userId = addUser().getId().toString();
+		statusId = addStatus().getId().toString();
 	}
 	
 	@After
@@ -61,7 +61,7 @@ public class BetControllerTest extends JUnitTestUtil {
 	
 	@Test
 	public void testModify() throws Exception {
-		String betId = addBet();
+		String betId = addBet().getId().toString();
 		
 		String query = String.format(getFormattedStr(2), 
 				PARAM_NAME_ID, getEncodedStr(betId),

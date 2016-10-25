@@ -16,24 +16,24 @@ public class UserRole {
     private Long id;
     
     @NotNull
-    private String roleName;
+	private String name;
 
     public UserRole() {}
 
-	public UserRole(String roleName) {
-		this.roleName = roleName;
+	public UserRole(String name) {
+		this.name = name;
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public String getRoleName() {
-		return roleName;
+	public String getName() {
+		return name;
 	}
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

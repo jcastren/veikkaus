@@ -60,7 +60,7 @@ public class PlayerControllerTest extends JUnitTestUtil {
 	
 	@Test
 	public void testModify() throws Exception {
-		String playerId = addPlayer();
+		String playerId = addPlayer().getId().toString();
 		
 		String firstName = "Matt";
 		String lastName = "Busby";

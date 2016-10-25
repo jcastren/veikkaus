@@ -113,7 +113,6 @@ public abstract class VeikkausConstants {
     public static final String PARAM_NAME_NAME = "name";
     public static final String PARAM_NAME_PASSWORD = "password";
     public static final String PARAM_NAME_PLAYER_ID = "playerId";
-    public static final String PARAM_NAME_ROLENAME = "roleName";
     public static final String PARAM_NAME_STATUS_NUMBER = "statusNumber";
     public static final String PARAM_NAME_STATUS_ID = "statusId";
     public static final String PARAM_NAME_TOURNAMENT_ID = "tournamentId";

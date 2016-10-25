@@ -57,7 +57,7 @@ public class StatusControllerTest extends JUnitTestUtil {
 	
 	@Test
 	public void testModify() throws Exception {
-		String statusId = addStatus();
+		String statusId = addStatus().getId().toString();
 		
 		String query = String.format(getFormattedStr(2), 
 				PARAM_NAME_ID, getEncodedStr(statusId),
