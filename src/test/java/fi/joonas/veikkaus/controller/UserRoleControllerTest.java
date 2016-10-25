@@ -48,11 +48,11 @@ public class UserRoleControllerTest extends JUnitTestUtil {
 		assertNull(userRoleDao.findOne(Long.valueOf(userRoleId)));
 	}
 	
-	/** TODO */
 	@Test
 	public void testModify() throws Exception {
-		String userRoleId = addUserRole().getId().toString();
 		String paramValueName = "ADMIN";
+
+		String userRoleId = addUserRole().getId().toString();
 		
 		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, userRoleId)
 				.put(PARAM_NAME_NAME, paramValueName).build();
