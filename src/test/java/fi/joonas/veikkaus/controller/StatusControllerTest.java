@@ -1,5 +1,6 @@
 package fi.joonas.veikkaus.controller;
 
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_DESCRIPTION;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_STATUS_NUMBER;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_COMPLETED;
@@ -18,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import com.google.common.collect.ImmutableMap;
 
 import fi.joonas.veikkaus.dao.StatusDao;
 import fi.joonas.veikkaus.jpaentity.Status;
@@ -40,37 +43,35 @@ public class StatusControllerTest extends JUnitTestUtil {
 	
 	@Test
 	public void testCreateAndDelete() throws Exception {
-		String query = String.format(getFormattedStr(1), 
-				PARAM_NAME_STATUS_NUMBER, getEncodedStr(Integer.valueOf(STATUS_UNDER_WORK).toString()));
-		String url = STATUS_CREATE_URL + "?" + query;
-		String statusId = callUrl(url, true);
+		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_STATUS_NUMBER, Integer.valueOf(STATUS_UNDER_WORK).toString()).build();
+		String statusId = callUrl(STATUS_CREATE_URL + getQuery(paramMap), true);
 		Status status = statusDao.findOne(Long.valueOf(statusId));
 		assertNotNull(status);
 		assertThat(status.getId().equals(Long.valueOf(statusId)));
 		assertThat(status.getStatusNumber() == STATUS_UNDER_WORK);
 		
-		query = String.format(getFormattedStr(1), PARAM_NAME_ID, getEncodedStr(statusId));
-		url = STATUS_DELETE_URL + "?" + query;
-		callUrl(url, false);
+		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, statusId).build();
+		callUrl(STATUS_DELETE_URL + getQuery(paramMap), false);
 		assertNull(statusDao.findOne(Long.valueOf(statusId)));
 	}
 	
 	@Test
 	public void testModify() throws Exception {
+		String description = "hommat kesken";
 		String statusId = addStatus().getId().toString();
 		
-		String query = String.format(getFormattedStr(2), 
-				PARAM_NAME_ID, getEncodedStr(statusId),
-				PARAM_NAME_STATUS_NUMBER, getEncodedStr(Integer.valueOf(STATUS_COMPLETED).toString()));
-		String url = STATUS_MODIFY_URL + "?" + query;
-		String newStatusId = callUrl(url, true);
-		
-		assertThat(statusId.equals(newStatusId));
-		Status newStatus = statusDao.findOne(Long.valueOf(newStatusId));
-		assertNotNull(newStatus);
-		assertThat(newStatus.getStatusNumber() == STATUS_COMPLETED);
-		
-		deleteStatus(statusId);
+		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, statusId)
+				.put(PARAM_NAME_STATUS_NUMBER, Integer.valueOf(STATUS_COMPLETED).toString())
+				.put(PARAM_NAME_DESCRIPTION, description)
+						.build();
+		String dbStatusId = callUrl(STATUS_MODIFY_URL + getQuery(paramMap), true);
+		Status dbStatus = statusDao.findOne(Long.valueOf(dbStatusId));
+		assertNotNull(dbStatus);
+		assertThat(statusId.equals(dbStatusId));
+		assertThat(dbStatus.getStatusNumber() == STATUS_COMPLETED);
+		assertThat(dbStatus.getDescription().equals(description));
+
+		deleteStatus(dbStatusId);
 	}
 
 }
