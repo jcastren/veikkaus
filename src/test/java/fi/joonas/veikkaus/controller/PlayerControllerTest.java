@@ -18,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.google.common.collect.ImmutableMap;
+
 import fi.joonas.veikkaus.dao.PlayerDao;
 import fi.joonas.veikkaus.jpaentity.Player;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
@@ -26,9 +28,6 @@ import fi.joonas.veikkaus.util.JUnitTestUtil;
 @SpringBootTest
 @WebAppConfiguration
 public class PlayerControllerTest extends JUnitTestUtil {
-
-	// private static final Logger logger =
-	// LoggerFactory.getLogger(TournamentControllerTest.class);
 
 	@Autowired
 	private PlayerDao playerDao;
@@ -42,43 +41,43 @@ public class PlayerControllerTest extends JUnitTestUtil {
 	public void testCreateAndDelete() throws Exception {
 		String firstName = "Eric";
 		String lastName = "Cantona";
-		String query = String.format(getFormattedStr(2), 
-				PARAM_NAME_FIRST_NAME, getEncodedStr(firstName), 
-				PARAM_NAME_LAST_NAME, getEncodedStr(lastName));
-		String url = PLAYER_CREATE_URL + "?" + query;
-		String playerId = callUrl(url, true);
-		Player player = playerDao.findOne(Long.valueOf(playerId));
-		assertNotNull(player);
-		assertThat(player.getFirstName().equals(firstName));
-		assertThat(player.getLastName().equals(lastName));
-
-		query = String.format(getFormattedStr(1), PARAM_NAME_ID, getEncodedStr(playerId));
-		url = PLAYER_DELETE_URL + "?" + query;
-		callUrl(url, false);
+		
+		paramMap = ImmutableMap.<String, String>builder()
+				.put(PARAM_NAME_FIRST_NAME, firstName)
+				.put(PARAM_NAME_LAST_NAME, lastName)
+				.build();
+		String playerId = callUrl(PLAYER_CREATE_URL + getQuery(paramMap), true);
+		Player dbPlayer = playerDao.findOne(Long.valueOf(playerId));
+		assertNotNull(dbPlayer);
+		assertThat(dbPlayer.getId().equals(Long.valueOf(playerId)));
+		assertThat(dbPlayer.getFirstName().equals(firstName));
+		assertThat(dbPlayer.getLastName().equals(lastName));
+		
+		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, playerId).build();
+		callUrl(PLAYER_DELETE_URL + getQuery(paramMap), false);
 		assertNull(playerDao.findOne(Long.valueOf(playerId)));
 	}
 	
 	@Test
 	public void testModify() throws Exception {
-		String playerId = addPlayer().getId().toString();
-		
 		String firstName = "Matt";
 		String lastName = "Busby";
+
+		String playerId = addPlayer().getId().toString();
 		
-		String query = String.format(getFormattedStr(3), 
-				PARAM_NAME_ID, getEncodedStr(playerId),
-				PARAM_NAME_FIRST_NAME, getEncodedStr(firstName),
-				PARAM_NAME_LAST_NAME, getEncodedStr(lastName));
-		String url = PLAYER_MODIFY_URL + "?" + query;
-		String newPlayerId = callUrl(url, true);
-		
-		assertThat(playerId.equals(newPlayerId));
-		Player newPlayer = playerDao.findOne(Long.valueOf(newPlayerId));
-		assertNotNull(newPlayer);
-		assertThat(newPlayer.getFirstName().equals(firstName));
-		assertThat(newPlayer.getLastName().equals(lastName));
-		
-		deletePlayer(playerId);
+		paramMap = ImmutableMap.<String, String>builder()
+				.put(PARAM_NAME_ID, playerId)
+				.put(PARAM_NAME_FIRST_NAME, firstName)
+				.put(PARAM_NAME_LAST_NAME, lastName)
+				.build();
+		String dbPlayerId = callUrl(PLAYER_MODIFY_URL + getQuery(paramMap), true);
+		Player dbPlayer = playerDao.findOne(Long.valueOf(dbPlayerId));
+		assertNotNull(dbPlayer);
+		assertThat(playerId.equals(dbPlayerId));
+		assertThat(dbPlayer.getFirstName().equals(firstName));
+		assertThat(dbPlayer.getLastName().equals(lastName));
+
+		deletePlayer(dbPlayerId);
 	}
 
 }
