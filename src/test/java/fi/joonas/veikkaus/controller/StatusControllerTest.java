@@ -43,7 +43,12 @@ public class StatusControllerTest extends JUnitTestUtil {
 	
 	@Test
 	public void testCreateAndDelete() throws Exception {
-		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_STATUS_NUMBER, Integer.valueOf(STATUS_UNDER_WORK).toString()).build();
+		String description = "hommat menee ku länsimetrossa";
+		
+		paramMap = ImmutableMap.<String, String>builder()
+				.put(PARAM_NAME_STATUS_NUMBER, Integer.valueOf(STATUS_UNDER_WORK).toString())
+				.put(PARAM_NAME_DESCRIPTION, description)
+				.build();
 		String statusId = callUrl(STATUS_CREATE_URL + getQuery(paramMap), true);
 		Status status = statusDao.findOne(Long.valueOf(statusId));
 		assertNotNull(status);
