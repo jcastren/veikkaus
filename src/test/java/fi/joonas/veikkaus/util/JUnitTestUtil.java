@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -27,9 +28,15 @@ import fi.joonas.veikkaus.dao.TournamentTeamDao;
 import fi.joonas.veikkaus.dao.UserDao;
 import fi.joonas.veikkaus.dao.UserRoleDao;
 import fi.joonas.veikkaus.jpaentity.Bet;
+import fi.joonas.veikkaus.jpaentity.BetResult;
+import fi.joonas.veikkaus.jpaentity.Game;
 import fi.joonas.veikkaus.jpaentity.Player;
+import fi.joonas.veikkaus.jpaentity.Scorer;
 import fi.joonas.veikkaus.jpaentity.Status;
+import fi.joonas.veikkaus.jpaentity.Team;
 import fi.joonas.veikkaus.jpaentity.Tournament;
+import fi.joonas.veikkaus.jpaentity.TournamentPlayer;
+import fi.joonas.veikkaus.jpaentity.TournamentTeam;
 import fi.joonas.veikkaus.jpaentity.User;
 import fi.joonas.veikkaus.jpaentity.UserRole;
 
@@ -215,6 +222,25 @@ public abstract class JUnitTestUtil {
 		tournamentDao.delete(Long.valueOf(tournamentId));
 	}
 	
+	public Team addTeam() throws Exception {
+		String name = "KÄPA";
+		return teamDao.save(new Team(name));
+	}
+	
+	public void deleteTeam(String teamId) throws Exception {
+		teamDao.delete(Long.valueOf(teamId));
+	}
+	
+	public TournamentTeam addTournamentTeam() throws Exception {
+		Tournament tournament = addTournament();
+		Team team = addTeam();
+		return tournamentTeamDao.save(new TournamentTeam(tournament, team));
+	}
+	
+	public void deleteTournamentTeam(String tournamentTeamId) throws Exception {
+		tournamentTeamDao.delete(Long.valueOf(tournamentTeamId));
+	}
+
 	public Player addPlayer() throws Exception {
 		String firstName = "Eric";
 		String lastName = "Cantona";
@@ -223,6 +249,57 @@ public abstract class JUnitTestUtil {
 	
 	public void deletePlayer(String playerId) throws Exception {
 		playerDao.delete(Long.valueOf(playerId));
+	}
+	
+	public TournamentPlayer addTournamentPlayer() throws Exception {
+		TournamentTeam tournamentTeam = addTournamentTeam();
+		Player player = addPlayer();
+		int goals = 7;
+		return tournamentPlayerDao.save(new TournamentPlayer(tournamentTeam, player, goals));
+	}
+	
+	public void deleteTournamentPlayer(String tournamentPlayerId) throws Exception {
+		tournamentPlayerDao.delete(Long.valueOf(tournamentPlayerId));
+	}
+	
+	public Game addGame() throws Exception {
+		int homeScore = 7;
+		int awayScore = 3;
+		Date gameDate = new Date();
+		TournamentTeam homeTeam = addTournamentTeam();
+		TournamentTeam awayTeam = addTournamentTeam();
+		Team team = addTeam();
+		team.setName("Cameroon");
+		awayTeam.setTeam(team);
+		
+		return gameDao.save(new Game(homeTeam, awayTeam, homeScore, awayScore, gameDate));
+	}
+	
+	public void deleteGame(String gameId) throws Exception {
+		gameDao.delete(Long.valueOf(gameId));
+	}
+	
+	public Scorer addScorer() throws Exception {
+		TournamentPlayer tournamentPlayer = addTournamentPlayer();
+		Game game = addGame();
+		return scorerDao.save(new Scorer(tournamentPlayer, game));
+	}
+	
+	public void deleteScorer(String scorerId) throws Exception {
+		scorerDao.delete(Long.valueOf(scorerId));
+	}
+	
+	public BetResult addBetResult() throws Exception {
+		Bet bet = addBet();
+		Game game = addGame();
+		int homeScore = 7;
+		int awayScore = 3;
+		
+		return betResultDao.save(new BetResult(bet, game, homeScore, awayScore));
+	}
+	
+	public void deleteBetResult(String betResultId) throws Exception {
+		betResultDao.delete(Long.valueOf(betResultId));
 	}
 	
 }
