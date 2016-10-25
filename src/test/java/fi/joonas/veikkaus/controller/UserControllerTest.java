@@ -1,12 +1,7 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_EMAIL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_NAME;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_PASSWORD;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_USER_ROLE_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_CREATE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_DELETE_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 import org.junit.After;
@@ -21,6 +16,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.google.common.collect.ImmutableMap;
 
 import fi.joonas.veikkaus.dao.UserDao;
+import fi.joonas.veikkaus.jpaentity.User;
+import fi.joonas.veikkaus.jpaentity.UserRole;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
 
 @RunWith(SpringRunner.class)
@@ -33,17 +30,17 @@ public class UserControllerTest extends JUnitTestUtil {
 	@Autowired
 	private UserDao userDao;
 
-	private String userRoleId;
+	private UserRole userRole;
 
 	@Before
 	public void setup() throws Exception {
 		cleanDb();
-		userRoleId = addUserRole().getId().toString();
+		userRole = addUserRole();
 	}
 	
 	@After
 	public void destroy() throws Exception {
-		deleteUserRole(userRoleId);
+		deleteUserRole(userRole.getId().toString());
 	}
 	
 	@Test
@@ -56,7 +53,7 @@ public class UserControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_EMAIL, email)
 				.put(PARAM_NAME_NAME, name)
 				.put(PARAM_NAME_PASSWORD, password)
-				.put(PARAM_NAME_USER_ROLE_ID, userRoleId)
+				.put(PARAM_NAME_USER_ROLE_ID, userRole.getId().toString())
 				.build();
 		
 		String userId = callUrl(USER_CREATE_URL + getQuery(paramMap), true);
@@ -72,8 +69,32 @@ public class UserControllerTest extends JUnitTestUtil {
 	
 	@Test
 	public void testModify() throws Exception {
-		/** TODO */
-		assertTrue(true);
+		String email = "sposti";
+		String name = "pena";
+		String password = "penanen";
+		
+		User user = addUser();
+		String userId = user.getId().toString();
+		String userRoleId = user.getRole().getId().toString();
+		
+		paramMap = ImmutableMap.<String, String>builder()
+				.put(PARAM_NAME_ID, userId)
+				.put(PARAM_NAME_EMAIL, email)
+				.put(PARAM_NAME_NAME, name)
+				.put(PARAM_NAME_PASSWORD, password)
+				.put(PARAM_NAME_USER_ROLE_ID, userRoleId)
+				.build();
+		
+		String dbUserId = callUrl(USER_MODIFY_URL + getQuery(paramMap), true);
+		User dbUser = userDao.findOne(Long.valueOf(dbUserId));
+		assertNotNull(dbUser);
+		assertThat(userId.equals(dbUserId));
+		assertThat(dbUser.getEmail().equals(email));
+		assertThat(dbUser.getName().equals(name));
+		assertThat(dbUser.getPassword().equals(password));
+		assertThat(dbUser.getRole().getId().equals(userRoleId));
+
+		deleteUser(dbUserId);
 	}
 	
 }
