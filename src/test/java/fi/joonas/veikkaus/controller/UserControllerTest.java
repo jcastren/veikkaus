@@ -75,7 +75,11 @@ public class UserControllerTest extends JUnitTestUtil {
 		
 		User user = addUser();
 		String userId = user.getId().toString();
-		String userRoleId = user.getRole().getId().toString();
+		
+		// We have to be careful with roleId used as @Before annotation creates
+		// a user role in addition to addUser method and we don't want to delete
+		// that user role before @After annotation
+		String userRoleId = user.getRole().getId().toString(); 
 		
 		paramMap = ImmutableMap.<String, String>builder()
 				.put(PARAM_NAME_ID, userId)
