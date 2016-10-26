@@ -74,11 +74,12 @@ public class TournamentTeamControllerTest extends JUnitTestUtil {
 	
 	@Test
 	public void testModify() throws Exception {
-		String tournamentId = addTournament().getId().toString();
-		String teamId = addTeam().getId().toString();
-		String tournamentTeamId = addTournamentTeam().getId().toString();
+		TournamentTeam tournamentTeam = addTournamentTeam();
+		String tournamentId = tournamentTeam.getTournament().getId().toString();
+		String teamId = tournamentTeam.getTeam().getId().toString();
 		
-		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, tournamentTeamId)
+		paramMap = ImmutableMap.<String, String>builder()
+				.put(PARAM_NAME_ID, tournamentTeam.getId().toString())
 				.put(PARAM_NAME_TOURNAMENT_ID, tournamentId)
 				.put(PARAM_NAME_TEAM_ID, teamId)
 				.build();
@@ -86,7 +87,7 @@ public class TournamentTeamControllerTest extends JUnitTestUtil {
 		String dbTournamentTeamId = callUrl(TOURNAMENT_TEAM_MODIFY_URL + getQuery(paramMap), true);
 		TournamentTeam dbTournamentTeam = tournamentTeamDao.findOne(Long.valueOf(dbTournamentTeamId));
 		assertNotNull(dbTournamentTeam);
-		assertThat(tournamentTeamId.equals(dbTournamentTeamId));
+		assertThat(tournamentTeam.getId().toString().equals(dbTournamentTeamId));
 		assertThat(tournamentId.equals(dbTournamentTeam.getTournament().getId()));
 		assertThat(teamId.equals(dbTournamentTeam.getTeam().getId()));
 	
