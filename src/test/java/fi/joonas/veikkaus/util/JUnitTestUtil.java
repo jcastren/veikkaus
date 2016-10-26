@@ -105,16 +105,15 @@ public abstract class JUnitTestUtil {
 			throw e;
 		}
 
-		String str = null;
+		String responseBody = null;
 		try (Scanner scanner = new Scanner(response)) {
-			String responseBody = scanner.useDelimiter("\\A").next();
+			responseBody = scanner.useDelimiter("\\A").next();
 			logger.info("URL: " + url + " produced responseBody: " + responseBody);
-			str = responseBody;
 		}
 
 		if (getId) {
 			Pattern p = Pattern.compile("(\\d+)");
-			Matcher matcher = p.matcher(str);
+			Matcher matcher = p.matcher(responseBody);
 
 			if (matcher.find()) {
 				logger.info("id found: " + matcher.group(1));
@@ -268,9 +267,7 @@ public abstract class JUnitTestUtil {
 		Date gameDate = new Date();
 		TournamentTeam homeTeam = addTournamentTeam();
 		TournamentTeam awayTeam = addTournamentTeam();
-		Team team = addTeam();
-		team.setName("Cameroon");
-		awayTeam.setTeam(team);
+		awayTeam.getTeam().setName(awayTeam.getTeam().getName() + "Cameroon");
 		
 		return gameDao.save(new Game(homeTeam, awayTeam, homeScore, awayScore, gameDate));
 	}

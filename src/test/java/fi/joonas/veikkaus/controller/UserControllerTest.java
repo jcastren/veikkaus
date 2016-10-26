@@ -97,7 +97,7 @@ public class UserControllerTest extends JUnitTestUtil {
 		String dbUserId = callUrl(USER_MODIFY_URL + getQuery(paramMap), true);
 		User dbUser = userDao.findOne(Long.valueOf(dbUserId));
 		assertNotNull(dbUser);
-		assertThat(userId.equals(dbUserId));
+		assertThat(dbUserId.equals(userId));
 		assertThat(dbUser.getEmail().equals(email));
 		assertThat(dbUser.getName().equals(name));
 		assertThat(dbUser.getPassword().equals(password));

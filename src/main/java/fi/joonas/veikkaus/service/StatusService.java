@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fi.joonas.veikkaus.dao.StatusDao;
-import fi.joonas.veikkaus.exception.VeikkausDaoException;
+import fi.joonas.veikkaus.exception.VeikkausServiceException;
 import fi.joonas.veikkaus.jpaentity.Status;
 
 @Service
@@ -13,7 +13,7 @@ public class StatusService {
 	@Autowired
 	StatusDao statusDao;
 
-	public Long insert(String statusNumber, String description) throws VeikkausDaoException {
+	public Long insert(String statusNumber, String description) throws VeikkausServiceException {
 		return statusDao.save(new Status(Integer.valueOf(statusNumber).intValue(), description)).getId();
 	}
 	

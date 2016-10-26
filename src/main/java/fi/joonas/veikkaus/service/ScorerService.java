@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import fi.joonas.veikkaus.dao.GameDao;
 import fi.joonas.veikkaus.dao.ScorerDao;
 import fi.joonas.veikkaus.dao.TournamentPlayerDao;
-import fi.joonas.veikkaus.exception.VeikkausDaoException;
+import fi.joonas.veikkaus.exception.VeikkausServiceException;
 import fi.joonas.veikkaus.jpaentity.Game;
 import fi.joonas.veikkaus.jpaentity.Scorer;
 import fi.joonas.veikkaus.jpaentity.TournamentPlayer;
@@ -23,34 +23,34 @@ public class ScorerService {
 	@Autowired
 	GameDao gameDao;
 	
-	public Long insert(String tournamentPlayerId, String gameId) throws VeikkausDaoException {
+	public Long insert(String tournamentPlayerId, String gameId) throws VeikkausServiceException {
 		TournamentPlayer tournamentPlayer = tournamentPlayerDao.findOne(Long.valueOf(tournamentPlayerId));
 		if (tournamentPlayer == null) {
-			throw new VeikkausDaoException("tournamentPlayer with id: " + tournamentPlayerId + " wasn't found, insert failed");
+			throw new VeikkausServiceException("tournamentPlayer with id: " + tournamentPlayerId + " wasn't found, insert failed");
 		}
 		
 		Game game = gameDao.findOne(Long.valueOf(gameId));
 		if (game == null) {
-			throw new VeikkausDaoException("game with id: " + gameId + " wasn't found, insert failed");
+			throw new VeikkausServiceException("game with id: " + gameId + " wasn't found, insert failed");
 		}
 
 		return scorerDao.save(new Scorer(tournamentPlayer, game)).getId();
 	}
 	
-	public Long modify(String id, String tournamentPlayerId, String gameId) throws VeikkausDaoException {
+	public Long modify(String id, String tournamentPlayerId, String gameId) throws VeikkausServiceException {
 		TournamentPlayer tournamentPlayer = tournamentPlayerDao.findOne(Long.valueOf(tournamentPlayerId));
 		if (tournamentPlayer == null) {
-			throw new VeikkausDaoException("TournamentPlayer with id: " + tournamentPlayerId + " wasn't found, modify failed");
+			throw new VeikkausServiceException("TournamentPlayer with id: " + tournamentPlayerId + " wasn't found, modify failed");
 		}
 		
 		Game game = gameDao.findOne(Long.valueOf(gameId));
 		if (game == null) {
-			throw new VeikkausDaoException("Game with id: " + gameId + " wasn't found, insert failed");
+			throw new VeikkausServiceException("Game with id: " + gameId + " wasn't found, insert failed");
 		}
 		
 		Scorer scorer = scorerDao.findOne(Long.valueOf(id));		
 		if (scorer == null) {
-			throw new VeikkausDaoException("Scorer with id: " + id + " wasn't found, modify failed");
+			throw new VeikkausServiceException("Scorer with id: " + id + " wasn't found, modify failed");
 		}
 
 		scorer.setTournamentPlayer(tournamentPlayer);
