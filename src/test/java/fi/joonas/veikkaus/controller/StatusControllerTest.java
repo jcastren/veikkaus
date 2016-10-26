@@ -48,10 +48,10 @@ public class StatusControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_DESCRIPTION, description)
 				.build();
 		String statusId = callUrl(STATUS_CREATE_URL + getQuery(paramMap), true);
-		Status status = statusDao.findOne(Long.valueOf(statusId));
-		assertNotNull(status);
-		assertThat(status.getId().equals(Long.valueOf(statusId)));
-		assertThat(status.getStatusNumber() == STATUS_UNDER_WORK);
+		Status dbStatus = statusDao.findOne(Long.valueOf(statusId));
+		assertNotNull(dbStatus);
+		assertThat(dbStatus.getId().equals(Long.valueOf(statusId)));
+		assertThat(dbStatus.getStatusNumber() == STATUS_UNDER_WORK);
 		
 		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, statusId).build();
 		callUrl(STATUS_DELETE_URL + getQuery(paramMap), false);
@@ -70,7 +70,7 @@ public class StatusControllerTest extends JUnitTestUtil {
 		String dbStatusId = callUrl(STATUS_MODIFY_URL + getQuery(paramMap), true);
 		Status dbStatus = statusDao.findOne(Long.valueOf(dbStatusId));
 		assertNotNull(dbStatus);
-		assertThat(statusId.equals(dbStatusId));
+		assertThat(dbStatusId.equals(statusId));
 		assertThat(dbStatus.getStatusNumber() == STATUS_COMPLETED);
 		assertThat(dbStatus.getDescription().equals(description));
 

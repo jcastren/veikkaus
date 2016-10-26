@@ -87,9 +87,9 @@ public class TournamentTeamControllerTest extends JUnitTestUtil {
 		String dbTournamentTeamId = callUrl(TOURNAMENT_TEAM_MODIFY_URL + getQuery(paramMap), true);
 		TournamentTeam dbTournamentTeam = tournamentTeamDao.findOne(Long.valueOf(dbTournamentTeamId));
 		assertNotNull(dbTournamentTeam);
-		assertThat(tournamentTeam.getId().toString().equals(dbTournamentTeamId));
-		assertThat(tournamentId.equals(dbTournamentTeam.getTournament().getId()));
-		assertThat(teamId.equals(dbTournamentTeam.getTeam().getId()));
+		assertThat(dbTournamentTeamId.equals(tournamentTeam.getId()));
+		assertThat(dbTournamentTeam.getTournament().getId().equals(tournamentId));
+		assertThat(dbTournamentTeam.getTeam().getId().equals(teamId));
 	
 		deleteTournamentTeam(dbTournamentTeam);
 	}

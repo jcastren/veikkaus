@@ -49,11 +49,11 @@ public class TournamentControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_YEAR, year)
 				.build();
 		String tournamentId = callUrl(TOURNAMENT_CREATE_URL + getQuery(paramMap), true);
-		Tournament tournament = tournamentDao.findOne(Long.valueOf(tournamentId));
-		assertNotNull(tournament);
-		assertThat(tournament.getId().equals(Long.valueOf(tournamentId)));
-		assertThat(tournament.getName() == name);
-		assertThat(tournament.getYear() == Integer.parseInt(year));
+		Tournament dbTournament = tournamentDao.findOne(Long.valueOf(tournamentId));
+		assertNotNull(dbTournament);
+		assertThat(dbTournament.getId().equals(Long.valueOf(tournamentId)));
+		assertThat(dbTournament.getName() == name);
+		assertThat(dbTournament.getYear() == Integer.parseInt(year));
 		
 		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, tournamentId).build();
 		callUrl(TOURNAMENT_DELETE_URL + getQuery(paramMap), false);
@@ -75,7 +75,7 @@ public class TournamentControllerTest extends JUnitTestUtil {
 		String dbTournamentId = callUrl(TOURNAMENT_MODIFY_URL + getQuery(paramMap), true);
 		Tournament dbTournament = tournamentDao.findOne(Long.valueOf(dbTournamentId));
 		assertNotNull(dbTournament);
-		assertThat(tournamentId.equals(dbTournamentId));
+		assertThat(dbTournamentId.equals(tournamentId));
 		assertThat(dbTournament.getName() == name);
 		assertThat(dbTournament.getYear() == Integer.parseInt(year));
 	

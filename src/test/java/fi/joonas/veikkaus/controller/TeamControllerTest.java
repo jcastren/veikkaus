@@ -44,10 +44,10 @@ public class TeamControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_NAME, name)
 				.build();
 		String teamId = callUrl(TEAM_CREATE_URL + getQuery(paramMap), true);
-		Team team = teamDao.findOne(Long.valueOf(teamId));
-		assertNotNull(team);
-		assertThat(team.getId().equals(Long.valueOf(teamId)));
-		assertThat(team.getName() == name);
+		Team dbTeam = teamDao.findOne(Long.valueOf(teamId));
+		assertNotNull(dbTeam);
+		assertThat(dbTeam.getId().equals(Long.valueOf(teamId)));
+		assertThat(dbTeam.getName().equals(name));
 		
 		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, teamId).build();
 		callUrl(TEAM_DELETE_URL + getQuery(paramMap), false);
@@ -65,8 +65,8 @@ public class TeamControllerTest extends JUnitTestUtil {
 		String dbTeamId = callUrl(TEAM_MODIFY_URL + getQuery(paramMap), true);
 		Team dbTeam = teamDao.findOne(Long.valueOf(dbTeamId));
 		assertNotNull(dbTeam);
-		assertThat(teamId.equals(dbTeamId));
-		assertThat(dbTeam.getName() == name);
+		assertThat(dbTeamId.equals(teamId));
+		assertThat(dbTeam.getName().equals(name));
 
 		deleteTeam(dbTeam);
 	}

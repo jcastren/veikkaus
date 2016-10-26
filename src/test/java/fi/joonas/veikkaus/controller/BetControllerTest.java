@@ -89,7 +89,7 @@ public class BetControllerTest extends JUnitTestUtil {
 		String dbBetId = callUrl(BET_MODIFY_URL + getQuery(paramMap), true);
 		Bet dbBet = betDao.findOne(Long.valueOf(dbBetId));
 		assertNotNull(dbBet);
-		assertThat(betId.equals(dbBetId));
+		assertThat(dbBetId.equals(betId));
 		assertThat(dbBet.getUser().getId().equals(userId));
 		assertThat(dbBet.getStatus().getId().equals(statusId));
 

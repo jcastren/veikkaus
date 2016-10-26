@@ -73,7 +73,7 @@ public class PlayerControllerTest extends JUnitTestUtil {
 		String dbPlayerId = callUrl(PLAYER_MODIFY_URL + getQuery(paramMap), true);
 		Player dbPlayer = playerDao.findOne(Long.valueOf(dbPlayerId));
 		assertNotNull(dbPlayer);
-		assertThat(playerId.equals(dbPlayerId));
+		assertThat(dbPlayerId.equals(playerId));
 		assertThat(dbPlayer.getFirstName().equals(firstName));
 		assertThat(dbPlayer.getLastName().equals(lastName));
 
