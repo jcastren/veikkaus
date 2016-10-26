@@ -18,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.google.common.collect.ImmutableMap;
+
 import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.jpaentity.Tournament;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
@@ -42,40 +44,42 @@ public class TournamentControllerTest extends JUnitTestUtil {
 	public void testCreateAndDelete() throws Exception {
 		String name = "Brazil World Cup";
 		String year = "2014";
-		String query = String.format(getFormattedStr(2), 
-				PARAM_NAME_NAME, getEncodedStr(name), 
-				PARAM_NAME_YEAR, getEncodedStr(year));
-		String url = TOURNAMENT_CREATE_URL + "?" + query;
-		String tournamentId = callUrl(url, true);
-		assertNotNull(tournamentDao.findOne(Long.valueOf(tournamentId)));
-
-		query = String.format(getFormattedStr(1), PARAM_NAME_ID, getEncodedStr(tournamentId));
-		url = TOURNAMENT_DELETE_URL + "?" + query;
-		callUrl(url, false);
+		
+		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_NAME, name)
+				.put(PARAM_NAME_YEAR, year)
+				.build();
+		String tournamentId = callUrl(TOURNAMENT_CREATE_URL + getQuery(paramMap), true);
+		Tournament tournament = tournamentDao.findOne(Long.valueOf(tournamentId));
+		assertNotNull(tournament);
+		assertThat(tournament.getId().equals(Long.valueOf(tournamentId)));
+		assertThat(tournament.getName() == name);
+		assertThat(tournament.getYear() == Integer.parseInt(year));
+		
+		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, tournamentId).build();
+		callUrl(TOURNAMENT_DELETE_URL + getQuery(paramMap), false);
 		assertNull(tournamentDao.findOne(Long.valueOf(tournamentId)));
 	}
 	
 	@Test
 	public void testModify() throws Exception {
-		String tournamentId = addTournament();
+		String tournamentId = addTournament().getId().toString();
 		
 		String name = "Mexico World Cup";
 		String year = "1986";
 		
-		String query = String.format(getFormattedStr(3), 
-				PARAM_NAME_ID, getEncodedStr(tournamentId),
-				PARAM_NAME_NAME, getEncodedStr(name),
-				PARAM_NAME_YEAR, getEncodedStr(year));
-		String url = TOURNAMENT_MODIFY_URL + "?" + query;
-		String newTOURNAMENTId = callUrl(url, true);
+		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, tournamentId)
+				.put(PARAM_NAME_NAME, name)
+				.put(PARAM_NAME_YEAR, year)
+				.build();
 		
-		assertThat(tournamentId.equals(newTOURNAMENTId));
-		Tournament newTournament = tournamentDao.findOne(Long.valueOf(newTOURNAMENTId));
-		assertNotNull(newTournament);
-		assertThat(newTournament.getName() == name);
-		assertThat(newTournament.getYear() == Integer.parseInt(year));
-		
-		deleteTournament(tournamentId);
+		String dbTournamentId = callUrl(TOURNAMENT_MODIFY_URL + getQuery(paramMap), true);
+		Tournament dbTournament = tournamentDao.findOne(Long.valueOf(dbTournamentId));
+		assertNotNull(dbTournament);
+		assertThat(tournamentId.equals(dbTournamentId));
+		assertThat(dbTournament.getName() == name);
+		assertThat(dbTournament.getYear() == Integer.parseInt(year));
+	
+		deleteTournament(dbTournament);
 	}
 
 }

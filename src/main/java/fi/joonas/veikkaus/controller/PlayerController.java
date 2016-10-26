@@ -64,7 +64,7 @@ public class PlayerController {
 			logger.error("Error updating the player: ", ex);
 			return "Error updating the player: " + ex.toString();
 		}
-		return "Player succesfully updated!";
+		return "Player succesfully updated for id = " + id;
 	}
 
 }

@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Date;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,8 +28,15 @@ import fi.joonas.veikkaus.dao.TournamentTeamDao;
 import fi.joonas.veikkaus.dao.UserDao;
 import fi.joonas.veikkaus.dao.UserRoleDao;
 import fi.joonas.veikkaus.jpaentity.Bet;
+import fi.joonas.veikkaus.jpaentity.BetResult;
+import fi.joonas.veikkaus.jpaentity.Game;
+import fi.joonas.veikkaus.jpaentity.Player;
+import fi.joonas.veikkaus.jpaentity.Scorer;
 import fi.joonas.veikkaus.jpaentity.Status;
+import fi.joonas.veikkaus.jpaentity.Team;
 import fi.joonas.veikkaus.jpaentity.Tournament;
+import fi.joonas.veikkaus.jpaentity.TournamentPlayer;
+import fi.joonas.veikkaus.jpaentity.TournamentTeam;
 import fi.joonas.veikkaus.jpaentity.User;
 import fi.joonas.veikkaus.jpaentity.UserRole;
 
@@ -39,6 +48,8 @@ public abstract class JUnitTestUtil {
 	
 	public static final boolean CLEAN_BEFORE_RUN_JUNIT_TESTS = true;
 	public static final String CHARSET = java.nio.charset.StandardCharsets.UTF_8.name();
+	
+	public Map<String, String> paramMap;
 	
 	@Autowired
 	private UserRoleDao userRoleDao;
@@ -113,22 +124,7 @@ public abstract class JUnitTestUtil {
 		return id;
 	}
 
-	/*
-	 * private String getQuery(String...strings) { String query = null; if
-	 * (strings != null) {
-	 * 
-	 * String formattedStr;
-	 * 
-	 * for (String str : strings) {
-	 * 
-	 * }
-	 * 
-	 * query = String.format("email=%s&name=%s&password=%s&userRoleId=%s",
-	 * URLEncoder.encode(email, charset), URLEncoder.encode(name, charset),
-	 * URLEncoder.encode(password, charset), URLEncoder.encode(userRoleId,
-	 * charset)); } return query; }
-	 */
-
+	@Deprecated
 	public static String getFormattedStr(int val) {
 		String str = "";
 		for (int i = 1; i <= val; i++) {
@@ -140,9 +136,19 @@ public abstract class JUnitTestUtil {
 		return str;
 	}
 
+	@Deprecated
 	public static String getEncodedStr(String str) throws UnsupportedEncodingException {
 		String ret = URLEncoder.encode(str, CHARSET);
 		return ret;
+	}
+	
+	public String getQuery(Map<String, String> paramMap) throws UnsupportedEncodingException {
+		String str = "?";
+		for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+			str += String.format("%s=%s&", entry.getKey(), URLEncoder.encode(entry.getValue(), CHARSET));
+		}
+		str = str.substring(0, str.length()-1);
+		return str;
 	}
 	
 	public void cleanDb() throws Exception {
@@ -162,58 +168,138 @@ public abstract class JUnitTestUtil {
     	}
 	}
 	
-	public String addUserRole() throws Exception {
-		String roleName = "ADMIN";
-		UserRole userRole = new UserRole(roleName);
-		return userRoleDao.save(userRole).getId().toString();
+	public UserRole addUserRole() throws Exception {
+		String name = "ADMIN";
+		UserRole userRole = new UserRole(name);
+		return userRoleDao.save(userRole);
 	}
 	
-	public void deleteUserRole(String userRoleId) throws Exception {
-		userRoleDao.delete(Long.valueOf(userRoleId));
+	public void deleteUserRole(UserRole userRole) throws Exception {
+		userRoleDao.delete(userRole.getId());
 	}
 	
-	public String addUser() throws Exception {
-		UserRole userRole = userRoleDao.findOne(Long.valueOf(addUserRole()));
+	public User addUser() throws Exception {
+		UserRole userRole = addUserRole();
 		String email = "eemeli";
 		String name = "nimi";
 		String password = "salainensana";
 		
-		return userDao.save(new User(email, name, password, userRole)).getId().toString();
+		return userDao.save(new User(email, name, password, userRole));
 	}
 	
-	public void deleteUser(String userId) throws Exception {
-		Long userRoleId = userDao.findOne(Long.valueOf(userId)).getRole().getId();
-		userDao.delete(Long.valueOf(userId));
+	public void deleteUser(User user) throws Exception {
+		Long userRoleId = userDao.findOne(user.getId()).getRole().getId();
+		userDao.delete(Long.valueOf(user.getId().toString()));
 		userRoleDao.delete(userRoleId);
 	}
 	
-	public String addStatus() throws Exception {
+	public Status addStatus() throws Exception {
 		String description = "statuksen kuvaus";
-		return statusDao.save(new Status(STATUS_UNDER_WORK, description)).getId().toString();
+		return statusDao.save(new Status(STATUS_UNDER_WORK, description));
 	}
 	
-	public void deleteStatus(String statusId) throws Exception {
-		statusDao.delete(Long.valueOf(statusId));
+	public void deleteStatus(Status status) throws Exception {
+		statusDao.delete(status.getId());
 	}
 	
-	public String addBet() throws Exception {
-		Status status = statusDao.findOne(Long.valueOf(addStatus()));
-		User user = userDao.findOne(Long.valueOf(addUser()));
-		return betDao.save(new Bet(user, status)).getId().toString();
+	public Bet addBet() throws Exception {
+		Status status = addStatus();
+		User user = addUser();
+		return betDao.save(new Bet(user, status));
 	}
 	
-	public void deleteBet(String betId) throws Exception {
-		betDao.delete(Long.valueOf(betId));
+	public void deleteBet(Bet bet) throws Exception {
+		betDao.delete(bet.getId());
 	}
 	
-	public String addTournament() throws Exception {
+	public Tournament addTournament() throws Exception {
 		String name = "Brazil World Cup";
 		int year = 2014;
-		return tournamentDao.save(new Tournament(name, year)).getId().toString();
+		return tournamentDao.save(new Tournament(name, year));
 	}
 	
-	public void deleteTournament(String tournamentId) throws Exception {
-		tournamentDao.delete(Long.valueOf(tournamentId));
+	public void deleteTournament(Tournament tournament) throws Exception {
+		tournamentDao.delete(tournament.getId());
+	}
+	
+	public Team addTeam() throws Exception {
+		String name = "KÄPA";
+		return teamDao.save(new Team(name));
+	}
+	
+	public void deleteTeam(Team team) throws Exception {
+		teamDao.delete(team.getId());
+	}
+	
+	public TournamentTeam addTournamentTeam() throws Exception {
+		Tournament tournament = addTournament();
+		Team team = addTeam();
+		return tournamentTeamDao.save(new TournamentTeam(tournament, team));
+	}
+	
+	public void deleteTournamentTeam(TournamentTeam tournamentTeam) throws Exception {
+		tournamentTeamDao.delete(tournamentTeam.getId());
+	}
+
+	public Player addPlayer() throws Exception {
+		String firstName = "Eric";
+		String lastName = "Cantona";
+		return playerDao.save(new Player(firstName, lastName));
+	}
+	
+	public void deletePlayer(Player player) throws Exception {
+		playerDao.delete(player.getId());
+	}
+	
+	public TournamentPlayer addTournamentPlayer() throws Exception {
+		TournamentTeam tournamentTeam = addTournamentTeam();
+		Player player = addPlayer();
+		int goals = 7;
+		return tournamentPlayerDao.save(new TournamentPlayer(tournamentTeam, player, goals));
+	}
+	
+	public void deleteTournamentPlayer(TournamentPlayer tournamentPlayer) throws Exception {
+		tournamentPlayerDao.delete(tournamentPlayer.getId());
+	}
+	
+	public Game addGame() throws Exception {
+		int homeScore = 7;
+		int awayScore = 3;
+		Date gameDate = new Date();
+		TournamentTeam homeTeam = addTournamentTeam();
+		TournamentTeam awayTeam = addTournamentTeam();
+		Team team = addTeam();
+		team.setName("Cameroon");
+		awayTeam.setTeam(team);
+		
+		return gameDao.save(new Game(homeTeam, awayTeam, homeScore, awayScore, gameDate));
+	}
+	
+	public void deleteGame(Game game) throws Exception {
+		gameDao.delete(game.getId());
+	}
+	
+	public Scorer addScorer() throws Exception {
+		TournamentPlayer tournamentPlayer = addTournamentPlayer();
+		Game game = addGame();
+		return scorerDao.save(new Scorer(tournamentPlayer, game));
+	}
+	
+	public void deleteScorer(Scorer scorer) throws Exception {
+		scorerDao.delete(scorer.getId());
+	}
+	
+	public BetResult addBetResult() throws Exception {
+		Bet bet = addBet();
+		Game game = addGame();
+		int homeScore = 7;
+		int awayScore = 3;
+		
+		return betResultDao.save(new BetResult(bet, game, homeScore, awayScore));
+	}
+	
+	public void deleteBetResult(BetResult betResult) throws Exception {
+		betResultDao.delete(betResult.getId());
 	}
 	
 }

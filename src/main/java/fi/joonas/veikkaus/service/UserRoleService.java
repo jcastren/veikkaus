@@ -12,13 +12,13 @@ public class UserRoleService {
 	@Autowired
 	UserRoleDao userRoleDao;
 	
-	public Long insert(String roleName) {
-		return userRoleDao.save(new UserRole(roleName)).getId();
+	public Long insert(String name) {
+		return userRoleDao.save(new UserRole(name)).getId();
 	}
 	
-	public Long modify(String id, String roleName) {
+	public Long modify(String id, String name) {
 		UserRole userRole = userRoleDao.findOne(Long.valueOf(id)); 
-		userRole.setRoleName(roleName);
+		userRole.setName(name);
 		return userRoleDao.save(userRole).getId();
 	}
 	

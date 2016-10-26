@@ -1,6 +1,5 @@
 package fi.joonas.veikkaus.service;
 
-
 import java.sql.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -17,6 +17,7 @@ public abstract class VeikkausConstants {
     public static final String USER_ROLE_URL = SERVER_URL + USER_ROLE;
     public static final String USER_ROLE_CREATE_URL = USER_ROLE_URL + URL_CREATE;
     public static final String USER_ROLE_DELETE_URL = USER_ROLE_URL + URL_DELETE;
+    public static final String USER_ROLE_MODIFY_URL = USER_ROLE_URL + URL_MODIFY;
     
     /** User URLs */
     public static final String USER = "/user";
@@ -113,7 +114,6 @@ public abstract class VeikkausConstants {
     public static final String PARAM_NAME_NAME = "name";
     public static final String PARAM_NAME_PASSWORD = "password";
     public static final String PARAM_NAME_PLAYER_ID = "playerId";
-    public static final String PARAM_NAME_ROLENAME = "roleName";
     public static final String PARAM_NAME_STATUS_NUMBER = "statusNumber";
     public static final String PARAM_NAME_STATUS_ID = "statusId";
     public static final String PARAM_NAME_TOURNAMENT_ID = "tournamentId";

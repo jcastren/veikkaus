@@ -1,6 +1,11 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.BET_CREATE_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.BET_DELETE_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.BET_MODIFY_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_STATUS_ID;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_USER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -14,8 +19,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.google.common.collect.ImmutableMap;
+
 import fi.joonas.veikkaus.dao.BetDao;
 import fi.joonas.veikkaus.jpaentity.Bet;
+import fi.joonas.veikkaus.jpaentity.Status;
+import fi.joonas.veikkaus.jpaentity.User;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
 
 @RunWith(SpringRunner.class)
@@ -23,58 +32,68 @@ import fi.joonas.veikkaus.util.JUnitTestUtil;
 @WebAppConfiguration
 public class BetControllerTest extends JUnitTestUtil {
 
-	//private static final Logger logger = LoggerFactory.getLogger(BetControllerTest.class);
-
 	@Autowired
 	private BetDao betDao;
 
-	private String userId;
+	private User user;
 	
-	private String statusId;
+	private Status status;
 	
 	@Before
 	public void setup() throws Exception {
 		cleanDb();
-		userId = addUser();
-		statusId = addStatus();
+		user = addUser();
+		status = addStatus();
 	}
 	
 	@After
 	public void destroy() throws Exception {
-		deleteUser(userId);
+		deleteUser(user);
+		deleteStatus(status);
 	}
 	
 	@Test
 	public void testCreateAndDelete() throws Exception {
-		String query = String.format(getFormattedStr(2),
-				PARAM_NAME_USER_ID, getEncodedStr(userId),
-				PARAM_NAME_STATUS_ID, getEncodedStr(statusId));
-		String url = BET_CREATE_URL + "?" + query;
-		String betId = callUrl(url, true);
-		assertNotNull(betDao.findOne(Long.valueOf(betId)));
+		paramMap = ImmutableMap.<String, String>builder()
+				.put(PARAM_NAME_USER_ID, user.getId().toString())
+				.put(PARAM_NAME_STATUS_ID, status.getId().toString())
+				.build();
+		String betId = callUrl(BET_CREATE_URL + getQuery(paramMap), true);
+		Bet dbBet = betDao.findOne(Long.valueOf(betId));
+		assertNotNull(dbBet);
+		assertThat(dbBet.getId().equals(Long.valueOf(betId)));
+		assertThat(dbBet.getUser().getId().equals(user.getId()));
+		assertThat(dbBet.getStatus().getId().equals(status.getId()));
 		
-		query = String.format(getFormattedStr(1), PARAM_NAME_ID, getEncodedStr(betId));
-		url = BET_DELETE_URL + "?" + query;
-		callUrl(url, false);
+		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, betId).build();
+		callUrl(BET_DELETE_URL + getQuery(paramMap), false);
 		assertNull(betDao.findOne(Long.valueOf(betId)));
 	}
 	
 	@Test
 	public void testModify() throws Exception {
-		String betId = addBet();
+		Bet bet = addBet();
+		String betId = bet.getId().toString();
 		
-		String query = String.format(getFormattedStr(2), 
-				PARAM_NAME_ID, getEncodedStr(betId),
-				PARAM_NAME_STATUS_ID, getEncodedStr(statusId));
-		String url = BET_MODIFY_URL + "?" + query;
-		String newBetId = callUrl(url, true);
+		// We have to be careful with userId and statusId used as @Before annotation creates
+		// a user and status in addition to addBet method and we don't want to delete
+		// that user and status before @After annotation
+		String userId = bet.getUser().getId().toString();
+		String statusId = bet.getStatus().getId().toString();
 		
-		assertThat(betId.equals(newBetId));
-		Bet newBet = betDao.findOne(Long.valueOf(newBetId));
-		assertNotNull(newBet);
-		assertThat(newBet.getStatus().getId().equals(statusId));
-		
-		deleteBet(betId);
+		paramMap = ImmutableMap.<String, String>builder()
+				.put(PARAM_NAME_ID, betId)
+				.put(PARAM_NAME_USER_ID, userId)
+				.put(PARAM_NAME_STATUS_ID, statusId)
+				.build();
+		String dbBetId = callUrl(BET_MODIFY_URL + getQuery(paramMap), true);
+		Bet dbBet = betDao.findOne(Long.valueOf(dbBetId));
+		assertNotNull(dbBet);
+		assertThat(betId.equals(dbBetId));
+		assertThat(dbBet.getUser().getId().equals(userId));
+		assertThat(dbBet.getStatus().getId().equals(statusId));
+
+		deleteBet(bet);
 	}
 
 }

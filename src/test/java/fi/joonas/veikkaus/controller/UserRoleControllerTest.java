@@ -1,9 +1,11 @@
 package fi.joonas.veikkaus.controller;
 
 import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ROLENAME;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_NAME;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_ROLE_CREATE_URL;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_ROLE_DELETE_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_ROLE_MODIFY_URL;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -15,11 +17,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.google.common.collect.ImmutableMap;
+
 import fi.joonas.veikkaus.dao.UserRoleDao;
+import fi.joonas.veikkaus.jpaentity.UserRole;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest // (webEnvironment=DEFINED_PORT)
+@SpringBootTest
 @WebAppConfiguration
 public class UserRoleControllerTest extends JUnitTestUtil {
 
@@ -35,16 +40,32 @@ public class UserRoleControllerTest extends JUnitTestUtil {
 	
 	@Test
 	public void testCreateAndDelete() throws Exception {
-		String paramValueRoleName = "ADMIN";
-		String query = String.format(getFormattedStr(1), PARAM_NAME_ROLENAME, getEncodedStr(paramValueRoleName));
-		String url = USER_ROLE_CREATE_URL + "?" + query;
-		String userRoleId = callUrl(url, true);
+		String paramValueName = "ADMIN";
+				
+		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_NAME, paramValueName).build();
+		String userRoleId = callUrl(USER_ROLE_CREATE_URL + getQuery(paramMap), true);
 		assertNotNull(userRoleDao.findOne(Long.valueOf(userRoleId)));
 		
-		query = String.format(getFormattedStr(1), PARAM_NAME_ID, getEncodedStr(userRoleId));
-		url = USER_ROLE_DELETE_URL + "?" + query;
-		callUrl(url, false);
+		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, userRoleId).build();
+		callUrl(USER_ROLE_DELETE_URL + getQuery(paramMap), false);
 		assertNull(userRoleDao.findOne(Long.valueOf(userRoleId)));
+	}
+	
+	@Test
+	public void testModify() throws Exception {
+		String paramValueName = "ADMIN";
+
+		String userRoleId = addUserRole().getId().toString();
+		
+		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, userRoleId)
+				.put(PARAM_NAME_NAME, paramValueName).build();
+		String dbUserRoleId = callUrl(USER_ROLE_MODIFY_URL + getQuery(paramMap), true);
+		UserRole dbUserRole = userRoleDao.findOne(Long.valueOf(dbUserRoleId));
+		assertNotNull(dbUserRole);
+		assertThat(userRoleId.equals(dbUserRoleId));
+		assertThat(dbUserRole.getName().equals(paramValueName));
+
+		deleteUserRole(dbUserRole);
 	}
 
 }
