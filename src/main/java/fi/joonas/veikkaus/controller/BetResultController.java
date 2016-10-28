@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import fi.joonas.veikkaus.service.BetResultService;
 
 @Controller
-@RequestMapping(BET_RESULT)
+@RequestMapping(BET_RESULT_URL)
 public class BetResultController {
 
 	@Autowired

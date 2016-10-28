@@ -13,7 +13,7 @@ import fi.joonas.veikkaus.service.UserService;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
-@RequestMapping(USER)
+@RequestMapping(USER_URL)
 public class UserController {
 
 	@Autowired

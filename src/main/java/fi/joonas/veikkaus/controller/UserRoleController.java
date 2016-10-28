@@ -11,7 +11,7 @@ import fi.joonas.veikkaus.service.UserRoleService;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
-@RequestMapping(USER_ROLE)
+@RequestMapping(USER_ROLE_URL)
 public class UserRoleController {
 
 	@Autowired

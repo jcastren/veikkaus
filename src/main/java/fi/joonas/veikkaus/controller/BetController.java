@@ -1,9 +1,6 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.BET;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_MODIFY;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import fi.joonas.veikkaus.service.BetService;
 
 @Controller
-@RequestMapping(BET)
+@RequestMapping(BET_URL)
 public class BetController {
 
 	@Autowired

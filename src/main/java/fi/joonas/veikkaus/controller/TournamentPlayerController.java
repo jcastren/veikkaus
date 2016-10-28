@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import fi.joonas.veikkaus.service.TournamentPlayerService;
 
 @Controller
-@RequestMapping(TOURNAMENT_PLAYER)
+@RequestMapping(TOURNAMENT_PLAYER_URL)
 public class TournamentPlayerController {
 
 	@Autowired

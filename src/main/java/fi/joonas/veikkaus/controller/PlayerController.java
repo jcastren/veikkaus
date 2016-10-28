@@ -12,7 +12,7 @@ import fi.joonas.veikkaus.service.PlayerService;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
-@RequestMapping(PLAYER)
+@RequestMapping(PLAYER_URL)
 public class PlayerController {
 
 	@Autowired

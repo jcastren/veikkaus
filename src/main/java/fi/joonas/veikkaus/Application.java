@@ -5,9 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Configuration;
+
+import fi.joonas.veikkaus.config.VeikkausServerProperties;
 
 @SpringBootApplication
+@Configuration
+@EnableConfigurationProperties(VeikkausServerProperties.class)
 public class Application extends SpringBootServletInitializer {
 
 	private static final Logger logger = LoggerFactory.getLogger(Application.class);

@@ -12,7 +12,7 @@ import fi.joonas.veikkaus.service.StatusService;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
-@RequestMapping(STATUS)
+@RequestMapping(STATUS_URL)
 public class StatusController {
 
 	@Autowired

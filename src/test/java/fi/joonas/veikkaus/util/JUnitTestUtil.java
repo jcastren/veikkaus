@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import fi.joonas.veikkaus.config.VeikkausServerProperties;
 import fi.joonas.veikkaus.dao.BetDao;
 import fi.joonas.veikkaus.dao.BetResultDao;
 import fi.joonas.veikkaus.dao.GameDao;
@@ -43,6 +44,10 @@ import fi.joonas.veikkaus.jpaentity.UserRole;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 public abstract class JUnitTestUtil {
+	
+	@Autowired
+	private
+	VeikkausServerProperties veikkausServerProperties;
 	
 	private static final Logger logger = LoggerFactory.getLogger(JUnitTestUtil.class);
 	
@@ -87,6 +92,11 @@ public abstract class JUnitTestUtil {
 	@Autowired
 	private BetResultDao betResultDao;
 	
+	private String getServerUrl() {
+		return veikkausServerProperties.getProtocol() + "://" + veikkausServerProperties.getHostPort() +
+				"/" + veikkausServerProperties.getApplicationName();
+	}
+	
 	/**
 	 * 
 	 * @param url URL called
@@ -94,12 +104,13 @@ public abstract class JUnitTestUtil {
 	 * @return Id if getId == true. Empty value if getId == false.
 	 * @throws Exception
 	 */
-	public static String callUrl(String url, boolean getId) throws Exception {
+	public String callUrl(String url, boolean getId) throws Exception {
 		String id = "";
 
 		InputStream response;
 		try {
-			response = new URL(url).openStream();
+			String serverUrl = getServerUrl();
+			response = new URL(serverUrl + url).openStream();
 		} catch (IOException e) {
 			logger.error("Getting response from URL: " + url + " failed: ", e);
 			throw e;
