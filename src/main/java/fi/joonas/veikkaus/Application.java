@@ -20,7 +20,7 @@ public class Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		logger.info("Start application");
-		SpringApplication.run(Application.class);
+		SpringApplication.run(Application.class, args);
 	}
 	
 	@Override
