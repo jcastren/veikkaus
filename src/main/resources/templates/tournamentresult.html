@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>VEIKKAUS ### Tournament result ###</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>Result</h1>
+    <p th:text="'name: ' + ${tournamentGUI.name}" />
+    <p th:text="'year: ' + ${tournamentGUI.year}" />
+    <a href="/veikkaus/tournament/createPost">Submit another message</a>
+</body>
+</html>

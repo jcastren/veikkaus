@@ -1,0 +1,14 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>VEIKKAUS ### List of all tournaments ###</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <!-- <p th:text="'Tournament with id 1: ' + ${tournament} + '!'" />-->
+    
+    <p th:each="tournament : ${tournaments}"
+       th:text="${tournament.name}">A Smoke Test</p>
+   	 
+</body>
+</html>
