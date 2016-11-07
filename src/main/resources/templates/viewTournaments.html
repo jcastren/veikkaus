@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>VEIKKAUS ### List of all tournaments ###</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<p><a th:href="@{/index.html}">Back to Index</a></p>
+    <p><a th:href="@{/tournament/getCreate}">Create a new tournament</a></p>
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Year</th>
+		</tr>
+		<tr th:each="tournament : ${tournaments}">
+			<td th:text="${tournament.name}"/>
+			<td th:text="${tournament.year}"/>
+			<td><a th:href="@{/tournament/getTournamentDetails(id=${tournament.id})}">Show tournament details</a></td>
+		</tr>
+	</table>
+</body>
+</html>

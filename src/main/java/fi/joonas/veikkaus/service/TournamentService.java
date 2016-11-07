@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.ImmutableList;
 
-import fi.joonas.veikkaus.TournamentGuiEntity;
 import fi.joonas.veikkaus.dao.TournamentDao;
+import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Tournament;
 
 @Service
@@ -76,7 +76,11 @@ public class TournamentService {
 	private Tournament convertGuiToDb(TournamentGuiEntity ge) {
 		Tournament db = new Tournament();
 		
-		db.setId(Long.valueOf(ge.getId()));
+		if (ge.getId() != null && !ge.getId().isEmpty()) {
+			db.setId(Long.valueOf(ge.getId()));
+		} else {
+			db.setId(null);
+		}
 		db.setName(ge.getName());
 		db.setYear(Integer.valueOf(ge.getYear()));
 		

@@ -1,4 +1,4 @@
-package fi.joonas.veikkaus;
+package fi.joonas.veikkaus.guientity;
 
 public class TournamentGuiEntity {
 	
