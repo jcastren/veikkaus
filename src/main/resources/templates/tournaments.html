@@ -1,14 +1,19 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head> 
-    <title>VEIKKAUS ### List of all tournaments ###</title> 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<head>
+<title>VEIKKAUS ### List of all tournaments ###</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <!-- <p th:text="'Tournament with id 1: ' + ${tournament} + '!'" />-->
-    
-    <p th:each="tournament : ${tournaments}"
-       th:text="${tournament.name}">A Smoke Test</p>
-   	 
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Year</th>
+		</tr>
+		<tr th:each="tournament : ${tournaments}">
+			<td th:text="${tournament.name}"/>
+			<td th:text="${tournament.year}"/>
+		</tr>
+	</table>
 </body>
 </html>

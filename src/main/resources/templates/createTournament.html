@@ -1,84 +1,15 @@
 <!DOCTYPE HTML>
-<!-- <html xmlns:th="http://www.thymeleaf.org"> -->
-<html>
-<head>
-    <title>VEIKKAUS ### Create new tournament ###</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>### Create new tournament ###</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-Create new tournament!<br><br>
-<!--  <a href="users/add">Add new tournament</a>-->
-<table>
-    <tr>
-        <th>Tournament name</th>
-        <th>Tournament year</th>
-    </tr>
-    <!-- <tr th:each="tournament : ${tournaments}">-->
-   	<tr>
-        <td>
-        
-        <form action="/veikkaus/tournament/createPost" method="post">  
-        <table>
-        <tr>
-                <td>Name:</td>
-                <td><input type="text" name="Name"/></td>
-            </tr>   
-            <tr>
-                <td>Year:</td>
-                <td><input type="text" name="Year"/></td>
-            </tr>   
-            <tr>
-                <td colspan="2" align="center">
-                <input type="submit"/>
-                </td>
-            </tr>
-           </table>
-           </form>
-        
-        <!-- 
-        <form action="/veikkaus/tournament/create?name=USA&year=1994}" method="get">
-            	<button type="submit">Create</button>
-        	</form>
-         -->	
-        	
-        	
-        <!-- 
-   			<form action="#" th:action="@{/veikkaus/tournament/create?name=USA&year=1994}" method="get">
-            	<button type="submit">Create</button>
-        	</form>
-         -->
-<!-- 		        <input type="text" th:field="*{name}" />
-		        <input type="text" th:field="*{year}" />
-	        <!-- 
-   
-        
-        
-            <!-- <form th:action="@{/veikkaus/tournament/doCreate}" th:object="${tournament}" method="post"> -->
-            
-            
-            <!-- <form action="#" th:action="@{/tournament/create?name=Italy&year=1990}" method="get"> -->
-            
-           <!-- http://localhost:8080/veikkaus/tournament/create?name=Italy&year=1990 -->
-           
-           <!-- 
-           <form action="#" th:action="@{/tournament/doCreate}" th:object="${seedStarter}" method="post">
-    ...
-</form> -->
-            
-            <!-- <input type="hidden" th:field="${id}" /> -->
-            
-	        
-     <!-- 
-        <form action="#" th:action="@{/tournament/doCreate}" th:object="${tournament}" method="post">
-        <input type="text" th:field="*{name}" />
-	    <input type="text" th:field="*{year}" />
-        <button type="submit">Create</button>
-        </form>
-         -->
-         
-        </td>
-    </tr>
-</table>
+    <h1>Form</h1>
+    <form action="#" th:action="@{create}" th:object="${tournament}" method="post">
+    	<p>Name: <input type="text" th:field="*{name}" /></p>
+    	<p>Year: <input type="text" th:field="*{year}" /></p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
 </body>
 </html>
-
