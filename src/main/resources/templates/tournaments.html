@@ -13,6 +13,15 @@
 		<tr th:each="tournament : ${tournaments}">
 			<td th:text="${tournament.name}"/>
 			<td th:text="${tournament.year}"/>
+			<!-- <td><a th:href="@{/tournament/tournamentdetails(id=${tournament.id},name=${tournament.name},year=${tournament.year})}">Show details</a></td>-->
+			<td><a th:href="@{/tournament/tournamentdetails(id=${tournament.id})}">Show details</a></td>
+			<!-- @{/order/{id}/details(id=3,action='show_all')} -->
+			
+			<!--  <td>
+			<form action="#" th:action="@{tournamentdetails}" th:object="${tournament}" method="post">
+	        	<p><input type="submit" value="Submit" /></p>
+    		</form>
+			</td> -->
 		</tr>
 	</table>
 </body>

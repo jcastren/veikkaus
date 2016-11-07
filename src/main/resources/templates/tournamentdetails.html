@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>VEIKKAUS ### Tournament details ###</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>Details</h1>
+	
+	<!-- <p th:text="'id: ' + ${id}" />
+	<p th:text="'name: ' + ${name}" />
+	<p th:text="'year: ' + ${year}" /> -->
+	
+	<p th:text="'id: ' + ${tournament.id}" />
+	<p th:text="'name: ' + ${tournament.name}" />
+	<p th:text="'year: ' + ${tournament.year}" />
+
+	<form action="#" th:action="@{delete}" th:object="${tournament}" method="post">
+		<!-- <input type="hidden" th:field="${id}" /> -->
+		<!-- <input type="text" th:field="${id}" /> -->
+		
+		<input type="text" th:field="*{id}" />
+		<input type="text" th:field="*{name}" />
+		<input type="text" th:field="*{year}" />
+		
+		<button type="submit">Delete</button>
+	</form>
+
+</body>
+</html>

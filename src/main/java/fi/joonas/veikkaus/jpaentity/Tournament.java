@@ -23,6 +23,10 @@ public class Tournament {
 		this.name = name;
 		this.year = year;
 	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Long getId() {
 		return id;
