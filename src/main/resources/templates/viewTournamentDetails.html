@@ -1,17 +1,28 @@
-<!DOCTYPE HTML>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>VEIKKAUS ### Tournament details ###</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### Tournament details ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet"/>
+    <link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet"/>
 </head>
 <body>
 	<h1>Details</h1>
-	
-	<p><a th:href="@{/tournament/getAll}">Back to tournament list</a></p>
+
+	<p>
+		<a id="tooltipList" th:href="@{/tournament/getAll}"
+			title="Go back to tournament list">Back to tournament list</a>
+	</p>
 	<br/>
 
 	<p th:text="'name: ' + ${tournament.name}" />
 	<p th:text="'year: ' + ${tournament.year}" />
+	
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+	<script>
+		$("#tooltipList").tooltip();
+	</script>
 
 </body>
 </html>
