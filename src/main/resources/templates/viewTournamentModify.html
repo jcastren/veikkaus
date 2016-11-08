@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>VEIKKAUS ### Tournament modify ###</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>Modify tournament</h1>
+	
+	<p th:text="'id: ' + ${tournament.id}" />
+	<p th:text="'name: ' + ${tournament.name}" />
+	<p th:text="'year: ' + ${tournament.year}" />
+	
+	<form action="#" th:action="@{/tournament/postModify}" th:object="${tournament}" method="post">
+		<input type="hidden" th:field="*{id}" />
+		<input type="text" th:field="*{name}" />
+		<input type="text" th:field="*{year}" />
+		<button type="submit">Save to DB</button>
+	</form>
+
+</body>
+</html>

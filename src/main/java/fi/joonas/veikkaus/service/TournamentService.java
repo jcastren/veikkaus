@@ -33,6 +33,10 @@ public class TournamentService {
 		return tournamentDao.save(tournament).getId();
 	}
 	
+	public Long modify(TournamentGuiEntity tournament) {
+		return tournamentDao.save(convertGuiToDb(tournament)).getId();
+	}
+	
 	public boolean delete(String id) {
 		boolean succeed = false;
 		tournamentDao.delete(Long.valueOf(id));

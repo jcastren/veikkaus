@@ -133,24 +133,6 @@ public abstract class JUnitTestUtil {
 		}
 		return id;
 	}
-
-	@Deprecated
-	public static String getFormattedStr(int val) {
-		String str = "";
-		for (int i = 1; i <= val; i++) {
-			if (i > 1) {
-				str = str + "&";
-			}
-			str = str + "%s=%s";
-		}
-		return str;
-	}
-
-	@Deprecated
-	public static String getEncodedStr(String str) throws UnsupportedEncodingException {
-		String ret = URLEncoder.encode(str, CHARSET);
-		return ret;
-	}
 	
 	public String getQuery(Map<String, String> paramMap) throws UnsupportedEncodingException {
 		String str = "?";

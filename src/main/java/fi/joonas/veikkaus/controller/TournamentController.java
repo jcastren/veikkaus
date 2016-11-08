@@ -1,7 +1,6 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_MODIFY;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
@@ -25,21 +23,34 @@ public class TournamentController extends WebMvcConfigurerAdapter {
 
 	@Autowired
 	private TournamentService tournamentService;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(TournamentController.class);
 	
-	@GetMapping("/getCreate")
-    public String getCreate(Model model) {
-        model.addAttribute("tournament", new TournamentGuiEntity());
-        return "viewCreateTournament";
-    }
+	@GetMapping(URL_GET_ALL)
+	public String getAll(Model model) {
+		model.addAttribute("tournaments", tournamentService.findAllTournaments());
+		return "viewTournaments";
+	}
+
+	@RequestMapping(URL_GET_DETAILS)
+	public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
+		TournamentGuiEntity tournament = tournamentService.findOneTournament(id);
+		model.addAttribute("tournament", tournament);
+		return "viewTournamentDetails";
+	}
+
+	@GetMapping(URL_GET_CREATE)
+	public String getCreate(Model model) {
+		model.addAttribute("tournament", new TournamentGuiEntity());
+		return "viewTournamentCreate";
+	}
 
 	/**
-	 * POST /create --> Create a new tournament and save it in the database.
+	 * POST /postCreate --> Create a new tournament and save it in the database.
 	 */
-    @PostMapping("/postCreate")
-    public String postCreate(@ModelAttribute TournamentGuiEntity tournament) {
-    	Long tournamentId = null;
+	@PostMapping(URL_POST_CREATE)
+	public String postCreate(@ModelAttribute TournamentGuiEntity tournament) {
+		Long tournamentId = null;
 		try {
 			tournamentId = tournamentService.insert(tournament);
 		} catch (Exception ex) {
@@ -47,50 +58,48 @@ public class TournamentController extends WebMvcConfigurerAdapter {
 			return "Error creating the tournament: " + ex.toString();
 		}
 		logger.debug("Tournament succesfully created with id = " + tournamentId);
-        return "redirect:/tournament/getTournaments";
-    }
-	
-	@GetMapping("/getTournaments")
-	public String getTournaments(
-			Model model) {
-		model.addAttribute("tournaments", tournamentService.findAllTournaments());
-		return "viewTournaments";
+		return "redirect:"+ TOURNAMENT_GET_ALL_URL;
 	}
 	
-	@PostMapping("/postDelete")
-    public String postDelete(@ModelAttribute TournamentGuiEntity tournament) {
+	/**
+	 * @param tournament
+	 * @param model
+	 * @return Tournament modify view
+	 */
+	@GetMapping(URL_GET_MODIFY)
+	public String getModify(@ModelAttribute TournamentGuiEntity tournament, Model model) {
+		model.addAttribute("tournament", tournament);
+		return "viewTournamentModify";
+	}
+
+	/**
+	 * Saves modified tournament data to DB
+	 * 
+	 * @param tournament
+	 * @return
+	 */
+	@PostMapping(URL_POST_MODIFY)
+	public String postModify(@ModelAttribute TournamentGuiEntity tournament) {
+		Long tournamentId = null;
+		try {
+			tournamentId = tournamentService.modify(tournament);
+		} catch (Exception ex) {
+			logger.error("Error updating the tournament: ", ex);
+			return "Error updating the tournament: " + ex.toString();
+		}
+		logger.debug("Tournament succesfully updated for id = " + tournamentId);
+		return "redirect:" + TOURNAMENT_GET_ALL_URL;
+	}
+
+	@PostMapping(URL_POST_DELETE)
+	public String postDelete(@ModelAttribute TournamentGuiEntity tournament) {
 		try {
 			tournamentService.delete(tournament.getId());
 		} catch (Exception ex) {
 			logger.error("Error deleting the tournament: ", ex);
 			return "Error deleting the tournament:" + ex.toString();
 		}
-        return "redirect:/tournament/getTournaments";
+		return "redirect:" + TOURNAMENT_GET_ALL_URL;
 	}
-	
-	/** TODO Finalize modify method
-	/**
-	 * GET /modify --> Update the name and year for the
-	 * tournament in the database having the passed id.
-	 */
-	@RequestMapping(URL_MODIFY)
-	@ResponseBody
-	public String updateTournament(String id, String name, String year) {
-		try {
-			tournamentService.modify(id, name, year);
-		} catch (Exception ex) {
-			logger.error("Error updating the tournament: ", ex);
-			return "Error updating the tournament: " + ex.toString();
-		}
-		return "Tournament succesfully updated for id = " + id;
-	}
-	
-	@RequestMapping("/getTournamentDetails")
-    public String getTournamentDetails(@RequestParam(value="id", required=true) String id,
-    		Model model) {
-		TournamentGuiEntity tournament = tournamentService.findOneTournament(id);
-		model.addAttribute("tournament", tournament);
-        return "viewTournamentDetails";
-    }
-	
+
 }

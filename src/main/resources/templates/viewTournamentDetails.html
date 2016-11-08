@@ -15,6 +15,13 @@
 		<input type="hidden" th:field="*{id}" />		
 		<button type="submit">Delete</button>
 	</form>
+	
+	<form action="#" th:action="@{/tournament/getModify}" th:object="${tournament}" method="get">
+		<input type="hidden" th:field="*{id}" />
+		<input type="hidden" th:field="*{name}" />
+		<input type="hidden" th:field="*{year}" />
+		<button type="submit">Modify</button>
+	</form>
 
 </body>
 </html>
