@@ -1,14 +1,21 @@
 <!doctype html>
 <html lang="fi" xmlns:th="http://www.thymeleaf.org">
-<head> 
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>VEIKKAUS ### Tournament list ###</title>
-    <link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet"/>
-    <link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet"/>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VEIKKAUS ### Tournament list ###</title>
+<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}"
+	rel="stylesheet" />
+<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
 </head>
 <body>
-	<p><a id="tooltipIndex" th:href="@{/index.html}" title="Go back to main page">Back to main page</a></p>
-    <p><a id="tooltipCreate" th:href="@{/tournament/getCreate}" title="Create new tournament">Create a new tournament</a></p>
+	<p>
+		<a id="tooltipIndex" th:href="@{/index.html}"
+			title="Go back to main page">Back to main page</a>
+	</p>
+	<p>
+		<a id="tooltipCreate" th:href="@{/tournament/getCreate}"
+			title="Create new tournament">Create a new tournament</a>
+	</p>
 	<table>
 		<tr>
 			<th>Name</th>
@@ -17,7 +24,7 @@
 		<tr th:each="tournament : ${tournaments}">
 			<td th:text="${tournament.name}" />
 			<td th:text="${tournament.year}" />
-			<td><a  id="tooltipDetails"
+			<td><a id="tooltipDetails"
 				th:href="@{/tournament/getDetails(id=${tournament.id})}"
 				title="Show details of tournament">Show details</a></td>
 			<td><a id="tooltipModify"
@@ -28,7 +35,7 @@
 				title="Delete tournament">Delete</a></td>
 		</tr>
 	</table>
-	
+
 	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
 	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
 	<script>
@@ -38,6 +45,6 @@
 		$("#tooltipModify").tooltip();
 		$("#tooltipDelete").tooltip();
 	</script>
-	
+
 </body>
 </html>

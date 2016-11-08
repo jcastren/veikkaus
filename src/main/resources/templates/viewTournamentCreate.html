@@ -1,31 +1,46 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head> 
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>VEIKKAUS ### Tournament create ###</title>
-	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet"/>
-    <link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet"/>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VEIKKAUS ### Tournament create ###</title>
+<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}"
+	rel="stylesheet" />
+<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
 </head>
 <body>
-    <h1>Create new tournament</h1>
-    
-   	<p><a id="tooltipList" th:href="@{/tournament/getAll}" title="Go back to tournament list">Back to tournament list</a></p>
-	<br/>
-    
-    <form action="#" th:action="@{/tournament/postCreate}" th:object="${tournament}" method="post">
-    	<p>Name: <input type="text" th:field="*{name}" /></p>
-    	<p>Year: <input type="text" th:field="*{year}" /></p>
-        <p>
-        	<button id="buttonCreate" type="submit" class="ui-button ui-corner-all ui-widget">Create tournament</button>
-        	<button id="buttonReset" type="reset" class="ui-button ui-corner-all ui-widget">Reset fields</button>
-        </p>
-    </form>
-    
-    <script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<h1>Create new tournament</h1>
+
+	<p>
+		<a id="tooltipList" th:href="@{/tournament/getAll}"
+			title="Go back to tournament list">Back to tournament list</a>
+	</p>
+	<br />
+
+	<form action="#" th:action="@{/tournament/postCreate}"
+		th:object="${tournament}" method="post">
+		<p>
+			Name: <input type="text" th:field="*{name}" />
+		</p>
+		<p>
+			Year: <input type="text" th:field="*{year}" />
+		</p>
+		<p>
+			<button id="buttonCreate" type="submit"
+				class="ui-button ui-corner-all ui-widget" title="Create tournament">Create
+				tournament</button>
+			<button id="buttonReset" type="reset"
+				class="ui-button ui-corner-all ui-widget" title="Reset fields">Reset
+				fields</button>
+		</p>
+	</form>
+
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
 	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
 	<script>
 		$("#tooltipList").tooltip();
+		$("#buttonCreate").tooltip();
 		$("#buttonCreate").button();
+		$("#buttonReset").tooltip();
 		$("#buttonReset").button();
 	</script>
 </body>
