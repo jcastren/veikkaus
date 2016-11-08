@@ -66,8 +66,9 @@ public class TournamentController extends WebMvcConfigurerAdapter {
 	 * @param model
 	 * @return Tournament modify view
 	 */
-	@GetMapping(URL_GET_MODIFY)
-	public String getModify(@ModelAttribute TournamentGuiEntity tournament, Model model) {
+	@RequestMapping(URL_GET_MODIFY)
+	public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
+		TournamentGuiEntity tournament = tournamentService.findOneTournament(id);
 		model.addAttribute("tournament", tournament);
 		return "viewTournamentModify";
 	}
@@ -89,6 +90,18 @@ public class TournamentController extends WebMvcConfigurerAdapter {
 		}
 		logger.debug("Tournament succesfully updated for id = " + tournamentId);
 		return "redirect:" + TOURNAMENT_GET_ALL_URL;
+	}
+	
+	/**
+	 * @param tournament
+	 * @param model
+	 * @return Tournament modify view
+	 */
+	@RequestMapping(URL_GET_DELETE)
+	public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
+		TournamentGuiEntity tournament = tournamentService.findOneTournament(id);
+		model.addAttribute("tournament", tournament);
+		return "viewTournamentDelete";
 	}
 
 	@PostMapping(URL_POST_DELETE)

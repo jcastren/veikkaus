@@ -5,7 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <h1>Form</h1>
+    <h1>Create new tournament</h1>
+    
+   	<p><a th:href="@{/tournament/getAll}">Back to tournament list</a></p>
+	<br/>
+    
     <form action="#" th:action="@{/tournament/postCreate}" th:object="${tournament}" method="post">
     	<p>Name: <input type="text" th:field="*{name}" /></p>
     	<p>Year: <input type="text" th:field="*{year}" /></p>

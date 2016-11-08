@@ -15,7 +15,10 @@
 		<tr th:each="tournament : ${tournaments}">
 			<td th:text="${tournament.name}"/>
 			<td th:text="${tournament.year}"/>
-			<td><a th:href="@{/tournament/getTournamentDetails(id=${tournament.id})}">Show tournament details</a></td>
+			<td><a th:href="@{/tournament/getDetails(id=${tournament.id})}">Show details</a></td>
+			<td><a th:href="@{/tournament/getModify(id=${tournament.id})}">Modify</a></td>
+			<td><a th:href="@{/tournament/getDelete(id=${tournament.id})}">Delete</a></td>
+				
 		</tr>
 	</table>
 </body>

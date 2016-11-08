@@ -7,6 +7,7 @@ public abstract class VeikkausConstants {
 	/** BASE URLs */
     public static final String URL_GET_ALL = "/getAll";
     public static final String URL_GET_CREATE = "/getCreate";
+    public static final String URL_GET_DELETE = "/getDelete";
     public static final String URL_GET_DETAILS = "/getDetails";
     public static final String URL_GET_MODIFY = "/getModify";
     public static final String URL_POST_CREATE = "/postCreate";

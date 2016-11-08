@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>VEIKKAUS ### Tournament delete confirm ###</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>Tournament delete confirm</h1>
+	
+	<p th:text="'name: ' + ${tournament.name}" />
+	<p th:text="'year: ' + ${tournament.year}" />
+	
+	<form action="#" th:action="@{/tournament/postDelete}" th:object="${tournament}" method="post">
+		<input type="hidden" th:field="*{id}" />		
+		<button type="submit">Delete</button>
+	</form>
+	
+	<form action="#" th:action="@{/tournament/getAll}" th:object="${tournament}" method="get">
+		<button type="submit">Cancel</button>
+	</form>
+
+</body>
+</html>
