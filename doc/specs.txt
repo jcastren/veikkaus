@@ -1,0 +1,40 @@
+=== ADMIN PAGES ===
+
+Tournament
+	- List
+	
+	- Details
+	
+	- Create new tournament
+	
+	- Modify tournament
+	
+	- Delete tournament
+
+Player
+	- List
+	
+	- Details
+	
+	- Create new player
+	
+	- Modify player
+	
+	- Delete player
+
+Tournament player
+	- List
+	
+	- Details
+	
+	- Create new tournament player
+		- Dropdown of tournaments
+		- Dropdown of players
+	
+	- Modify tournament player
+		- Dropdown of tournaments
+		- Dropdown of players
+	
+	- Delete tournament player
+
+=== USER PAGES ====
