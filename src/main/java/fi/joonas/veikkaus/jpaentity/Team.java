@@ -16,7 +16,7 @@ public class Team {
     
     private String name;
     
-    public Team() {}
+	public Team() {}
 
 	public Team(String name) {
 		this.name = name;
@@ -24,6 +24,10 @@ public class Team {
 
 	public Long getId() {
 		return id;
+	}
+
+    public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {

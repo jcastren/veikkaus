@@ -10,15 +10,20 @@
 	<h1>Veikkaus MainPage</h1>
 	<table>
 		<tr>
-			<td id="tooltip"><a href="tournament/getAll"
+			<td id="tooltipTournamentList"><a href="tournament/getAll"
 				title="Go to view all tournaments">List of tournaments</a></td>
+		</tr>
+		<tr>
+			<td id="tooltipTeamList"><a href="team/getAll"
+				title="Go to view all teams">List of teams</a></td>
 		</tr>
 	</table>
 
 	<script src="jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
 	<script src="jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 	<script>
-		$("#tooltip").tooltip();
+		$("#tooltipTournamentList").tooltip();
+		$("#tooltipTeamList").tooltip();
 	</script>
 
 </body>

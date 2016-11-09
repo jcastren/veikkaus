@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VEIKKAUS ### Tournament confirm delete ###</title>
+<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}"
+	rel="stylesheet" />
+<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+</head>
+<body>
+	<h1>Tournament delete confirm</h1>
+
+	<p th:text="'name: ' + ${team.name}" />
+
+	<form action="#" th:action="@{/team/postDelete}"
+		th:object="${team}" method="post">
+		<input type="hidden" th:field="*{id}" />
+		<button id="buttonConfirmDelete" type="submit"
+			class="ui-button ui-corner-all ui-widget"
+			title="Confirm deleting of team">Confirm deleting
+			team</button>
+	</form>
+
+	<form action="#" th:action="@{/team/getAll}"
+		th:object="${team}" method="get">
+		<button id="buttonCancelDelete" type="submit"
+			class="ui-button ui-corner-all ui-widget"
+			title="Cancel deleting of team">Cancel deleting
+			team</button>
+	</form>
+
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+	<script>
+		$("#buttonConfirmDelete").tooltip();
+		$("#buttonConfirmDelete").button();
+		$("#buttonCancelDelete").button();
+		$("#buttonCancelDelete").tooltip();
+	</script>
+
+</body>
+</html>

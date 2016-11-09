@@ -29,7 +29,7 @@ public class TournamentController extends WebMvcConfigurerAdapter {
 	@GetMapping(URL_GET_ALL)
 	public String getAll(Model model) {
 		model.addAttribute("tournaments", tournamentService.findAllTournaments());
-		return "viewTournaments";
+		return "viewTournamentList";
 	}
 
 	@RequestMapping(URL_GET_DETAILS)

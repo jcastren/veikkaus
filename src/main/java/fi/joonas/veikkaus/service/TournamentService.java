@@ -12,31 +12,40 @@ import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Tournament;
 
+/**
+ * Business logic level class for DB handling of Tournament
+ * @author joona
+ *
+ */
 @Service
 public class TournamentService {
 	
 	@Autowired
 	TournamentDao tournamentDao;
-	
-	/*public Long insert(String name, String year) {
-		return tournamentDao.save(new Tournament(name, Integer.parseInt(year))).getId();
-	}*/
-	
+
+	/**
+	 * 
+	 * @param tournament
+	 * @return
+	 */
 	public Long insert(TournamentGuiEntity tournament) {
 		return tournamentDao.save(convertGuiToDb(tournament)).getId();
 	}
 	
-	public Long modify(String id, String name, String year) {
-		Tournament tournament = tournamentDao.findOne(Long.valueOf(id)); 
-		tournament.setName(name);
-		tournament.setYear(Integer.parseInt(year));
-		return tournamentDao.save(tournament).getId();
-	}
-	
+	/**
+	 * 
+	 * @param tournament
+	 * @return
+	 */
 	public Long modify(TournamentGuiEntity tournament) {
 		return tournamentDao.save(convertGuiToDb(tournament)).getId();
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public boolean delete(String id) {
 		boolean succeed = false;
 		tournamentDao.delete(Long.valueOf(id));
@@ -44,13 +53,10 @@ public class TournamentService {
 		return succeed;
 	}
 	
-	/*public boolean delete(Long id) {
-		boolean succeed = false;
-		tournamentDao.delete(id);
-		succeed = true;
-		return succeed;
-	}*/
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public List<TournamentGuiEntity> findAllTournaments() {
 		List<TournamentGuiEntity> geList = new ArrayList<>();
 		List<Tournament> dbTourns =  ImmutableList.copyOf(tournamentDao.findAll());
@@ -62,6 +68,11 @@ public class TournamentService {
 		return geList;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public TournamentGuiEntity findOneTournament(String id) {
 		TournamentGuiEntity tournGe = convertDbToGui(tournamentDao.findOne(Long.valueOf(id)));
 		return tournGe;

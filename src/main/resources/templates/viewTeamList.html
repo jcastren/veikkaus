@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VEIKKAUS ### Tournament list ###</title>
+<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}"
+	rel="stylesheet" />
+<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+</head>
+<body>
+	<p>
+		<a id="tooltipIndex" th:href="@{/index.html}"
+			title="Go back to main page">Back to main page</a>
+	</p>
+	<p>
+		<a id="tooltipCreate" th:href="@{/team/getCreate}"
+			title="Create new team">Create a new team</a>
+	</p>
+	<table>
+		<tr>
+			<th>Name</th>
+		</tr>
+		<tr th:each="team : ${teams}">
+			<td th:text="${team.name}" />
+			<td><a id="tooltipDetails"
+				th:href="@{/team/getDetails(id=${team.id})}"
+				title="Show details of team">Show details</a></td>
+			<td><a id="tooltipModify"
+				th:href="@{/team/getModify(id=${team.id})}"
+				title="Modify details of team">Modify</a></td>
+			<td><a id="tooltipDelete"
+				th:href="@{/team/getDelete(id=${team.id})}"
+				title="Delete team">Delete</a></td>
+		</tr>
+	</table>
+
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+	<script>
+		$("#tooltipIndex").tooltip();
+		$("#tooltipCreate").tooltip();
+		$("#tooltipDetails").tooltip();
+		$("#tooltipModify").tooltip();
+		$("#tooltipDelete").tooltip();
+	</script>
+
+</body>
+</html>
