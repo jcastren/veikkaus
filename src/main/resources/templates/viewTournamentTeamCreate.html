@@ -1,0 +1,62 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VEIKKAUS ### Tournament create ###</title>
+<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+</head>
+<body>
+	<h1>Create new tournament team</h1>
+
+	<p>
+		<a id="tooltipList" th:href="@{/tournamentTeam/getAll}"
+			title="Go back to tournament team list">Back to tournament team list</a>
+	</p>
+	<br />
+
+	<form action="#" th:action="@{/tournamentTeam/postCreate}"
+		th:object="${tournamentTeam}" method="post">
+		
+		<div>
+			<label id="lblSelectTournament" title="Select a tournament for the team">Select tournament</label>
+			<select th:field="*{tournament.id}">
+				<option th:each="tournament : ${allTournaments}" 
+						th:value="${tournament.id}" th:text="${tournament.name}">
+				</option>
+			</select>
+		</div>
+		<div>
+			<label id="lblSelectTeam" title="Select a team to the tournament">Select team</label>
+			<select th:field="*{team.id}">
+				<option th:each="team : ${allTeams}" 
+						th:value="${team.id}" th:text="${team.name}">
+				</option>
+			</select>
+		</div>
+ 
+		<p>
+			<button id="buttonCreate" type="submit"
+				class="ui-button ui-corner-all ui-widget" title="Create tournament team">
+				Create tournament team
+			</button>
+			<button id="buttonReset" type="reset"
+				class="ui-button ui-corner-all ui-widget" title="Reset fields">
+				Reset fields
+			</button>
+		</p>
+	</form>
+	
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+	<script>
+		$("#tooltipList").tooltip();
+		$("#lblSelectTournament").tooltip();
+		$("#lblSelectTeam").tooltip();
+		$("#buttonCreate").tooltip();
+		$("#buttonCreate").button();
+		$("#buttonReset").tooltip();
+		$("#buttonReset").button();
+	</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VEIKKAUS ### Tournament team modify ###</title>
+<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}"
+	rel="stylesheet" />
+<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+</head>
+<body>
+	<h1>Modify Tournament team</h1>
+
+	<p>
+		<a id="tooltipList" th:href="@{/tournamentTeam/getAll}"
+			title="Go back to Tournament team list">Back to Tournament team list</a>
+	</p>
+	<br/>
+
+	<form action="#" th:action="@{/tournamentTeam/postModify}"
+		th:object="${tournamentTeam}" method="post">
+		<input type="hidden" th:field="*{id}" />
+		
+		<div>
+            <label id="lblSelectTournament" title="Select a tournament for the team">Select tournament</label>
+            <select th:field="*{tournament.id}">
+				<option th:each="tournament : ${allTournaments}" 
+					th:value="${tournament.id}" 
+					th:text="${tournament.name}">
+				</option>
+            </select>    
+		</div>
+
+		<div>
+            <label id="lblSelectTeam" title="Select a team to the tournament">Select team</label>
+            <select th:field="*{team.id}">
+				<option th:each="team : ${allTeams}" 
+						th:value="${team.id}" 
+						th:text="${team.name}">
+				</option>
+            </select>
+		</div>
+		
+		<button id="buttonModify" type="submit"
+			title="Save changed Tournament team information to database">Save to DB</button>
+	</form>
+
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+	<script>
+		$("#tooltipList").tooltip();
+		$("#lblSelectTournament").tooltip();
+		$("#lblSelectTeam").tooltip();
+		$("#buttonModify").tooltip();
+		$("#buttonModify").button();
+	</script>
+
+</body>
+</html>

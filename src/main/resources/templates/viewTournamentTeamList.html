@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VEIKKAUS ### Tournament list ###</title>
+<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}"
+	rel="stylesheet" />
+<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+</head>
+<body>
+	<p>
+		<a id="tooltipIndex" th:href="@{/index.html}"
+			title="Go back to main page">Back to main page</a>
+	</p>
+	<p>
+		<a id="tooltipCreate" th:href="@{/tournamentTeam/getCreate}"
+			title="Create new tournament team">Create a new tournament team</a>
+	</p>
+
+	<table>
+		<tr>
+			<th>Tournament name</th>
+			<th>Tournament year</th>
+			<th>Team name</th>
+		</tr>
+		<tr th:each="tournamentTeam : ${tournamentTeams}">
+			<td th:text="${tournamentTeam.tournament.name}" />
+			<td th:text="${tournamentTeam.tournament.year}" />
+			<td th:text="${tournamentTeam.team.name}" />
+			<td><a id="tooltipDetails"
+				th:href="@{/tournamentTeam/getDetails(id=${tournamentTeam.id})}"
+				title="Show details of tournament team">Show details</a></td>
+			<td><a id="tooltipModify"
+				th:href="@{/tournamentTeam/getModify(id=${tournamentTeam.id})}"
+				title="Modify details of tournament team">Modify</a></td>
+			<td><a id="tooltipDelete"
+				th:href="@{/tournamentTeam/getDelete(id=${tournamentTeam.id})}"
+				title="Delete tournament team">Delete</a></td>
+		</tr>
+	</table>
+ 	
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+	
+	<script>
+		$("#tooltipIndex").tooltip();
+		$("#tooltipCreate").tooltip();
+		$("#tooltipDetails").tooltip();
+		$("#tooltipModify").tooltip();
+		$("#tooltipDelete").tooltip();
+	</script>
+
+</body>
+</html>

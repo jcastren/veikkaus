@@ -78,7 +78,7 @@ public class TournamentService {
 		return tournGe;
 	}
 	
-	private TournamentGuiEntity convertDbToGui(Tournament db) {
+	protected static TournamentGuiEntity convertDbToGui(Tournament db) {
 		TournamentGuiEntity ge = new TournamentGuiEntity();
 		
 		ge.setId(db.getId().toString());
@@ -88,7 +88,7 @@ public class TournamentService {
 		return ge;
 	}
 	
-	private Tournament convertGuiToDb(TournamentGuiEntity ge) {
+	protected static Tournament convertGuiToDb(TournamentGuiEntity ge) {
 		Tournament db = new Tournament();
 		
 		if (ge.getId() != null && !ge.getId().isEmpty()) {

@@ -78,7 +78,7 @@ public class TeamService {
 		return teamGe;
 	}
 	
-	private TeamGuiEntity convertDbToGui(Team db) {
+	protected static TeamGuiEntity convertDbToGui(Team db) {
 		TeamGuiEntity ge = new TeamGuiEntity();
 		
 		ge.setId(db.getId().toString());
@@ -87,7 +87,7 @@ public class TeamService {
 		return ge;
 	}
 	
-	private Team convertGuiToDb(TeamGuiEntity ge) {
+	protected static Team convertGuiToDb(TeamGuiEntity ge) {
 		Team db = new Team();
 		
 		if (ge.getId() != null && !ge.getId().isEmpty()) {

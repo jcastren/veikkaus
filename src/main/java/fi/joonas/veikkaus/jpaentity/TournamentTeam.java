@@ -31,6 +31,10 @@ public class TournamentTeam {
 	public Long getId() {
 		return id;
 	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Tournament getTournament() {
 		return tournament;
