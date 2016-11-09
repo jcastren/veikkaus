@@ -1,16 +1,27 @@
-<!doctype html>
-<html lang="fi" xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>VEIKKAUS ### MainPage ###</title>
-	<link href="jquery-ui-1.12.1.custom/jquery-ui.css" rel="stylesheet" />
-	<link href="veikkaus-jquery-style.css" rel="stylesheet" />
-	<script src="jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
-	<script src="jquery-ui-1.12.1.custom/jquery-ui.js"></script>
-</head>
-<body>
+var babelCss = document.createElement("link");
+babelCss.href = "babel.css";
+babelCss.rel= "stylesheet";
+document.head.appendChild(babelCss);
 
-	<!--
+var navigation = document.createElement("nav");
+navigation.role = "navigation";
+navigation.id = "header";
+navigation.class = "navbar navbar-default navbar-fixed-top";
+document.body.appendChild(navigation);
+
+var container = $("<div class='container'></div>" );
+container.appendTo("#header");
+
+var navigationDiv = $("<div id='navigation' class='collapse navbar-collapse'></div>");
+navigationDiv.appendTo(container);
+
+var ul = $("<ul class='nav navbar-nav'></ul>");
+ul.appendTo(navigationDiv);
+
+var li1 = $("<li><a id='tournamentsLink' href='tournament/getAll' title='Go see tournaments'>Tournaments</a></li>");
+li1.appendTo(ul);
+
+/*
 	<nav role="navigation" id="header" class="navbar navbar-default navbar-fixed-top">
 		<div class="container">		
 			<div id="navigation" class="collapse navbar-collapse">
@@ -31,24 +42,4 @@
 			</div>
 		</div>
 	</nav>
-	-->
-	<script src="navigation.js"></script>
-	
-	<script>
-		$("#mainPageLink").tooltip();
-		$("#tournamentsLink").tooltip();
-		$("#teamsLink").tooltip();
-		$("#tournamentTeamsLink").tooltip();
-		$("#playersLink").tooltip();
-		$("#tournamentPlayersLink").tooltip();
-		$("#gamesLink").tooltip();
-		$("#scorersLink").tooltip();
-		$("#userRolesLink").tooltip();
-		$("#usersLink").tooltip();
-		$("#statusesLink").tooltip();
-		$("#betsLink").tooltip();
-		$("#betResultsLink").tooltip();
-	</script>
-
-</body>
-</html>
+	*/
