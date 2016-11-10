@@ -1,15 +1,6 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_TEAM_GET_ALL_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_TEAM_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 import java.util.List;
 
@@ -46,12 +37,12 @@ public class TournamentTeamController {
 
 	private static final Logger logger = LoggerFactory.getLogger(TournamentTeamController.class);
 	
-    @ModelAttribute("allTournaments")
+    @ModelAttribute(ALL_TOURNAMENTS)
     public List<TournamentGuiEntity> populateTournaments() {
         return tournamentService.findAllTournaments();
     }
 
-    @ModelAttribute("allTeams")
+    @ModelAttribute(ALL_TEAMS)
     public List<TeamGuiEntity> populateTeams() {
         return teamService.findAllTeams();
     }
@@ -72,8 +63,6 @@ public class TournamentTeamController {
 	@GetMapping(URL_GET_CREATE)
 	public String getCreate(Model model) {
 		model.addAttribute("tournamentTeam", new TournamentTeamGuiEntity());
-		model.addAttribute("tournament", new TournamentGuiEntity());
-		
 		return "viewTournamentTeamCreate";
 	}
 
@@ -82,12 +71,7 @@ public class TournamentTeamController {
 	 */
 	@PostMapping(URL_POST_CREATE)
 	public String postCreate(@ModelAttribute TournamentTeamGuiEntity tournamentTeam) {
-			//@ModelAttribute String tournament) {
 		Long tournamentTeamId = null;
-		
-		//logger.debug(String.format("tournamentTeam: %s %s", tournamentTeam.getId(), tournamentTeam.getTournament().getName()));
-		
-		
 		try {
 			tournamentTeamId = tournamentTeamService.insert(tournamentTeam);
 		} catch (Exception ex) {

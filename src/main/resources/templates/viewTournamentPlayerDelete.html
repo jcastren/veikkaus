@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### Tournament player confirm delete ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+</head>
+<body>
+	<h1>Tournament player delete confirm</h1>
+	<p th:text="'Tournament name: ' + ${tournamentPlayer.tournamentTeam.tournament.name}"/>
+	<p th:text="'Tournament year: ' + ${tournamentPlayer.tournamentTeam.tournament.year}"/>
+	<p th:text="'Tournament team name: ' + ${tournamentPlayer.tournamentTeam.team.name}"/>
+	<p th:text="'Tournament player name: ' + ${tournamentPlayer.player.firstName} + ' ' + ${tournamentPlayer.player.lastName}"/>
+	<p th:text="'Player goals in this tournament: ' + ${tournamentPlayer.goals}"/>
+	<form action="#" th:action="@{/tournamentPlayer/postDelete}"
+		th:object="${tournamentPlayer}" method="post">
+		<input type="hidden" th:field="*{id}" />
+		<button type="submit"
+			class="ui-button ui-corner-all ui-widget"
+			title="Confirm deleting of tournament player">Confirm deleting
+			tournament player</button>
+	</form>
+	<form action="#" th:action="@{/tournamentPlayer/getAll}"
+		th:object="${tournamentPlayer}" method="get">
+		<button type="submit"
+			class="ui-button ui-corner-all ui-widget"
+			title="Cancel deleting of tournament team">
+			Cancel deleting tournament player
+		</button>
+	</form>
+	<script th:src="@{/navigation.js}"></script>
+</body>
+</html>
