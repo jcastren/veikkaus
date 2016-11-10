@@ -1,37 +1,27 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>VEIKKAUS ### Tournament modify ###</title>
-<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}"
-	rel="stylesheet" />
-<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### Tournament modify ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
 </head>
 <body>
 	<h1>Modify tournament</h1>
-
 	<p>
-		<a id="tooltipList" th:href="@{/tournament/getAll}"
-			title="Go back to tournament list">Back to tournament list</a>
+		<a id="tooltipList" th:href="@{/tournament/getAll}" title="Go back to tournament list">Back to tournament list</a>
 	</p>
-	<br />
-
-	<form action="#" th:action="@{/tournament/postModify}"
-		th:object="${tournament}" method="post">
-		<input type="hidden" th:field="*{id}" />
-		<input type="text" th:field="*{name}" /> 
-		<input type="text" th:field="*{year}" />
+	<br/>
+	<form action="#" th:action="@{/tournament/postModify}" th:object="${tournament}" method="post">
+		<input type="hidden" th:field="*{id}"/>
+		<input type="text" th:field="*{name}"/>
+		<input type="text" th:field="*{year}"/>
 		<button id="buttonModify" type="submit"
-			title="Save changed tournament information to database">Save to DB</button>
+			title="Save changed tournament information to database">Save to DB
+		</button>
 	</form>
-
-	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
-	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
-	<script>
-		$("#tooltipList").tooltip();
-		$("#buttonModify").tooltip();
-		$("#buttonModify").button();
-	</script>
-
+	<script th:src="@{/navigation.js}"></script>
 </body>
 </html>

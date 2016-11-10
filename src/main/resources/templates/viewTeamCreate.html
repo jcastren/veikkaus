@@ -1,44 +1,33 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>VEIKKAUS ### Tournament create ###</title>
-<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}"
-	rel="stylesheet" />
-<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### Team create ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
 </head>
 <body>
 	<h1>Create new team</h1>
-
 	<p>
-		<a id="tooltipList" th:href="@{/team/getAll}"
-			title="Go back to team list">Back to team list</a>
+		<a id="tooltipList" th:href="@{/team/getAll}" title="Go back to team list">Back to team list</a>
 	</p>
-	<br />
-
+	<br/>
 	<form action="#" th:action="@{/team/postCreate}"
 		th:object="${team}" method="post">
 		<p>
-			Name: <input type="text" th:field="*{name}" />
+			Name: <input type="text" th:field="*{name}"/>
 		</p>
 		<p>
-			<button id="buttonCreate" type="submit"
-				class="ui-button ui-corner-all ui-widget" title="Create team">Create
-				team</button>
-			<button id="buttonReset" type="reset"
-				class="ui-button ui-corner-all ui-widget" title="Reset fields">Reset
-				fields</button>
+			<button type="submit"
+				class="show-tooltip ui-button ui-corner-all ui-widget" title="Create team">Create team
+			</button>
+			<button type="reset"
+				class="show-tooltip ui-button ui-corner-all ui-widget" title="Reset fields">Reset fields
+			</button>
 		</p>
 	</form>
-
-	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
-	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
-	<script>
-		$("#tooltipList").tooltip();
-		$("#buttonCreate").tooltip();
-		$("#buttonCreate").button();
-		$("#buttonReset").tooltip();
-		$("#buttonReset").button();
-	</script>
+	<script th:src="@{/navigation.js}"></script>
 </body>
 </html>

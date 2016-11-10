@@ -1,30 +1,23 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>VEIKKAUS ### Tournament details ###</title>
-<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}"
-	rel="stylesheet" />
-<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### Tournament team details ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
 </head>
 <body>
 	<h1>Details</h1>
-	
 	<p>
-		<a id="tooltipList" th:href="@{/tournamentTeam/getAll}"
+		<a class="show-tooltip" th:href="@{/tournamentTeam/getAll}"
 			title="Go back to tournament team list">Back to tournament team list</a>
 	</p>
-	<br />
-
-	<p th:text="'tournament name: ' + ${tournamentTeam.tournament.name}" />
-	<p th:text="'tournament year: ' + ${tournamentTeam.tournament.year}" />
-	<p th:text="'team name: ' + ${tournamentTeam.team.name}" />
-
-	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
-	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
-	<script>
-		$("#tooltipList").tooltip();
-	</script>
-
+	<br/>
+	<p th:text="'Tournament name: ' + ${tournamentTeam.tournament.name}"/>
+	<p th:text="'Tournament year: ' + ${tournamentTeam.tournament.year}"/>
+	<p th:text="'Team name: ' + ${tournamentTeam.team.name}"/>
+	<script th:src="@{/navigation.js}"></script>
 </body>
 </html>
