@@ -25,16 +25,16 @@ public class User {
     private String password;
     
     @ManyToOne
-    private UserRole role;
+    private UserRole userRole;
 
     public User() {}
     
-    public User(String email, String name, String password, UserRole role) {
+    public User(String email, String name, String password, UserRole userRole) {
 		super();
 		this.email = email;
 		this.name = name;
 		this.password = password;
-		this.role = role;
+		this.userRole = userRole;
     }
     
     public User(Long id) {
@@ -43,6 +43,10 @@ public class User {
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getEmail() {
@@ -69,12 +73,12 @@ public class User {
 		this.password = password;
 	}
 
-	public UserRole getRole() {
-		return role;
+	public UserRole getUserRole() {
+		return userRole;
 	}
 
-	public void setRole(UserRole role) {
-		this.role = role;
+	public void setUserRole(UserRole userRole) {
+		this.userRole = userRole;
 	}
 
 }

@@ -63,7 +63,7 @@ public class UserControllerTest extends JUnitTestUtil {
 		assertThat(dbUser.getEmail().equals(email));
 		assertThat(dbUser.getName().equals(name));
 		assertThat(dbUser.getPassword().equals(password));
-		assertThat(dbUser.getRole().getId().equals(userRole.getId()));
+		assertThat(dbUser.getUserRole().getId().equals(userRole.getId()));
 		
 		paramMap = ImmutableMap.<String, String>builder()
 				.put(PARAM_NAME_ID, userId)
@@ -84,7 +84,7 @@ public class UserControllerTest extends JUnitTestUtil {
 		// We have to be careful with roleId used as @Before annotation creates
 		// a user role in addition to addUser method and we don't want to delete
 		// that user role before @After annotation
-		String userRoleId = user.getRole().getId().toString(); 
+		String userRoleId = user.getUserRole().getId().toString(); 
 		
 		paramMap = ImmutableMap.<String, String>builder()
 				.put(PARAM_NAME_ID, userId)
@@ -101,7 +101,7 @@ public class UserControllerTest extends JUnitTestUtil {
 		assertThat(dbUser.getEmail().equals(email));
 		assertThat(dbUser.getName().equals(name));
 		assertThat(dbUser.getPassword().equals(password));
-		assertThat(dbUser.getRole().getId().equals(userRoleId));
+		assertThat(dbUser.getUserRole().getId().equals(userRoleId));
 
 		deleteUser(dbUser);
 	}

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### User modify ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+</head>
+<body>
+	<h1>Modify User</h1>
+	<p>
+		<a id="tooltipList" th:href="@{/user/getAll}" title="Go back to user list">
+		Back to user list</a>
+	</p>
+	<br/>
+	<form action="#" th:action="@{/user/postModify}"
+		th:object="${user}" method="post">
+		<input type="hidden" th:field="*{id}" />
+		<div>
+			<label class="show-tooltip" title="Select a user role for the user">Select user role</label>
+			<select th:field="*{userRole.id}">
+				<option th:each="userRole : ${allUserRoles}" 
+						th:value="${userRole.id}" th:text="${userRole.name}">
+				</option>
+			</select>
+		</div>
+		<p>
+			Email: <input type="text" th:field="*{email}"/>
+			Name: <input type="text" th:field="*{name}"/>
+			Password: <input type="text" th:field="*{password}"/>
+		</p>
+		<button id="buttonModify" type="submit" title="Save changed user information to database">Save to DB</button>
+	</form>
+	<script th:src="@{/navigation.js}"></script>
+</body>
+</html>

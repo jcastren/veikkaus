@@ -180,7 +180,7 @@ public abstract class JUnitTestUtil {
 	}
 	
 	public void deleteUser(User user) throws Exception {
-		Long userRoleId = userDao.findOne(user.getId()).getRole().getId();
+		Long userRoleId = userDao.findOne(user.getId()).getUserRole().getId();
 		userDao.delete(Long.valueOf(user.getId().toString()));
 		userRoleDao.delete(userRoleId);
 	}

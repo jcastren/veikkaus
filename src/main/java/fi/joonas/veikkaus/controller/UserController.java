@@ -1,16 +1,24 @@
 package fi.joonas.veikkaus.controller;
 
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import fi.joonas.veikkaus.jpaentity.User;
+import fi.joonas.veikkaus.guientity.UserGuiEntity;
+import fi.joonas.veikkaus.guientity.UserRoleGuiEntity;
+import fi.joonas.veikkaus.service.UserRoleService;
 import fi.joonas.veikkaus.service.UserService;
-
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(USER_URL)
@@ -19,70 +27,103 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private UserRoleService userRoleService;
+
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    @ModelAttribute(ALL_USER_ROLES)
+    public List<UserRoleGuiEntity> populateTournaments() {
+        return userRoleService.findAllUserRoles();
+    }
+
+    @GetMapping(URL_GET_ALL)
+	public String getAll(Model model) {
+		model.addAttribute("users", userService.findAllUsers());
+		return "viewUserList";
+	}
+
+	@RequestMapping(URL_GET_DETAILS)
+	public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
+		UserGuiEntity user = userService.findOneUser(id);
+		model.addAttribute("user", user);
+		return "viewUserDetails";
+	}
+
+	@GetMapping(URL_GET_CREATE)
+	public String getCreate(Model model) {
+		model.addAttribute("user", new UserGuiEntity());
+		return "viewUserCreate";
+	}
+
 	/**
-	 * GET /create --> Create a new user and save it in the database.
+	 * POST /postCreate --> Create a new user and save it in the database.
 	 */
-	@RequestMapping(URL_CREATE)
-	@ResponseBody
-	public String create(String email, String name, String password, String userRoleId) {
+	@PostMapping(URL_POST_CREATE)
+	public String postCreate(@ModelAttribute UserGuiEntity user) {
 		Long userId = null;
 		try {
-			userId = userService.insert(email, name, password, userRoleId);
+			userId = userService.insert(user);
 		} catch (Exception ex) {
 			logger.error("Error creating the user: ", ex);
 			return "Error creating the user: " + ex.toString();
 		}
-		return "User succesfully created with id = " + userId;
+		logger.debug("User succesfully created with id = " + userId);
+		
+		return "redirect:"+ USER_GET_ALL_URL;
+	}
+	
+	/**
+	 * @param user
+	 * @param model
+	 * @return Tournament modify view
+	 */
+	@RequestMapping(URL_GET_MODIFY)
+	public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
+		UserGuiEntity user = userService.findOneUser(id);
+		model.addAttribute("user", user);
+		return "viewUserModify";
 	}
 
 	/**
-	 * GET /delete --> Delete the user having the passed id.
+	 * Saves modified user data to DB
+	 * 
+	 * @param user
+	 * @return
 	 */
-	@RequestMapping(URL_DELETE)
-	@ResponseBody
-	public String delete(String id) {
+	@PostMapping(URL_POST_MODIFY)
+	public String postModify(@ModelAttribute UserGuiEntity user) {
+		Long userId = null;
 		try {
-			userService.delete(id);
-		} catch (Exception ex) {
-			logger.error("Error deleting the user: ", ex);
-			return "Error deleting the user:" + ex.toString();
-		}
-		return "User succesfully deleted!";
-	}
-
-	/**
-	 * GET /get-by-email --> Return the id for the user having the passed email.
-	 */
-	@RequestMapping(URL_GET_BY_EMAIL)
-	@ResponseBody
-	public String getByEmail(String email) {
-		String userId = "";
-		try {
-			User user = userService.findByEmail(email);
-			userId = user.getId().toString();
-		} catch (Exception ex) {
-			logger.error("User not found: ", ex);
-			return "User not found";
-		}
-		return "The user id is: " + userId;
-	}
-
-	/**
-	 * GET /modify --> Update the email, name, password and user role for the
-	 * user in the database having the passed id.
-	 */
-	@RequestMapping(URL_MODIFY)
-	@ResponseBody
-	public String updateUser(String id, String email, String name, String password, String userRoleId) {
-		try {
-			userService.modify(id, email, name, password, userRoleId);
+			userId = userService.modify(user);
 		} catch (Exception ex) {
 			logger.error("Error updating the user: ", ex);
 			return "Error updating the user: " + ex.toString();
 		}
-		return "User succesfully updated for id = " + id;
+		logger.debug("User succesfully updated for id = " + userId);
+		return "redirect:" + USER_GET_ALL_URL;
+	}
+	
+	/**
+	 * @param user
+	 * @param model
+	 * @return User modify view
+	 */
+	@RequestMapping(URL_GET_DELETE)
+	public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
+		UserGuiEntity user = userService.findOneUser(id);
+		model.addAttribute("user", user);
+		return "viewUserDelete";
 	}
 
+	@PostMapping(URL_POST_DELETE)
+	public String postDelete(@ModelAttribute UserGuiEntity user) {
+		try {
+			userService.delete(user.getId());
+		} catch (Exception ex) {
+			logger.error("Error deleting the user: ", ex);
+			return "Error deleting the user:" + ex.toString();
+		}
+		return "redirect:" + USER_GET_ALL_URL;
+	}
 }
