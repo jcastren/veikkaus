@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### User role modify ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+</head>
+<body>
+	<h1>Modify user role</h1>
+	<p>
+		<a id="tooltipList" th:href="@{/userRole/getAll}" title="Go back to user role list">Back to user role list</a>
+	</p>
+	<br/>
+	<form action="#" th:action="@{/userRole/postModify}" th:object="${userRole}" method="post">
+		<input type="hidden" th:field="*{id}"/>
+		<input type="text" th:field="*{name}"/>
+		<button id="buttonModify" type="submit"
+			title="Save changed user role information to database">Save to DB
+		</button>
+	</form>
+	<script th:src="@{/navigation.js}"></script>
+</body>
+</html>

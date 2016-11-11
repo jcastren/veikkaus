@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### User role create ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+</head>
+<body>
+	<h1>Create new user role</h1>
+	<p>
+		<a id="tooltipList" th:href="@{/userRole/getAll}"	title="Go back to user role list">Back to user role list</a>
+	</p>
+	<br/>
+	<form action="#" th:action="@{/userRole/postCreate}" th:object="${userRole}" method="post">
+		<p>
+			Name: <input type="text" th:field="*{name}"/>
+		</p>
+		<p>
+			<button id="buttonCreate" type="submit"
+				class="show-tooltip ui-button ui-corner-all ui-widget" title="Create user role">Create user role
+			</button>
+			<button id="buttonReset" type="reset"
+				class="show-tooltip ui-button ui-corner-all ui-widget" title="Reset fields">Reset fields
+			</button>
+		</p>
+	</form>
+	<script th:src="@{/navigation.js}"></script>
+</body>
+</html>

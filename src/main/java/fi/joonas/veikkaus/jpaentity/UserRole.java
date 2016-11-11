@@ -18,7 +18,7 @@ public class UserRole {
     @NotNull
 	private String name;
 
-    public UserRole() {}
+	public UserRole() {}
 
 	public UserRole(String name) {
 		this.name = name;
@@ -26,6 +26,10 @@ public class UserRole {
 
 	public Long getId() {
 		return id;
+	}
+
+    public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {
