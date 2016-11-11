@@ -824,11 +824,11 @@ input, button, select, textarea {
     line-height: inherit;
 }
 a {
-    color: #337ab7;
+    color: #F82525;
     text-decoration: none;
 }
 a:hover, a:focus {
-    color: #23527c;
+    color: #C10505;
     text-decoration: underline;
 }
 a:focus {
