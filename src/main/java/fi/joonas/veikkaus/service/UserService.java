@@ -36,6 +36,7 @@ public class UserService {
 			throw new VeikkausServiceException("User role with id: " + userRoleId + " wasn't found, insert failed");
 		}
 
+		/** TODO Why is userRole set again? Did it miss originally some fields????? */
 		userGe.setUserRole(UserRoleService.convertDbToGui(userRoleDb));
 
 		return userDao.save(convertGuiToDb(userGe)).getId();

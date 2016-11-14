@@ -29,7 +29,7 @@
 			<label class="show-tooltip" title="Select a player to the tournament player">Select player</label>
 			<select th:field="*{player.id}">
 				<option th:each="player : ${allPlayers}" 
-						th:value="${player.id}" th:text="${player.firstName} + ${player.lastName}">
+						th:value="${player.id}" th:text="${player.firstName} + ' ' + ${player.lastName}">
 				</option>
 			</select>
 		</div>

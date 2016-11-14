@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### Game details ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+</head>
+<body>
+	<h1>Details</h1>
+	<p>
+		<a class="show-tooltip" th:href="@{/game/getAll}"
+			title="Go back to game list">Back to game list</a>
+	</p>
+	<br/>
+	
+	<p th:text="'Tournament name: ' + ${game.homeTeam.tournament.name}"/>
+	<p th:text="'Tournament year: ' + ${game.homeTeam.tournament.year}"/>
+	<p th:text="'Home team name: ' + ${game.homeTeam.team.name}"/>
+	<p th:text="'Away team name: ' + ${game.awayTeam.team.name}"/>
+	<p th:text="'Home score: ' + ${game.homeScore}"/>
+	<p th:text="'Away score: ' + ${game.awayScore}"/>
+	<p th:text="'Game date: ' + ${game.gameDate}"/>
+	<script th:src="@{/navigation.js}"></script>
+</body>
+</html>

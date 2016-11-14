@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### Game modify ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+</head>
+<body>
+	<h1>Modify Game</h1>
+	<p>
+		<a id="tooltipList" th:href="@{/game/getAll}" title="Go back to game list">
+		Back to game list</a>
+	</p>
+	<br/>
+	<form action="#" th:action="@{/game/postModify}"
+		th:object="${game}" method="post">
+		<input type="hidden" th:field="*{id}" />
+		<p th:text="'Tournament name: ' + ${game.homeTeam.tournament.name}"/>
+		<p th:text="'Tournament year: ' + ${game.homeTeam.tournament.year}"/>
+		<div>
+			<label class="show-tooltip" title="Select a home team for the game">Select home team</label>
+			<select th:field="*{homeTeam.id}">
+				<option th:each="homeTeam : ${allTournamentTeams}" 
+						th:value="${homeTeam.id}" th:text="${homeTeam.team.name}">
+				</option>
+			</select>
+		</div>
+		<div>
+			<label class="show-tooltip" title="Select an away team for the game">Select away team</label>
+			<select th:field="*{awayTeam.id}">
+				<option th:each="awayTeam : ${allTournamentTeams}" 
+						th:value="${awayTeam.id}" th:text="${awayTeam.team.name}">
+				</option>
+			</select>
+		</div>
+		<p>
+			Home score: <input type="text" th:field="*{homeScore}"/>
+			Away score: <input type="text" th:field="*{awayScore}"/>
+			Game date: <input type="text" th:field="*{gameDate}"/>
+		</p>
+		<button id="buttonModify" type="submit" title="Save changed game information to database">Save to DB</button>
+	</form>
+	<script th:src="@{/navigation.js}"></script>
+</body>
+</html>

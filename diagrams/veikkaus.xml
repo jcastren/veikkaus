@@ -99,11 +99,11 @@
 	</entity>
 
 	<entity>
-		<entity-name>fi.joonas.veikkaus.jpaentity.User</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>186</entity-height>
-		<entity-X-Coordinate>174</entity-X-Coordinate>
-		<entity-Y-Coordinate>0</entity-Y-Coordinate>
+		<entity-name>fi.joonas.veikkaus.jpaentity.Scorer</entity-name>
+		<entity-width>131</entity-width>
+		<entity-height>128</entity-height>
+		<entity-X-Coordinate>-4</entity-X-Coordinate>
+		<entity-Y-Coordinate>117</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -121,11 +121,11 @@
 	</entity>
 
 	<entity>
-		<entity-name>fi.joonas.veikkaus.jpaentity.Scorer</entity-name>
-		<entity-width>131</entity-width>
-		<entity-height>128</entity-height>
-		<entity-X-Coordinate>-4</entity-X-Coordinate>
-		<entity-Y-Coordinate>117</entity-Y-Coordinate>
+		<entity-name>fi.joonas.veikkaus.jpaentity.User</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>186</entity-height>
+		<entity-X-Coordinate>174</entity-X-Coordinate>
+		<entity-Y-Coordinate>0</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
