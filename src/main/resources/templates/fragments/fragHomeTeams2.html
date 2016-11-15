@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+    <!-- 
+    <div th:fragment="homeTeamFragment" th:unless="${#lists.isEmpty(homeTeamList)}" id="homeTeamInnerDiv" th:object="${game_homeTeam}">
+     -->
+	<div th:fragment="homeTeamFragment" th:unless="${#lists.isEmpty(homeTeamList)}" id="homeTeamInnerDiv">
+        <label id="lblHomeTeamList" class="show-tooltip" title="Select a home team for the game">Select home team</label>
+		<!-- <select id="homeTeamSelect" th:field="${game_homeTeam_id}">-->
+		<select id="homeTeamSelect" th:field="${homeTeam.id}">
+			<option th:each="homeTeamEntry : ${homeTeamList}" 
+					th:value="${homeTeamEntry.id}" th:text="${homeTeamEntry.tournament.name} + ' ' + ${homeTeamEntry.tournament.year} + '/' + ${homeTeamEntry.team.name}">
+			</option>
+		</select>
+    </div>
+
+
+	<!-- 
+    <div th:fragment="homeTeamFragment" th:unless="${#lists.isEmpty(homeTeamList)}" id="homeTeamInnerDiv" th:object="${homeTeam}">
+        <label id="lblHomeTeamList" class="show-tooltip" title="Select a home team for the game">Select home team</label>
+		<select id="homeTeamSelect" th:field="*{id}">
+			<option th:each="homeTeamEntry : ${homeTeamList}" 
+					th:value="${homeTeamEntry.id}" th:text="${homeTeamEntry.tournament.name} + ' ' + ${homeTeamEntry.tournament.year} + '/' + ${homeTeamEntry.team.name}">
+			</option>
+		</select>
+    </div>
+    -->
+    	<!-- 
+		<select id="homeTeam.id" th:field="*{homeTeam.id}">
+			<option th:each="homeTeam : ${homeTeamList}" 
+					th:value="${homeTeam.id}" th:text="${homeTeam.tournament.name} + ' ' + ${homeTeam.tournament.year} + '/' + ${homeTeam.team.name}">
+			</option>
+		</select>
+		 -->
+    
+</body>
+</html>

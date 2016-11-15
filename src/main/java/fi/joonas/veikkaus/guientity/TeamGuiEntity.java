@@ -1,10 +1,19 @@
 package fi.joonas.veikkaus.guientity;
 
-public class TeamGuiEntity {
-	
+public class TeamGuiEntity {	
 	private String id;
     private String name;
     
+	public TeamGuiEntity() {
+		super();
+	}
+
+	public TeamGuiEntity(String id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
 	public String getId() {
 		return id;
 	}

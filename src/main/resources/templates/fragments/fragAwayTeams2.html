@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+    <div th:fragment="awayTeamFragment" th:unless="${#lists.isEmpty(awayTeamList)}" id="awayTeamInnerDiv">
+        <label id="lblAwayTeamList" class="show-tooltip" title="Select an away team for the game">Select away team</label>
+		<select id="awayTeamSelect" th:field="${awayTeam.id}">
+			<option th:each="awayTeamEntry : ${awayTeamList}" 
+					th:value="${awayTeamEntry.id}" th:text="${awayTeamEntry.tournament.name} + ' ' + ${awayTeamEntry.tournament.year} + '/' + ${awayTeamEntry.team.name}">
+			</option>
+		</select>
+    </div>
+</body>
+</html>

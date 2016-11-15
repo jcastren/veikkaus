@@ -15,51 +15,52 @@
 			title="Go back to game list">Back to game list</a>
 	</p>
 	<br/>
+	
 	<form action="#" th:action="@{/game/postCreate}"
 		th:object="${game}" method="post">
-		<!-- 
-		<div>
-			<label class="show-tooltip" title="Select a tournament">Select tournament</label>
-			<select th:field="*{tournament.id}">
-				<option th:each="tournament : ${allTournaments}" 
-						th:value="${tournament.id}" th:text="${tournament.name} + ' ' + ${tournamnent.year}">
-				</option>
-			</select>
-		</div>
-		 -->
-		<div>
-			<label class="show-tooltip" title="Select a home team for the game">Select home team</label>
-			<select th:field="*{homeTeam.id}">
-				<option th:each="homeTeam : ${allTournamentTeams}" 
-						th:value="${homeTeam.id}" th:text="${homeTeam.team.name}">
-				</option>
-			</select>
-		</div>
-		<div>
-			<label class="show-tooltip" title="Select an away team for the game">Select away team</label>
-			<select th:field="*{awayTeam.id}">
-				<option th:each="awayTeam : ${allTournamentTeams}" 
-						th:value="${awayTeam.id}" th:text="${awayTeam.team.name}">
-				</option>
-			</select>
-		</div>
-		<p>
-			Home score: <input type="text" th:field="*{homeScore}"/>
-			Away score: <input type="text" th:field="*{awayScore}"/>
-			Game date: <input type="text" th:field="*{gameDate}"/>
-		</p>
 		
-		<p>
-			<button type="submit"
-				class="show-tooltip ui-button ui-corner-all ui-widget" title="Create game">
-				Create game
-			</button>
-			<button type="reset"
-				class="show-tooltip ui-button ui-corner-all ui-widget" title="Reset fields">
-				Reset fields
-			</button>
-		</p>
+		<div id="tournamentListDiv" th:object="${game}">
+			<label class="show-tooltip" title="Select a tournament">Select tournament</label>
+			<select id="tournamentListSelect" th:field="*{homeTeam.tournament.id}">
+				<option th:each="tournament : ${allTournaments}" 
+						th:value="${tournament.id}" th:text="${tournament.name} + ' ' + ${tournament.year}">
+				</option>
+			</select>
+		</div>
+		<div id="homeTeamDiv"></div>
+		<div id="awayTeamDiv"></div>
+		<div id="textFieldDiv">
+			<p>
+				Home score: <input type="text" th:field="*{homeScore}"/>
+				Away score: <input type="text" th:field="*{awayScore}"/>
+				Game date: <input type="text" th:field="*{gameDate}"/>
+			</p>
+		</div>
+		<div id="buttonDiv">		
+			<p>
+				<button type="submit"
+					class="show-tooltip ui-button ui-corner-all ui-widget" title="Create game">
+					Create game
+				</button>
+				<button type="reset"
+					class="show-tooltip ui-button ui-corner-all ui-widget" title="Reset fields">
+					Reset fields
+				</button>
+			</p>
+		</div>
 	</form>
+	<script>
+		$("#tournamentListSelect").change(function () {
+			var homeTeamUrl = "getFragHomeTeams";
+			var awayTeamUrl = "getFragAwayTeams";
+			if ($("#tournamentListSelect").val() != "-999") {
+				homeTeamUrl = homeTeamUrl + '/' + $('#tournamentListSelect').val();
+			    $("#homeTeamDiv").load(homeTeamUrl);
+			    awayTeamUrl = awayTeamUrl + '/' + $('#tournamentListSelect').val();
+			    $("#awayTeamDiv").load(awayTeamUrl);
+			}
+		});
+	</script>	
 	<script th:src="@{/navigation.js}"></script>
 </body>
 </html>

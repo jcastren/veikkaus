@@ -48,7 +48,7 @@ public class TournamentPlayerController {
 
 	private static final Logger logger = LoggerFactory.getLogger(TournamentPlayerController.class);
 
-	   @ModelAttribute(ALL_TOURNAMENT_TEAMS)
+	   	@ModelAttribute(ALL_TOURNAMENT_TEAMS)
 	    public List<TournamentTeamGuiEntity> populateTournamentTeams() {
 	        return tournamentTeamService.findAllTournamentTeams();
 	    }

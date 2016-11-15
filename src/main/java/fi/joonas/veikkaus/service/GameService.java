@@ -47,6 +47,7 @@ public class GameService {
 		}
 
 		String awayTeamId = gameGe.getAwayTeam().getId();
+		//String awayTeamId = gameGe.getHomeTeam().getId();
 		TournamentTeam awayTeamDb = tournamentTeamDao.findOne(Long.valueOf(awayTeamId));
 		if (awayTeamDb == null) {
 			throw new VeikkausServiceException(

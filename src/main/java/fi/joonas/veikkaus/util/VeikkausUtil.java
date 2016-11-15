@@ -36,4 +36,5 @@ public abstract class VeikkausUtil {
 	public static Date getStringAsDate(String str) throws ParseException {
 		return getStringAsDate(str, null);
 	}
+	
 }

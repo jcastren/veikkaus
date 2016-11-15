@@ -12,6 +12,8 @@ import fi.joonas.veikkaus.dao.TeamDao;
 import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.dao.TournamentTeamDao;
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
+import fi.joonas.veikkaus.guientity.TeamGuiEntity;
+import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.guientity.TournamentTeamGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Team;
 import fi.joonas.veikkaus.jpaentity.Tournament;
@@ -112,6 +114,29 @@ public class TournamentTeamService {
 		for (TournamentTeam dbTournTeam : dbTournTeams) {
 			geList.add(convertDbToGui(dbTournTeam));
 		}
+		
+		return geList;
+	}
+	
+	public List<TournamentTeamGuiEntity> findTournamentTeamsByTournamentId(String tournamentId) {
+		List<TournamentTeamGuiEntity> geList = new ArrayList<>();
+		
+		List<TournamentTeam> dbList = tournamentTeamDao.findByTournamentId(Long.valueOf(tournamentId));
+		for (TournamentTeam tt: dbList) {
+			geList.add(convertDbToGui(tt));
+		}
+		
+		/*
+		TournamentGuiEntity tourn1 = new TournamentGuiEntity("1", "turnaus1", "1999");
+		TeamGuiEntity team1 = new TeamGuiEntity("1", "team 1");
+		TournamentTeamGuiEntity tt1 = new TournamentTeamGuiEntity("1", tourn1, team1);
+		geList.add(tt1);
+		
+		TournamentGuiEntity tourn2 = new TournamentGuiEntity("2", "turnaus2", "2002");
+		TeamGuiEntity team2 = new TeamGuiEntity("2", "team 2");
+		TournamentTeamGuiEntity tt2 = new TournamentTeamGuiEntity("2", tourn2, team2);
+		geList.add(tt2);
+		*/
 		
 		return geList;
 	}
