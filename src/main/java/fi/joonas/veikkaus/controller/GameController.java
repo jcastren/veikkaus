@@ -50,37 +50,26 @@ public class GameController {
 		return tournamentList;
     }
 	
-	@ModelAttribute(ALL_TOURNAMENT_TEAMS)
-    public List<TournamentTeamGuiEntity> populateTournamentTeams() {
-		//List<TournamentTeamGuiEntity> tournamentTeamList = new ArrayList<TournamentTeamGuiEntity>();
-		//TournamentTeamGuiEntity emptyEntry = new TournamentTeamGuiEntity("-999", "-- empty choice --", "");
-		//tournamentTeamList.add(emptyEntry);
-		//tournamentTeamList.addAll(tournamentTeamService.findAllTournamentTeams());
-		//return tournamentList;
-		return tournamentTeamService.findAllTournamentTeams();
-    }
-	
-	/*
-	@RequestMapping(value = "/getFragAwayTeams/{tournamentId}", method = RequestMethod.GET)
-	public String getFragAwayTeams(Model model, @PathVariable("tournamentId") String tournamentId) {
-		model.addAttribute("awayTeamList", tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId));
-		model.addAttribute("awayTeam", new TournamentTeamGuiEntity());
-		return "fragments/fragAwayTeams2 :: awayTeamFragment";
+	@RequestMapping(value = "/getFragHomeTeams/{tournamentId}", method = RequestMethod.GET)
+	public String getFragHomeTeams(Model model, @PathVariable("tournamentId") String tournamentId) {
+		List<TournamentTeamGuiEntity> teamList = new ArrayList<TournamentTeamGuiEntity>();
+		if (Long.valueOf(tournamentId) > 0) {
+			teamList = tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId);
+		}		
+		model.addAttribute("homeTeamList", teamList);
+		model.addAttribute("homeTeam", new TournamentTeamGuiEntity());
+		return "fragments/fragHomeTeams :: homeTeamFragment";
 	}
-	*/
 
-	/*@RequestMapping(value = "/fragAwayTeams/{tournamentId}", method = RequestMethod.GET)
-	public String getFragAwayTeams(Model model, @PathVariable("tournamentId") String tournamentId) {
-		model.addAttribute("tournamentTeamList", tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId));
-		model.addAttribute("awayTeam", new TournamentTeamGuiEntity());
-		return "fragments/fragAwayTeams :: tournamentTeamFragment";
-	}*/
-	
 	@RequestMapping(value = "/getFragAwayTeams/{tournamentId}", method = RequestMethod.GET)
 	public String getFragAwayTeams(Model model, @PathVariable("tournamentId") String tournamentId) {
-		model.addAttribute("awayTeamList", tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId));
+		List<TournamentTeamGuiEntity> teamList = new ArrayList<TournamentTeamGuiEntity>();
+		if (Long.valueOf(tournamentId) > 0) {
+			teamList = tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId);
+		}		
+		model.addAttribute("awayTeamList", teamList);
 		model.addAttribute("awayTeam", new TournamentTeamGuiEntity());
-		return "fragments/fragAwayTeams2 :: awayTeamFragment";
+		return "fragments/fragAwayTeams :: awayTeamFragment";
 	}
 
 	@GetMapping(URL_GET_ALL)
@@ -102,48 +91,25 @@ public class GameController {
 		return "viewGameCreate";
 	}
 
-	@RequestMapping(value = "/getFragHomeTeams/{tournamentId}", method = RequestMethod.GET)
-	public String getFragHomeTeams(Model model, @PathVariable("tournamentId") String tournamentId) {
-		model.addAttribute("homeTeamList", tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId));
-		//model.addAttribute("game_homeTeam", new TournamentTeamGuiEntity());
-		//model.addAttribute("homeTeam", new TournamentTeamGuiEntity());
-		//model.addAttribute("game_homeTeam_id", new String());
-		model.addAttribute("homeTeam", new TournamentTeamGuiEntity());
-		return "fragments/fragHomeTeams2 :: homeTeamFragment";
-	}
-
 	/**
 	 * POST /postCreate --> Create a new game and save it in the database.
 	 */
 	@PostMapping(URL_POST_CREATE)
-	public String postCreate(@ModelAttribute GameGuiEntity game, @ModelAttribute TournamentTeamGuiEntity homeTeam, @ModelAttribute TournamentTeamGuiEntity awayTeam) {
-	//public String postCreate(@ModelAttribute GameGuiEntity game, @ModelAttribute TournamentTeamGuiEntity game_homeTeam) {
-	//public String postCreate(@ModelAttribute GameGuiEntity game, @ModelAttribute String game_homeTeam_id) {
-	//public String postCreate(@ModelAttribute GameGuiEntity game) {
-	//public String postCreate(@ModelAttribute GameGuiEntity game, @ModelAttribute TournamentTeamGuiEntity homeTeam) {
+	public String postCreate(@ModelAttribute GameGuiEntity game) {
 		Long gameId = null;
 		try {
-			//game.getHomeTeam().setId(game_homeTeam_id);
-			//game.getHomeTeam().setId(game_homeTeam.getId());
-			//game.getAwayTeam().setId(awayTeam.getId());
-			
 			game.setHomeTeam(new TournamentTeamGuiEntity());
 			game.setAwayTeam(new TournamentTeamGuiEntity());
-			
-			String[] split = awayTeam.getId().split(",");
+			String[] split = game.getId().split(",");
 			game.getHomeTeam().setId(split[0]);
 			game.getAwayTeam().setId(split[1]);
-			
-			//game.getHomeTeam().setId(homeTeam.getId());
 			game.setId(null);
-			
 			gameId = gameService.insert(game);
 		} catch (Exception ex) {
 			logger.error("Error creating the game: ", ex);
 			return "Error creating the game: " + ex.toString();
 		}
 		logger.debug("Game succesfully created with id = " + gameId);
-		
 		return "redirect:"+ GAME_GET_ALL_URL;
 	}
 	
@@ -167,9 +133,15 @@ public class GameController {
 	 */
 	@PostMapping(URL_POST_MODIFY)
 	public String postModify(@ModelAttribute GameGuiEntity game) {
-		Long gameId = null;
+		String gameId = game.getId();
 		try {
-			gameId = gameService.modify(game);
+			game.setHomeTeam(new TournamentTeamGuiEntity());
+			game.setAwayTeam(new TournamentTeamGuiEntity());
+			String[] split = game.getId().split(",");
+			game.getHomeTeam().setId(split[0]);
+			game.getAwayTeam().setId(split[1]);
+			game.setId(gameId);
+			gameId = gameService.modify(game).toString();
 		} catch (Exception ex) {
 			logger.error("Error updating the game: ", ex);
 			return "Error updating the game: " + ex.toString();

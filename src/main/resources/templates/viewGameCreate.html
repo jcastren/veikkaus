@@ -16,19 +16,24 @@
 	</p>
 	<br/>
 	
+	<!-- <div id="tournamentListDiv" th:insert="~{fragments/fragTournamentSelect :: tournamentSelectFragment"></div> -->
+	
 	<form action="#" th:action="@{/game/postCreate}"
 		th:object="${game}" method="post">
 		
 		<div id="tournamentListDiv" th:object="${game}">
-			<label class="show-tooltip" title="Select a tournament">Select tournament</label>
-			<select id="tournamentListSelect" th:field="*{homeTeam.tournament.id}">
+			<label id="lblTournament" class="show-tooltip" title="Select a tournament">Select tournament</label>
+			<select id="selTournament" th:field="*{homeTeam.tournament.id}">
 				<option th:each="tournament : ${allTournaments}" 
 						th:value="${tournament.id}" th:text="${tournament.name} + ' ' + ${tournament.year}">
 				</option>
 			</select>
 		</div>
+		
+		<!-- <div th:insert="~{fragments/fragHomeTeams :: homeTeamFragment}"></div> -->
 		<div id="homeTeamDiv"></div>
 		<div id="awayTeamDiv"></div>
+		
 		<div id="textFieldDiv">
 			<p>
 				Home score: <input type="text" th:field="*{homeScore}"/>
@@ -49,18 +54,7 @@
 			</p>
 		</div>
 	</form>
-	<script>
-		$("#tournamentListSelect").change(function () {
-			var homeTeamUrl = "getFragHomeTeams";
-			var awayTeamUrl = "getFragAwayTeams";
-			if ($("#tournamentListSelect").val() != "-999") {
-				homeTeamUrl = homeTeamUrl + '/' + $('#tournamentListSelect').val();
-			    $("#homeTeamDiv").load(homeTeamUrl);
-			    awayTeamUrl = awayTeamUrl + '/' + $('#tournamentListSelect').val();
-			    $("#awayTeamDiv").load(awayTeamUrl);
-			}
-		});
-	</script>	
-	<script th:src="@{/navigation.js}"></script>
+	<script th:src="@{/js/game.js}"></script>
+	<script th:src="@{/js/common-navigation.js}"></script>
 </body>
 </html>

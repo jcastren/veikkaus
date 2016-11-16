@@ -18,31 +18,29 @@
 	<form action="#" th:action="@{/game/postModify}"
 		th:object="${game}" method="post">
 		<input type="hidden" th:field="*{id}" />
-		<p th:text="'Tournament name: ' + ${game.homeTeam.tournament.name}"/>
-		<p th:text="'Tournament year: ' + ${game.homeTeam.tournament.year}"/>
-		<div>
-			<label class="show-tooltip" title="Select a home team for the game">Select home team</label>
-			<select th:field="*{homeTeam.id}">
-				<option th:each="homeTeam : ${allTournamentTeams}" 
-						th:value="${homeTeam.id}" th:text="${homeTeam.team.name}">
+
+		<div id="tournamentListDiv" th:object="${game}">
+			<label id="lblTournament" class="show-tooltip" title="Select a tournament">Select tournament</label>
+			<select id="selTournament" th:field="*{homeTeam.tournament.id}">
+				<option th:each="tournament : ${allTournaments}" 
+						th:value="${tournament.id}" th:text="${tournament.name} + ' ' + ${tournament.year}">
 				</option>
 			</select>
 		</div>
-		<div>
-			<label class="show-tooltip" title="Select an away team for the game">Select away team</label>
-			<select th:field="*{awayTeam.id}">
-				<option th:each="awayTeam : ${allTournamentTeams}" 
-						th:value="${awayTeam.id}" th:text="${awayTeam.team.name}">
-				</option>
-			</select>
+
+		<div id="homeTeamDiv"></div>
+		<div id="awayTeamDiv"></div>
+
+		<div id="textFieldDiv">
+			<p>
+				Home score: <input type="text" th:field="*{homeScore}"/>
+				Away score: <input type="text" th:field="*{awayScore}"/>
+				Game date: <input type="text" th:field="*{gameDate}"/>
+			</p>
 		</div>
-		<p>
-			Home score: <input type="text" th:field="*{homeScore}"/>
-			Away score: <input type="text" th:field="*{awayScore}"/>
-			Game date: <input type="text" th:field="*{gameDate}"/>
-		</p>
 		<button id="buttonModify" type="submit" title="Save changed game information to database">Save to DB</button>
 	</form>
-	<script th:src="@{/navigation.js}"></script>
+	<script th:src="@{/js/game.js}"></script>
+	<script th:src="@{/js/common-navigation.js}"></script>
 </body>
 </html>

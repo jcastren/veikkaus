@@ -1,15 +1,12 @@
-<th:block xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	th:fragment="tournamentTeamFragment"
-	th:unless="${#lists.isEmpty(tournamentTeamList)}">
-	
+<th:block xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	th:fragment="homeTeamFragment">
 	<label id="lblHomeTeamList" class="show-tooltip" title="Select a home team for the game">Select home team</label>
-	<select id="homeTeam.id" name="homeTeam.id" th:name="homeTeam.id" th:field="*{homeTeam.id}">
-		<option th:each="homeTeam : ${tournamentTeamList}" 
-				th:value="${homeTeam.id}" th:text="${homeTeam.tournament.name} + ' ' + ${homeTeam.tournament.year} + '/' + ${homeTeam.team.name}">
+	<select id="homeTeamSelect" th:field="*{homeTeam.id}">
+		<option th:each="homeTeamEntry : ${homeTeamList}" 
+				th:value="${homeTeamEntry.id}"
+				th:text="${homeTeamEntry.tournament.name} + ' ' + ${homeTeamEntry.tournament.year} + '/' + ${homeTeamEntry.team.name}">
 		</option>
 	</select>
-	
 	<!-- 
 	<table>
 		<thead>
@@ -28,5 +25,4 @@
 		</tbody>
 	</table>
 	 -->
-	 
 </th:block>
