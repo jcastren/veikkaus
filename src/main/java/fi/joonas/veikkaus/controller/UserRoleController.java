@@ -1,5 +1,16 @@
 package fi.joonas.veikkaus.controller;
 
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_ROLE_GET_ALL_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_ROLE_URL;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import fi.joonas.veikkaus.guientity.UserRoleGuiEntity;
 import fi.joonas.veikkaus.service.UserRoleService;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(USER_ROLE_URL)

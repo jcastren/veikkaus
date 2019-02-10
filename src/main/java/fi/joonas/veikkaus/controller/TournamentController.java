@@ -1,6 +1,15 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_GET_ALL_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

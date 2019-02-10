@@ -1,7 +1,7 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PLAYER_URL;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.PLAYER_GET_ALL_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.PLAYER_URL;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;

@@ -1,5 +1,9 @@
 package fi.joonas.veikkaus.controller;
 
+import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_CREATE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_MODIFY;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import fi.joonas.veikkaus.service.StatusService;
-
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(STATUS_URL)

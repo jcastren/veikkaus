@@ -1,6 +1,9 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.BET_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_CREATE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_DELETE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_MODIFY;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

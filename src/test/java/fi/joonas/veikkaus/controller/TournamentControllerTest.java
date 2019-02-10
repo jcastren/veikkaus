@@ -1,8 +1,6 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,10 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.google.common.collect.ImmutableMap;
-
 import fi.joonas.veikkaus.dao.TournamentDao;
-import fi.joonas.veikkaus.jpaentity.Tournament;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
 
 @RunWith(SpringRunner.class)

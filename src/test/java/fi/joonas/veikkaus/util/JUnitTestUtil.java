@@ -1,5 +1,7 @@
 package fi.joonas.veikkaus.util;
 
+import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_UNDER_WORK;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -40,8 +42,6 @@ import fi.joonas.veikkaus.jpaentity.TournamentPlayer;
 import fi.joonas.veikkaus.jpaentity.TournamentTeam;
 import fi.joonas.veikkaus.jpaentity.User;
 import fi.joonas.veikkaus.jpaentity.UserRole;
-
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 public abstract class JUnitTestUtil {
 	

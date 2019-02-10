@@ -82,6 +82,7 @@ public abstract class VeikkausConstants {
     public static final String GAME_GET_DETAILS_URL = GAME_URL + URL_GET_DETAILS;
     public static final String GAME_POST_DELETE_URL = GAME_URL + URL_POST_DELETE;
     public static final String GAME_POST_MODIFY_URL = GAME_URL + URL_POST_MODIFY;
+    public static final String ALL_GAMES = "allGames";
     
     /** BetResult URLs */
     public static final String BET_RESULT_URL = "/betResult";
@@ -107,6 +108,7 @@ public abstract class VeikkausConstants {
     public static final String TOURNAMENT_PLAYER_GET_DETAILS_URL = TOURNAMENT_PLAYER_URL + URL_GET_DETAILS;
     public static final String TOURNAMENT_PLAYER_POST_DELETE_URL = TOURNAMENT_PLAYER_URL + URL_POST_DELETE;
     public static final String TOURNAMENT_PLAYER_POST_MODIFY_URL = TOURNAMENT_PLAYER_URL + URL_POST_MODIFY;
+    public static final String ALL_TOURNAMENT_PLAYERS = "allTournamentPlayers";
   
     /** Scorer URLs */
     public static final String SCORER_URL = "/scorer";

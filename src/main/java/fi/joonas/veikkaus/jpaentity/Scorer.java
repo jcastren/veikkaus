@@ -33,6 +33,10 @@ public class Scorer {
 		return id;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public TournamentPlayer getTournamentPlayer() {
 		return tournamentPlayer;
 	}
