@@ -40,23 +40,23 @@ public class ScorerService {
 		return geList;
 	}
 	
-//	public Long insert(String tournamentPlayerId, String gameId) throws VeikkausServiceException {
-//		TournamentPlayer tournamentPlayer = tournamentPlayerDao.findOne(Long.valueOf(tournamentPlayerId));
-//		if (tournamentPlayer == null) {
-//			throw new VeikkausServiceException("tournamentPlayer with id: " + tournamentPlayerId + " wasn't found, insert failed");
-//		}
-//		
-//		Game game = gameDao.findOne(Long.valueOf(gameId));
-//		if (game == null) {
-//			throw new VeikkausServiceException("game with id: " + gameId + " wasn't found, insert failed");
-//		}
-//
-//		return scorerDao.save(new Scorer(tournamentPlayer, game)).getId();
-//	}
+	public Long insert(String tournamentPlayerId, String gameId) throws VeikkausServiceException {
+		TournamentPlayer tournamentPlayer = tournamentPlayerDao.findOne(Long.valueOf(tournamentPlayerId));
+		if (tournamentPlayer == null) {
+			throw new VeikkausServiceException("tournamentPlayer with id: " + tournamentPlayerId + " wasn't found, insert failed");
+		}
+
+		Game game = gameDao.findOne(Long.valueOf(gameId));
+		if (game == null) {
+			throw new VeikkausServiceException("game with id: " + gameId + " wasn't found, insert failed");
+		}
+
+		return scorerDao.save(new Scorer(tournamentPlayer, game)).getId();
+	}
 	
 	/**
 	 * 
-	 * @param tournamentPlayerGe
+	 * @param scorerGe
 	 * @return
 	 */
 	public Long insert(ScorerGuiEntity scorerGe) throws VeikkausServiceException {
