@@ -3,7 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="fb06dca5-7efa-47da-9ba3-9bafa7da0c46" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/service/ScorerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/service/ScorerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/controller/StatusController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/controller/StatusController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/controller/TeamController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/controller/TeamController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/jpaentity/Status.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/jpaentity/Status.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/service/StatusService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/service/StatusService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/service/TeamService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/service/TeamService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,19 +39,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/templates" />
     <property name="project.structure.last.edited" value="Facets" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="fi.joonas.veikkaus.guientity" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\veikkaus\src\main\resources\templates" />
     </key>
   </component>
   <component name="RunManager">
@@ -83,37 +92,61 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="137" y="19" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584795182271" />
-    <state x="488" y="48" key="#com.intellij.ide.util.MemberChooser" timestamp="1584794500283">
+    <state x="488" y="48" key="#com.intellij.ide.util.MemberChooser" timestamp="1584871806357">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="488" y="48" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584794500283" />
+    <state x="488" y="48" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584871806357" />
     <state x="463" y="118" key="FileChooserDialogImpl" timestamp="1584787448748">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584787448748" />
-    <state width="1323" height="364" key="GridCell.Tab.0.bottom" timestamp="1584796035746">
+    <state width="1323" height="236" key="GridCell.Tab.0.bottom" timestamp="1584875475375">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="364" key="GridCell.Tab.0.bottom/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584796035746" />
-    <state width="1323" height="364" key="GridCell.Tab.0.center" timestamp="1584796035746">
+    <state width="1323" height="236" key="GridCell.Tab.0.bottom/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584875475375" />
+    <state width="1323" height="236" key="GridCell.Tab.0.center" timestamp="1584875475375">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="364" key="GridCell.Tab.0.center/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584796035746" />
-    <state width="1323" height="364" key="GridCell.Tab.0.left" timestamp="1584796035746">
+    <state width="1323" height="236" key="GridCell.Tab.0.center/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584875475375" />
+    <state width="1323" height="236" key="GridCell.Tab.0.left" timestamp="1584875475375">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="364" key="GridCell.Tab.0.left/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584796035746" />
-    <state width="1323" height="364" key="GridCell.Tab.0.right" timestamp="1584796035746">
+    <state width="1323" height="236" key="GridCell.Tab.0.left/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584875475375" />
+    <state width="1323" height="236" key="GridCell.Tab.0.right" timestamp="1584875475375">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="364" key="GridCell.Tab.0.right/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584796035746" />
+    <state width="1323" height="236" key="GridCell.Tab.0.right/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584875475375" />
+    <state width="1323" height="236" key="GridCell.Tab.1.bottom" timestamp="1584875475149">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="236" key="GridCell.Tab.1.bottom/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584875475149" />
+    <state width="1323" height="236" key="GridCell.Tab.1.center" timestamp="1584875475149">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="236" key="GridCell.Tab.1.center/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584875475149" />
+    <state width="1323" height="236" key="GridCell.Tab.1.left" timestamp="1584875475148">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="236" key="GridCell.Tab.1.left/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584875475148" />
+    <state width="1323" height="236" key="GridCell.Tab.1.right" timestamp="1584875475149">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="236" key="GridCell.Tab.1.right/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584875475149" />
     <state x="184" y="0" key="SettingsEditor" timestamp="1584795354592">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="184" y="0" key="SettingsEditor/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584795354592" />
-    <state x="379" y="188" key="com.intellij.ide.util.TipDialog" timestamp="1584793984257">
+    <state x="379" y="188" key="com.intellij.ide.util.TipDialog" timestamp="1584863727109">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="379" y="188" key="com.intellij.ide.util.TipDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584793984257" />
+    <state x="379" y="188" key="com.intellij.ide.util.TipDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584863727109" />
+    <state x="379" y="96" width="915" height="625" key="find.popup" timestamp="1584875840639">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="379" y="96" width="915" height="625" key="find.popup/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584875840639" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1584876239378">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584876239378" />
   </component>
 </project>

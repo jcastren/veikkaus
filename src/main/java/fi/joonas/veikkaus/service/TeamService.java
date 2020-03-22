@@ -14,7 +14,7 @@ import fi.joonas.veikkaus.jpaentity.Team;
 
 /**
  * Business logic level class for DB handling of Team
- * @author joona
+ * @author joonas
  *
  */
 @Service

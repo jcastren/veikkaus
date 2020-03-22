@@ -70,8 +70,8 @@ public class TeamController {
 	}
 	
 	/**
-	 * @param team
-	 * @param model
+	 * @param id Id of team
+	 * @param model UI model
 	 * @return Team modify view
 	 */
 	@RequestMapping(URL_GET_MODIFY)
@@ -84,8 +84,8 @@ public class TeamController {
 	/**
 	 * Saves modified team data to DB
 	 * 
-	 * @param team
-	 * @return
+	 * @param team Team UI entity
+	 * @return Redirect URL for getting all teams
 	 */
 	@PostMapping(URL_POST_MODIFY)
 	public String postModify(@ModelAttribute TeamGuiEntity team) {
@@ -101,9 +101,9 @@ public class TeamController {
 	}
 	
 	/**
-	 * @param team
-	 * @param model
-	 * @return Team modify view
+	 * @param id Team id
+	 * @param model UI model
+	 * @return Team delete view
 	 */
 	@RequestMapping(URL_GET_DELETE)
 	public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
@@ -112,6 +112,11 @@ public class TeamController {
 		return "viewTeamDelete";
 	}
 
+	/**
+	 *
+	 * @param team Team UI entity
+	 * @return Redirect URL for getting all teams
+	 */
 	@PostMapping(URL_POST_DELETE)
 	public String postDelete(@ModelAttribute TeamGuiEntity team) {
 		try {

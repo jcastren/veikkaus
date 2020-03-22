@@ -29,6 +29,10 @@ public class Status {
 		return id;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public int getStatusNumber() {
 		return statusNumber;
 	}

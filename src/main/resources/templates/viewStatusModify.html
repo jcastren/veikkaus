@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### Status  modify ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+</head>
+<body>
+	<h1>Modify status</h1>
+	<p>
+		<a id="tooltipList" th:href="@{/status/getAll}" title="Go back to status list">Back to status list</a>
+	</p>
+	<br/>
+	<form action="#" th:action="@{/status/postModify}" th:object="${status}" method="post">
+		<input type="hidden" th:field="*{id}" />
+		<input type="text" th:field="*{statusNumber}" />
+		<input type="text" th:field="*{description}" />
+		<button class="show-tooltip" type="submit" title="Save changed status information to database">Save to DB</button>
+	</form>
+	<script th:src="@{/js/common-navigation.js}"></script>
+</body>
+</html>
