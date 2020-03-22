@@ -20,6 +20,8 @@ import fi.joonas.veikkaus.jpaentity.Game;
 import fi.joonas.veikkaus.jpaentity.TournamentTeam;
 import fi.joonas.veikkaus.util.VeikkausUtil;
 
+import static fi.joonas.veikkaus.constants.VeikkausConstants.INT_NOT_DEFINED;
+
 @Service
 public class GameService {
 
@@ -164,14 +166,14 @@ public class GameService {
 		try {
 			db.setHomeScore(Integer.parseInt(ge.getHomeScore()));
 		} catch (NumberFormatException nfe) {
-			logger.error("Error while parsing integer", nfe);
-			throw new VeikkausConversionException("Error while parsing homeScore integer" + ge.getHomeScore(), nfe);
+			logger.info(String.format("Error while parsing integer '%s' Using integer %d instead", ge.getHomeScore(), INT_NOT_DEFINED), nfe);
+			db.setHomeScore(INT_NOT_DEFINED);
 		}
 		try {
 			db.setAwayScore(Integer.parseInt(ge.getAwayScore()));
 		} catch (NumberFormatException nfe) {
-			logger.error("Error while parsing integer", nfe);
-			throw new VeikkausConversionException("Error while parsing awayScore integer" + ge.getAwayScore(), nfe);
+			logger.info(String.format("Error while parsing integer '%s' Using integer %d instead", ge.getAwayScore(), INT_NOT_DEFINED), nfe);
+			db.setAwayScore(INT_NOT_DEFINED);
 		}
 		try {
 			db.setGameDate(VeikkausUtil.getStringAsDate(ge.getGameDate()));			

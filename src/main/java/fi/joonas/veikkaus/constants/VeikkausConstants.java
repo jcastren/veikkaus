@@ -213,5 +213,7 @@ public abstract class VeikkausConstants {
         /** Scorer URLs */
         public static final String SCORER_CREATE_URL = SCORER_URL + URL_CREATE;
         public static final String SCORER_DELETE_URL = SCORER_URL + URL_DELETE;
-        public static final String SCORER_MODIFY_URL = SCORER_URL + URL_MODIFY;      
+        public static final String SCORER_MODIFY_URL = SCORER_URL + URL_MODIFY;
+
+        public static final int INT_NOT_DEFINED = -999;
 }
