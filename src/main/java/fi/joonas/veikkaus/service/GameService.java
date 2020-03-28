@@ -1,16 +1,6 @@
 package fi.joonas.veikkaus.service;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.ImmutableList;
-
 import fi.joonas.veikkaus.dao.GameDao;
 import fi.joonas.veikkaus.dao.TournamentTeamDao;
 import fi.joonas.veikkaus.exception.VeikkausConversionException;
@@ -19,6 +9,14 @@ import fi.joonas.veikkaus.guientity.GameGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Game;
 import fi.joonas.veikkaus.jpaentity.TournamentTeam;
 import fi.joonas.veikkaus.util.VeikkausUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static fi.joonas.veikkaus.constants.VeikkausConstants.INT_NOT_DEFINED;
 
@@ -32,15 +30,9 @@ public class GameService {
 	TournamentTeamDao tournamentTeamDao;
 	
 	private static final Logger logger = LoggerFactory.getLogger(GameService.class);
-	
-	/**
-	 * 
-	 * @param gameGe
-	 * @return
-	 */
+
 	public Long insert(GameGuiEntity gameGe) throws VeikkausServiceException {
 		Long retGameId = null;
-
 		String homeTeamId = gameGe.getHomeTeam().getId();
 		TournamentTeam homeTeamDb = tournamentTeamDao.findOne(Long.valueOf(homeTeamId));
 		if (homeTeamDb == null) {
@@ -49,7 +41,6 @@ public class GameService {
 		}
 
 		String awayTeamId = gameGe.getAwayTeam().getId();
-		//String awayTeamId = gameGe.getHomeTeam().getId();
 		TournamentTeam awayTeamDb = tournamentTeamDao.findOne(Long.valueOf(awayTeamId));
 		if (awayTeamDb == null) {
 			throw new VeikkausServiceException(
