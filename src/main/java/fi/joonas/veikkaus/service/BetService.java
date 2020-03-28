@@ -2,7 +2,6 @@ package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.guientity.BetGuiEntity;
-import fi.joonas.veikkaus.guientity.TournamentPlayerGuiEntity;
 import fi.joonas.veikkaus.jpaentity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,21 +27,6 @@ public class BetService {
 	StatusDao statusDao;
 
 	public Long insert(BetGuiEntity betGe) throws VeikkausServiceException {
-//	public Long insert(String userId, String statusId) throws VeikkausServiceException {
-//		User user = userDao.findOne(Long.valueOf(userId));
-//
-//		if (user == null) {
-//			throw new VeikkausServiceException("user with id: " + userId + " wasn't found, insert failed");
-//		}
-//
-//		Status status = statusDao.findOne(Long.valueOf(statusId));
-//
-//		if (status == null) {
-//			throw new VeikkausServiceException("status with id: " + statusId + " wasn't found, insert failed");
-//		}
-//
-//		return betDao.save(new Bet(user, status)).getId();
-
 		String userId = betGe.getUser().getId();
 		User userDb = userDao.findOne(Long.valueOf(userId));
 		if (userDb == null) {
@@ -62,28 +46,6 @@ public class BetService {
 
 		return betDao.save(convertGuiToDb(betGe)).getId();
 	}
-	
-//	public Long modify(String id, String statusId, String userId) throws VeikkausServiceException {
-//		Bet bet = betDao.findOne(Long.valueOf(id));
-//		if (bet == null) {
-//			throw new VeikkausServiceException("bet with id: " + id + " wasn't found, modify failed");
-//		}
-//
-//		User user = userDao.findOne(Long.valueOf(id));
-//		if (user == null) {
-//			throw new VeikkausServiceException("user with id: " + id + " wasn't found, modify failed");
-//		}
-//
-//		Status status = statusDao.findOne(Long.valueOf(id));
-//		if (status == null) {
-//			throw new VeikkausServiceException("status with id: " + id + " wasn't found, modify failed");
-//		}
-//
-//		bet.setUser(user);
-//		bet.setStatus(status);
-//		return betDao.save(bet).getId();
-//	}
-//
 
 	public Long modify(BetGuiEntity betGe) throws VeikkausServiceException {
 		String id = betGe.getId();
@@ -127,11 +89,6 @@ public class BetService {
 		return geList;
 	}
 
-	/**
-	 *
-	 * @param id
-	 * @return
-	 */
 	public BetGuiEntity findOneBet(String id) {
 		BetGuiEntity betGe = convertDbToGui(betDao.findOne(Long.valueOf(id)));
 		return betGe;
