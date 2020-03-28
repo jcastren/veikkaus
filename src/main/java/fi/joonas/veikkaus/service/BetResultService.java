@@ -1,5 +1,9 @@
 package fi.joonas.veikkaus.service;
 
+import com.google.common.collect.ImmutableList;
+import fi.joonas.veikkaus.exception.VeikkausConversionException;
+import fi.joonas.veikkaus.guientity.BetResultGuiEntity;
+import fi.joonas.veikkaus.jpaentity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,9 +11,9 @@ import fi.joonas.veikkaus.dao.BetDao;
 import fi.joonas.veikkaus.dao.BetResultDao;
 import fi.joonas.veikkaus.dao.GameDao;
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
-import fi.joonas.veikkaus.jpaentity.Bet;
-import fi.joonas.veikkaus.jpaentity.BetResult;
-import fi.joonas.veikkaus.jpaentity.Game;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BetResultService {
@@ -22,39 +26,100 @@ public class BetResultService {
 	
 	@Autowired
 	GameDao gameDao;
-	
-	public Long insert(String betId, String gameId, String homeScore, String awayScore) throws VeikkausServiceException {
-		
-		Bet bet = betDao.findOne(Long.valueOf(betId));
-		if (bet == null) {
-			throw new VeikkausServiceException("bet with id: " + betId + " wasn't found, insert failed");
-		}
-		
-		Game game = gameDao.findOne(Long.valueOf(gameId));
-		if (game == null) {
-			throw new VeikkausServiceException("game with id: " + gameId + " wasn't found, insert failed");
+
+	public Long insert(BetResultGuiEntity betResultGe) throws VeikkausServiceException {
+		String betId = betResultGe.getBet().getId();
+		Bet betDb = betDao.findOne(Long.valueOf(betId));
+		if (betDb == null) {
+			throw new VeikkausServiceException("Bet with id: " + betId + " wasn't found, insert failed");
 		}
 
-		return betResultDao.save(new BetResult(bet, game, Integer.valueOf(homeScore), Integer.valueOf(awayScore))).getId();
-	}
-	
-	public Long modify(String id, String homeScore, String awayScore) throws VeikkausServiceException {
-		BetResult betResult = betResultDao.findOne(Long.valueOf(id));
-		
-		if (betResult == null) {
-			throw new VeikkausServiceException("betResult with id: " + id + " wasn't found, modify failed");
+		String gameId = betResultGe.getGame().getId();
+		Game gameDb = gameDao.findOne(Long.valueOf(gameId));
+		if (gameDb == null) {
+			throw new VeikkausServiceException("Game with id: " + gameId + " wasn't found, insert failed");
 		}
 
-		betResult.setHomeScore(Integer.valueOf(homeScore));
-		betResult.setAwayScore(Integer.valueOf(awayScore));
-		return betResultDao.save(betResult).getId();
+		betResultGe.setBet(BetService.convertDbToGui(betDb));
+		betResultGe.setGame(GameService.convertDbToGui(gameDb));
+
+		return betResultDao.save(convertGuiToDb(betResultGe)).getId();
 	}
-	
+
+	public Long modify(BetResultGuiEntity betResultGe) throws VeikkausServiceException {
+		String id = betResultGe.getId();
+		BetResult betResultDb = betResultDao.findOne(Long.valueOf(id));
+		if (betResultDb == null) {
+			throw new VeikkausServiceException("Bet result with id: " + id + " wasn't found, modify failed");
+		}
+
+		String betId = betResultGe.getBet().getId();
+		Bet betDb = betDao.findOne(Long.valueOf(betId));
+		if (betDb == null) {
+			throw new VeikkausServiceException("Bet with id: " + id + " wasn't found, modify failed");
+		}
+
+		String gameId = betResultGe.getGame().getId();
+		Game gameDb = gameDao.findOne(Long.valueOf(betId));
+		if (gameDb == null) {
+			throw new VeikkausServiceException("Game with id: " + id + " wasn't found, modify failed");
+		}
+
+		betResultGe.setBet(BetService.convertDbToGui(betDb));
+		betResultGe.setGame(GameService.convertDbToGui(gameDb));
+
+		return betResultDao.save(convertGuiToDb(betResultGe)).getId();
+	}
+
 	public boolean delete(String id) {
 		boolean succeed = false;
 		betResultDao.delete(Long.valueOf(id));
 		succeed = true;
 		return succeed;
+	}
+
+	public List<BetResultGuiEntity> findAllBetResults() {
+		List<BetResultGuiEntity> geList = new ArrayList<>();
+		List<BetResult> dbBetResults = ImmutableList.copyOf(betResultDao.findAll());
+
+		for (BetResult dbBetResult : dbBetResults) {
+			geList.add(convertDbToGui(dbBetResult));
+		}
+		return geList;
+	}
+
+	public BetResultGuiEntity findOneBetResult(String id) {
+		BetResultGuiEntity betResultGe = convertDbToGui(betResultDao.findOne(Long.valueOf(id)));
+		return betResultGe;
+	}
+
+	protected static BetResultGuiEntity convertDbToGui(BetResult db) {
+		BetResultGuiEntity ge = new BetResultGuiEntity();
+
+		ge.setId(db.getId().toString());
+		ge.setBet(BetService.convertDbToGui(db.getBet()));
+		ge.setGame(GameService.convertDbToGui(db.getGame()));
+		ge.setHomeScore(db.getHomeScore());
+		ge.setAwayScore(db.getAwayScore());
+		return ge;
+	}
+
+	protected static BetResult convertGuiToDb(BetResultGuiEntity ge) {
+		BetResult db = new BetResult();
+
+		if (ge.getId() != null && !ge.getId().isEmpty()) {
+			db.setId(Long.valueOf(ge.getId()));
+		} else {
+			db.setId(null);
+		}
+		db.setBet(BetService.convertGuiToDb(ge.getBet()));
+		try {
+			db.setGame(GameService.convertGuiToDb(ge.getGame()));
+		} catch (VeikkausConversionException e) {
+			e.printStackTrace();
+		}
+
+		return db;
 	}
 	
 }

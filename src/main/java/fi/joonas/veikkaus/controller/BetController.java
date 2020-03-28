@@ -69,7 +69,7 @@ public class BetController {
 			logger.error("Error creating the bet: ", ex);
 			return "Error creating the bet: " + ex.toString();
 		}
-		logger.debug("Bet succesfully created with id = " + betId);
+		logger.debug("Bet successfully created with id = " + betId);
 		return "redirect:" + BET_GET_ALL_URL;
 	}
 
@@ -89,7 +89,7 @@ public class BetController {
 			logger.error("Error updating the bet: ", ex);
 			return "Error updating the bet: " + ex.toString();
 		}
-		logger.debug("Bet succesfully updated for id = " + betId);
+		logger.debug("Bet successfully updated for id = " + betId);
 		return "redirect:" + BET_GET_ALL_URL;
 	}
 

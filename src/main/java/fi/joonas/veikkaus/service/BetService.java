@@ -38,7 +38,6 @@ public class BetService {
 		Status statusDb = statusDao.findOne(Long.valueOf(statusId));
 		if (statusDb == null) {
 			throw new VeikkausServiceException("Status with id: " + statusId + " wasn't found, insert failed");
-		} else {
 		}
 
 		betGe.setUser(UserService.convertDbToGui(userDb));

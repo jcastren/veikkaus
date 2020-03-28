@@ -33,6 +33,7 @@ public abstract class VeikkausConstants {
     /** Bet URLs */
     public static final String BET_URL = "/bet";
     public static final String BET_GET_ALL_URL = BET_URL + URL_GET_ALL;
+    public static final String ALL_BETS = "allBets";
 
     /** Tournament URLs */
     public static final String TOURNAMENT_URL = "/tournament";
@@ -56,6 +57,8 @@ public abstract class VeikkausConstants {
     
     /** BetResult URLs */
     public static final String BET_RESULT_URL = "/betResult";
+    public static final String BET_RESULT_GET_ALL_URL = BET_RESULT_URL + URL_GET_ALL;
+    public static final String ALL_BET_RESULTS = "allBetResults";
 
     /** Player URLs */
     public static final String PLAYER_URL = "/player";
