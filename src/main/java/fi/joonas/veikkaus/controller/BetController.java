@@ -1,18 +1,20 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.BET_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_MODIFY;
-
+import fi.joonas.veikkaus.guientity.*;
+import fi.joonas.veikkaus.service.StatusService;
+import fi.joonas.veikkaus.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import fi.joonas.veikkaus.service.BetService;
+
+import java.util.List;
+
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(BET_URL)
@@ -20,54 +22,93 @@ public class BetController {
 
 	@Autowired
 	private BetService betService;
-	
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private StatusService statusService;
+
 	private static final Logger logger = LoggerFactory.getLogger(BetController.class);
 
-	/**
-	 * GET /create --> Create a new bet and save it in the database.
-	 */
-	@RequestMapping(URL_CREATE)
-	@ResponseBody
-	public String create(String userId, String statusId) {
+	@ModelAttribute(ALL_USERS)
+	public List<UserGuiEntity> populateUsers() {
+		return userService.findAllUsers();
+	}
+
+	@ModelAttribute(ALL_STATUSES)
+	public List<StatusGuiEntity> populateStatuses() {
+		return statusService.findAllStatuses();
+	}
+
+	@GetMapping(URL_GET_ALL)
+	public String getAll(Model model) {
+		model.addAttribute("bets", betService.findAllBets());
+		return "viewBetList";
+	}
+
+	@RequestMapping(URL_GET_DETAILS)
+	public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
+		BetGuiEntity bet = betService.findOneBet(id);
+		model.addAttribute("bet", bet);
+		return "viewBetDetails";
+	}
+
+	@GetMapping(URL_GET_CREATE)
+	public String getCreate(Model model) {
+		model.addAttribute("bet", new BetGuiEntity());
+		return "viewBetCreate";
+	}
+
+	@PostMapping(URL_POST_CREATE)
+	public String postCreate(@ModelAttribute BetGuiEntity bet) {
 		Long betId = null;
 		try {
-			betId = betService.insert(userId, statusId);
+			betId = betService.insert(bet);
 		} catch (Exception ex) {
 			logger.error("Error creating the bet: ", ex);
 			return "Error creating the bet: " + ex.toString();
 		}
-		return "bet succesfully created with id = " + betId;
+		logger.debug("Bet succesfully created with id = " + betId);
+		return "redirect:" + BET_GET_ALL_URL;
 	}
 
-	/**
-	 * GET /delete --> Delete the bet having the passed id.
-	 */
-	@RequestMapping(URL_DELETE)
-	@ResponseBody
-	public String delete(String id) {
-		try {
-			betService.delete(id);
-		} catch (Exception ex) {
-			logger.error("Error deleting the bet: ", ex);
-			return "Error deleting the bet:" + ex.toString();
-		}
-		return "bet succesfully deleted!";
+	@RequestMapping(URL_GET_MODIFY)
+	public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
+		BetGuiEntity bet = betService.findOneBet(id);
+		model.addAttribute("bet", bet);
+		return "viewBetModify";
 	}
 
-	/**
-	 * GET /modify --> Update the user and status for the
-	 * bet in the database having the passed id.
-	 */
-	@RequestMapping(URL_MODIFY)
-	@ResponseBody
-	public String updateBet(String id, String userId, String statusId) {
+	@PostMapping(URL_POST_MODIFY)
+	public String postModify(@ModelAttribute BetGuiEntity bet) {
+		Long betId = null;
 		try {
-			betService.modify(id, userId, statusId);
+			betId = betService.modify(bet);
 		} catch (Exception ex) {
 			logger.error("Error updating the bet: ", ex);
 			return "Error updating the bet: " + ex.toString();
 		}
-		return "bet succesfully updated for id = " + id;
+		logger.debug("Bet succesfully updated for id = " + betId);
+		return "redirect:" + BET_GET_ALL_URL;
+	}
+
+	@RequestMapping(URL_GET_DELETE)
+	public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
+		BetGuiEntity bet = betService.findOneBet(id);
+		model.addAttribute("bet", bet);
+		return "viewBetDelete";
+	}
+
+	@PostMapping(URL_POST_DELETE)
+	public String postDelete(@ModelAttribute BetGuiEntity bet) {
+		try {
+			betService.delete(bet.getId());
+		} catch (Exception ex) {
+			logger.error("Error deleting the bet: ", ex);
+			return "Error deleting the bet:" + ex.toString();
+		}
+		return "redirect:" + BET_GET_ALL_URL;
 	}
 
 }

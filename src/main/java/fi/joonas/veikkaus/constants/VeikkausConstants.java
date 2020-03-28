@@ -31,6 +31,7 @@ public abstract class VeikkausConstants {
     public static final String USER_GET_DETAILS_URL = USER_URL + URL_GET_DETAILS;
     public static final String USER_POST_DELETE_URL = USER_URL + URL_POST_DELETE;
     public static final String USER_POST_MODIFY_URL = USER_URL + URL_POST_MODIFY;
+    public static final String ALL_USERS = "allUsers";
     
     /** Status URLs */
     public static final String STATUS_URL = "/status";
@@ -39,7 +40,8 @@ public abstract class VeikkausConstants {
     public static final String STATUS_GET_DETAILS_URL = STATUS_URL + URL_GET_DETAILS;
     public static final String STATUS_POST_DELETE_URL = STATUS_URL + URL_POST_DELETE;
     public static final String STATUS_POST_MODIFY_URL = STATUS_URL + URL_POST_MODIFY;
-    
+    public static final String ALL_STATUSES = "allStatuses";
+
     /** Bet URLs */
     public static final String BET_URL = "/bet";
     public static final String BET_GET_ALL_URL = BET_URL + URL_GET_ALL;

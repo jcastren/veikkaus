@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>VEIKKAUS ### Bet details ###</title>
+	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
+	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
+	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+</head>
+<body>
+	<h1>Details</h1>
+	<p>
+		<a class="show-tooltip" th:href="@{/bet/getAll}"
+			title="Go back to bet list">Back to Bet list</a>
+	</p>
+	<br/>
+	<p th:text="'User name: ' + ${bet.user.name}"/>
+	<p th:text="'Status: ' + ${bet.status.description}"/>
+	<script th:src="@{/js/common-navigation.js}"></script>
+</body>
+</html>

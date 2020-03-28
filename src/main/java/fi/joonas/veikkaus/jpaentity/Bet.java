@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Table
 public class Bet {
 
-    @Id
+	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     
@@ -30,6 +30,10 @@ public class Bet {
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public User getUser() {

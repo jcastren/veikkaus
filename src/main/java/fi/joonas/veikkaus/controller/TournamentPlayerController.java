@@ -37,113 +37,113 @@ import fi.joonas.veikkaus.service.TournamentTeamService;
 @RequestMapping(TOURNAMENT_PLAYER_URL)
 public class TournamentPlayerController {
 
-	@Autowired
-	private TournamentPlayerService tournamentPlayerService;
-	
-	@Autowired
-	private TournamentTeamService tournamentTeamService;
+    @Autowired
+    private TournamentPlayerService tournamentPlayerService;
 
-	@Autowired
-	private PlayerService playerService;
+    @Autowired
+    private TournamentTeamService tournamentTeamService;
 
-	private static final Logger logger = LoggerFactory.getLogger(TournamentPlayerController.class);
+    @Autowired
+    private PlayerService playerService;
 
-	   	@ModelAttribute(ALL_TOURNAMENT_TEAMS)
-	    public List<TournamentTeamGuiEntity> populateTournamentTeams() {
-	        return tournamentTeamService.findAllTournamentTeams();
-	    }
+    private static final Logger logger = LoggerFactory.getLogger(TournamentPlayerController.class);
 
-	    @ModelAttribute(ALL_PLAYERS)
-	    public List<PlayerGuiEntity> populatePlayers() {
-	        return playerService.findAllPlayers();
-	    }
-		
-		@GetMapping(URL_GET_ALL)
-		public String getAll(Model model) {
-			model.addAttribute("tournamentPlayers", tournamentPlayerService.findAllTournamentPlayers());
-			return "viewTournamentPlayerList";
-		}
+    @ModelAttribute(ALL_TOURNAMENT_TEAMS)
+    public List<TournamentTeamGuiEntity> populateTournamentTeams() {
+        return tournamentTeamService.findAllTournamentTeams();
+    }
 
-		@RequestMapping(URL_GET_DETAILS)
-		public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
-			TournamentPlayerGuiEntity tournamentPlayer = tournamentPlayerService.findOneTournamentPlayer(id);
-			model.addAttribute("tournamentPlayer", tournamentPlayer);
-			return "viewTournamentPlayerDetails";
-		}
+    @ModelAttribute(ALL_PLAYERS)
+    public List<PlayerGuiEntity> populatePlayers() {
+        return playerService.findAllPlayers();
+    }
 
-		@GetMapping(URL_GET_CREATE)
-		public String getCreate(Model model) {
-			model.addAttribute("tournamentPlayer", new TournamentPlayerGuiEntity());
-			return "viewTournamentPlayerCreate";
-		}
+    @GetMapping(URL_GET_ALL)
+    public String getAll(Model model) {
+        model.addAttribute("tournamentPlayers", tournamentPlayerService.findAllTournamentPlayers());
+        return "viewTournamentPlayerList";
+    }
 
-		/**
-		 * POST /postCreate --> Create a new tournamentPlayer and save it in the database.
-		 */
-		@PostMapping(URL_POST_CREATE)
-		public String postCreate(@ModelAttribute TournamentPlayerGuiEntity tournamentPlayer) {
-			Long tournamentPlayerId = null;
-			try {
-				tournamentPlayerId = tournamentPlayerService.insert(tournamentPlayer);
-			} catch (Exception ex) {
-				logger.error("Error creating the tournamentPlayer: ", ex);
-				return "Error creating the tournamentPlayer: " + ex.toString();
-			}
-			logger.debug("Tournament player succesfully created with id = " + tournamentPlayerId);
-			return "redirect:"+ TOURNAMENT_PLAYER_GET_ALL_URL;
-		}
-		
-		/**
-		 * @param tournamentTeam
-		 * @param model
-		 * @return Tournament modify view
-		 */
-		@RequestMapping(URL_GET_MODIFY)
-		public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
-			TournamentPlayerGuiEntity tournamentPlayer = tournamentPlayerService.findOneTournamentPlayer(id);
-			model.addAttribute("tournamentPlayer", tournamentPlayer);
-			return "viewTournamentPlayerModify";
-		}
+    @RequestMapping(URL_GET_DETAILS)
+    public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
+        TournamentPlayerGuiEntity tournamentPlayer = tournamentPlayerService.findOneTournamentPlayer(id);
+        model.addAttribute("tournamentPlayer", tournamentPlayer);
+        return "viewTournamentPlayerDetails";
+    }
 
-		/**
-		 * Saves modified tournamentPlayer data to DB
-		 * 
-		 * @param tournamentPlayer
-		 * @return
-		 */
-		@PostMapping(URL_POST_MODIFY)
-		public String postModify(@ModelAttribute TournamentPlayerGuiEntity tournamentPlayer) {
-			Long tournamentPlayerId = null;
-			try {
-				tournamentPlayerId = tournamentPlayerService.modify(tournamentPlayer);
-			} catch (Exception ex) {
-				logger.error("Error updating the tournamentPlayer: ", ex);
-				return "Error updating the tournamentPlayer: " + ex.toString();
-			}
-			logger.debug("Tournament player succesfully updated for id = " + tournamentPlayerId);
-			return "redirect:" + TOURNAMENT_PLAYER_GET_ALL_URL;
-		}
-		
-		/**
-		 * @param tournamentPlayer
-		 * @param model
-		 * @return Tournament player modify view
-		 */
-		@RequestMapping(URL_GET_DELETE)
-		public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
-			TournamentPlayerGuiEntity tournamentPlayer = tournamentPlayerService.findOneTournamentPlayer(id);
-			model.addAttribute("tournamentPlayer", tournamentPlayer);
-			return "viewTournamentPlayerDelete";
-		}
+    @GetMapping(URL_GET_CREATE)
+    public String getCreate(Model model) {
+        model.addAttribute("tournamentPlayer", new TournamentPlayerGuiEntity());
+        return "viewTournamentPlayerCreate";
+    }
 
-		@PostMapping(URL_POST_DELETE)
-		public String postDelete(@ModelAttribute TournamentPlayerGuiEntity tournamentPlayer) {
-			try {
-				tournamentPlayerService.delete(tournamentPlayer.getId());
-			} catch (Exception ex) {
-				logger.error("Error deleting the tournamentPlayer: ", ex);
-				return "Error deleting the tournamentPlayer:" + ex.toString();
-			}
-			return "redirect:" + TOURNAMENT_PLAYER_GET_ALL_URL;
-		}
+    /**
+     * POST /postCreate --> Create a new tournamentPlayer and save it in the database.
+     */
+    @PostMapping(URL_POST_CREATE)
+    public String postCreate(@ModelAttribute TournamentPlayerGuiEntity tournamentPlayer) {
+        Long tournamentPlayerId = null;
+        try {
+            tournamentPlayerId = tournamentPlayerService.insert(tournamentPlayer);
+        } catch (Exception ex) {
+            logger.error("Error creating the tournamentPlayer: ", ex);
+            return "Error creating the tournamentPlayer: " + ex.toString();
+        }
+        logger.debug("Tournament player succesfully created with id = " + tournamentPlayerId);
+        return "redirect:" + TOURNAMENT_PLAYER_GET_ALL_URL;
+    }
+
+    /**
+     * @param tournamentTeam
+     * @param model
+     * @return Tournament modify view
+     */
+    @RequestMapping(URL_GET_MODIFY)
+    public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
+        TournamentPlayerGuiEntity tournamentPlayer = tournamentPlayerService.findOneTournamentPlayer(id);
+        model.addAttribute("tournamentPlayer", tournamentPlayer);
+        return "viewTournamentPlayerModify";
+    }
+
+    /**
+     * Saves modified tournamentPlayer data to DB
+     *
+     * @param tournamentPlayer
+     * @return
+     */
+    @PostMapping(URL_POST_MODIFY)
+    public String postModify(@ModelAttribute TournamentPlayerGuiEntity tournamentPlayer) {
+        Long tournamentPlayerId = null;
+        try {
+            tournamentPlayerId = tournamentPlayerService.modify(tournamentPlayer);
+        } catch (Exception ex) {
+            logger.error("Error updating the tournamentPlayer: ", ex);
+            return "Error updating the tournamentPlayer: " + ex.toString();
+        }
+        logger.debug("Tournament player succesfully updated for id = " + tournamentPlayerId);
+        return "redirect:" + TOURNAMENT_PLAYER_GET_ALL_URL;
+    }
+
+    /**
+     * @param tournamentPlayer
+     * @param model
+     * @return Tournament player modify view
+     */
+    @RequestMapping(URL_GET_DELETE)
+    public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
+        TournamentPlayerGuiEntity tournamentPlayer = tournamentPlayerService.findOneTournamentPlayer(id);
+        model.addAttribute("tournamentPlayer", tournamentPlayer);
+        return "viewTournamentPlayerDelete";
+    }
+
+    @PostMapping(URL_POST_DELETE)
+    public String postDelete(@ModelAttribute TournamentPlayerGuiEntity tournamentPlayer) {
+        try {
+            tournamentPlayerService.delete(tournamentPlayer.getId());
+        } catch (Exception ex) {
+            logger.error("Error deleting the tournamentPlayer: ", ex);
+            return "Error deleting the tournamentPlayer:" + ex.toString();
+        }
+        return "redirect:" + TOURNAMENT_PLAYER_GET_ALL_URL;
+    }
 }
