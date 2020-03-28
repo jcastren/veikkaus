@@ -18,107 +18,58 @@ public abstract class VeikkausConstants {
     /** UserRole URLs*/
     public static final String USER_ROLE_URL = "/userRole";
     public static final String USER_ROLE_GET_ALL_URL = USER_ROLE_URL + URL_GET_ALL;
-    public static final String USER_ROLE_GET_CREATE_URL = USER_ROLE_URL + URL_GET_CREATE;
-    public static final String USER_ROLE_GET_DETAILS_URL = USER_ROLE_URL + URL_GET_DETAILS;
-    public static final String USER_ROLE_POST_DELETE_URL = USER_ROLE_URL + URL_POST_DELETE;
-    public static final String USER_ROLE_POST_MODIFY_URL = USER_ROLE_URL + URL_POST_MODIFY;
     public static final String ALL_USER_ROLES = "allUserRoles";
     
     /** User URLs */
     public static final String USER_URL = "/user";
     public static final String USER_GET_ALL_URL = USER_URL + URL_GET_ALL;
-    public static final String USER_GET_CREATE_URL = USER_URL + URL_GET_CREATE;
-    public static final String USER_GET_DETAILS_URL = USER_URL + URL_GET_DETAILS;
-    public static final String USER_POST_DELETE_URL = USER_URL + URL_POST_DELETE;
-    public static final String USER_POST_MODIFY_URL = USER_URL + URL_POST_MODIFY;
     public static final String ALL_USERS = "allUsers";
     
     /** Status URLs */
     public static final String STATUS_URL = "/status";
     public static final String STATUS_GET_ALL_URL = STATUS_URL + URL_GET_ALL;
-    public static final String STATUS_GET_CREATE_URL = STATUS_URL + URL_GET_CREATE;
-    public static final String STATUS_GET_DETAILS_URL = STATUS_URL + URL_GET_DETAILS;
-    public static final String STATUS_POST_DELETE_URL = STATUS_URL + URL_POST_DELETE;
-    public static final String STATUS_POST_MODIFY_URL = STATUS_URL + URL_POST_MODIFY;
     public static final String ALL_STATUSES = "allStatuses";
 
     /** Bet URLs */
     public static final String BET_URL = "/bet";
     public static final String BET_GET_ALL_URL = BET_URL + URL_GET_ALL;
-    public static final String BET_GET_CREATE_URL = BET_URL + URL_GET_CREATE;
-    public static final String BET_GET_DETAILS_URL = BET_URL + URL_GET_DETAILS;
-    public static final String BET_POST_DELETE_URL = BET_URL + URL_POST_DELETE;
-    public static final String BET_POST_MODIFY_URL = BET_URL + URL_POST_MODIFY;
-    
+
     /** Tournament URLs */
     public static final String TOURNAMENT_URL = "/tournament";
     public static final String TOURNAMENT_GET_ALL_URL = TOURNAMENT_URL + URL_GET_ALL;
-    public static final String TOURNAMENT_GET_CREATE_URL = TOURNAMENT_URL + URL_GET_CREATE;
-    public static final String TOURNAMENT_GET_DETAILS_URL = TOURNAMENT_URL + URL_GET_DETAILS;
-    public static final String TOURNAMENT_POST_DELETE_URL = TOURNAMENT_URL + URL_POST_DELETE;
-    public static final String TOURNAMENT_POST_MODIFY_URL = TOURNAMENT_URL + URL_POST_MODIFY;
     public static final String ALL_TOURNAMENTS = "allTournaments";
 
     /** Team URLs */
     public static final String TEAM_URL = "/team";
     public static final String TEAM_GET_ALL_URL = TEAM_URL + URL_GET_ALL;
-    public static final String TEAM_GET_CREATE_URL = TEAM_URL + URL_GET_CREATE;
-    public static final String TEAM_GET_DETAILS_URL = TEAM_URL + URL_GET_DETAILS;
-    public static final String TEAM_POST_DELETE_URL = TEAM_URL + URL_POST_DELETE;
-    public static final String TEAM_POST_MODIFY_URL = TEAM_URL + URL_POST_MODIFY;
     public static final String ALL_TEAMS = "allTeams";
     
     /** TournamentTeam URLs */
     public static final String TOURNAMENT_TEAM_URL = "/tournamentTeam";
     public static final String TOURNAMENT_TEAM_GET_ALL_URL = TOURNAMENT_TEAM_URL + URL_GET_ALL;
-    public static final String TOURNAMENT_TEAM_GET_CREATE_URL = TOURNAMENT_TEAM_URL + URL_GET_CREATE;
-    public static final String TOURNAMENT_TEAM_GET_DETAILS_URL = TOURNAMENT_TEAM_URL + URL_GET_DETAILS;
-    public static final String TOURNAMENT_TEAM_POST_DELETE_URL = TOURNAMENT_TEAM_URL + URL_POST_DELETE;
-    public static final String TOURNAMENT_TEAM_POST_MODIFY_URL = TOURNAMENT_TEAM_URL + URL_POST_MODIFY;
     public static final String ALL_TOURNAMENT_TEAMS = "allTournamentTeams";
 
     /** Game URLs */
     public static final String GAME_URL = "/game";
     public static final String GAME_GET_ALL_URL = GAME_URL + URL_GET_ALL;
-    public static final String GAME_GET_CREATE_URL = GAME_URL + URL_GET_CREATE;
-    public static final String GAME_GET_DETAILS_URL = GAME_URL + URL_GET_DETAILS;
-    public static final String GAME_POST_DELETE_URL = GAME_URL + URL_POST_DELETE;
-    public static final String GAME_POST_MODIFY_URL = GAME_URL + URL_POST_MODIFY;
     public static final String ALL_GAMES = "allGames";
     
     /** BetResult URLs */
     public static final String BET_RESULT_URL = "/betResult";
-    public static final String BET_RESULT_GET_ALL_URL = BET_RESULT_URL + URL_GET_ALL;
-    public static final String BET_RESULT_GET_CREATE_URL = BET_RESULT_URL + URL_GET_CREATE;
-    public static final String BET_RESULT_GET_DETAILS_URL = BET_RESULT_URL + URL_GET_DETAILS;
-    public static final String BET_RESULT_POST_DELETE_URL = BET_RESULT_URL + URL_POST_DELETE;
-    public static final String BET_RESULT_POST_MODIFY_URL = BET_RESULT_URL + URL_POST_MODIFY;
 
     /** Player URLs */
     public static final String PLAYER_URL = "/player";
     public static final String PLAYER_GET_ALL_URL = PLAYER_URL + URL_GET_ALL;
-    public static final String PLAYER_GET_CREATE_URL = PLAYER_URL + URL_GET_CREATE;
-    public static final String PLAYER_GET_DETAILS_URL = PLAYER_URL + URL_GET_DETAILS;
-    public static final String PLAYER_POST_DELETE_URL = PLAYER_URL + URL_POST_DELETE;
-    public static final String PLAYER_POST_MODIFY_URL = PLAYER_URL + URL_POST_MODIFY;
     public static final String ALL_PLAYERS = "allPlayers";
     
     /** TournamentPlayer URLs */
     public static final String TOURNAMENT_PLAYER_URL = "/tournamentPlayer";
     public static final String TOURNAMENT_PLAYER_GET_ALL_URL = TOURNAMENT_PLAYER_URL + URL_GET_ALL;
-    public static final String TOURNAMENT_PLAYER_GET_CREATE_URL = TOURNAMENT_PLAYER_URL + URL_GET_CREATE;
-    public static final String TOURNAMENT_PLAYER_GET_DETAILS_URL = TOURNAMENT_PLAYER_URL + URL_GET_DETAILS;
-    public static final String TOURNAMENT_PLAYER_POST_DELETE_URL = TOURNAMENT_PLAYER_URL + URL_POST_DELETE;
-    public static final String TOURNAMENT_PLAYER_POST_MODIFY_URL = TOURNAMENT_PLAYER_URL + URL_POST_MODIFY;
     public static final String ALL_TOURNAMENT_PLAYERS = "allTournamentPlayers";
   
     /** Scorer URLs */
     public static final String SCORER_URL = "/scorer";
     public static final String SCORER_GET_ALL_URL = SCORER_URL + URL_GET_ALL;
-    public static final String SCORER_GET_CREATE_URL = SCORER_URL + URL_GET_CREATE;
-    public static final String SCORER_GET_DETAILS_URL = SCORER_URL + URL_GET_DETAILS;
-    public static final String SCORER_POST_DELETE_URL = SCORER_URL + URL_POST_DELETE;
-    public static final String SCORER_POST_MODIFY_URL = SCORER_URL + URL_POST_MODIFY;
 
     /** URL parameters */
     public static final String PARAM_NAME_AWAY_SCORE = "awayScore";
