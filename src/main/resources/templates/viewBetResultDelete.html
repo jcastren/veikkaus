@@ -2,33 +2,32 @@
 <html lang="fi" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>VEIKKAUS ### Tournament player confirm delete ###</title>
+	<title>VEIKKAUS ### Bet result confirm delete ###</title>
 	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
 	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
 	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
 	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
 </head>
 <body>
-	<h1>Tournament player delete confirm</h1>
-	<p th:text="'Tournament name: ' + ${tournamentPlayer.tournamentTeam.tournament.name}"/>
-	<p th:text="'Tournament year: ' + ${tournamentPlayer.tournamentTeam.tournament.year}"/>
-	<p th:text="'Tournament team name: ' + ${tournamentPlayer.tournamentTeam.team.name}"/>
-	<p th:text="'Tournament player name: ' + ${tournamentPlayer.player.firstName} + ' ' + ${tournamentPlayer.player.lastName}"/>
-	<p th:text="'Player goals in this tournament: ' + ${tournamentPlayer.goals}"/>
-	<form action="#" th:action="@{/tournamentPlayer/postDelete}"
-		th:object="${tournamentPlayer}" method="post">
+	<h1>Bet result delete confirm</h1>
+	<p th:text="'Bet user name: ' + ${betResult.bet.user.name}"/>
+	<p th:text="'Home team: ' + ${betResult.game.homeTeam.team.name}"/>
+	<p th:text="'Away team: ' + ${betResult.game.awayTeam.team.name}"/>
+	<p th:text="'Home score: ' + ${betResult.homeScore}"/>
+	<p th:text="'Away score: ' + ${betResult.awayScore}"/>
+	<form action="#" th:action="@{/betResult/postDelete}"
+		th:object="${betResult}" method="post">
 		<input type="hidden" th:field="*{id}" />
 		<button type="submit"
 			class="ui-button ui-corner-all ui-widget"
-			title="Confirm deleting of tournament player">Confirm deleting
-			tournament player</button>
+			title="Confirm deleting of Bet result">Confirm deleting Bet result</button>
 	</form>
-	<form action="#" th:action="@{/tournamentPlayer/getAll}"
-		th:object="${tournamentPlayer}" method="get">
+	<form action="#" th:action="@{/betResult/getAll}"
+		th:object="${betResult}" method="get">
 		<button type="submit"
 			class="ui-button ui-corner-all ui-widget"
 			title="Cancel deleting of tournament team">
-			Cancel deleting tournament player
+			Cancel deleting Bet result
 		</button>
 	</form>
 	<script th:src="@{/js/common-navigation.js}"></script>
