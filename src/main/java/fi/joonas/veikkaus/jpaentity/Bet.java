@@ -1,11 +1,7 @@
 package fi.joonas.veikkaus.jpaentity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table
@@ -14,10 +10,16 @@ public class Bet {
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    
+
+	@NotNull
     @ManyToOne
     private User user;
-    
+
+	@NotNull
+	@ManyToOne
+	private Tournament tournament;
+
+	@NotNull
     @ManyToOne
     private Status status;
 
@@ -42,6 +44,14 @@ public class Bet {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Tournament getTournament() {
+		return tournament;
+	}
+
+	public void setTournament(Tournament tournament) {
+		this.tournament = tournament;
 	}
 
 	public Status getStatus() {

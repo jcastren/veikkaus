@@ -1,15 +1,18 @@
 package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
-import fi.joonas.veikkaus.guientity.BetGuiEntity;
-import fi.joonas.veikkaus.jpaentity.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import fi.joonas.veikkaus.dao.BetDao;
 import fi.joonas.veikkaus.dao.StatusDao;
+import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.dao.UserDao;
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
+import fi.joonas.veikkaus.guientity.BetGuiEntity;
+import fi.joonas.veikkaus.jpaentity.Bet;
+import fi.joonas.veikkaus.jpaentity.Status;
+import fi.joonas.veikkaus.jpaentity.Tournament;
+import fi.joonas.veikkaus.jpaentity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,10 @@ public class BetService {
 	
 	@Autowired
 	UserDao userDao;
-	
+
+	@Autowired
+	TournamentDao tournamentDao;
+
 	@Autowired
 	StatusDao statusDao;
 
@@ -30,8 +36,14 @@ public class BetService {
 		String userId = betGe.getUser().getId();
 		User userDb = userDao.findOne(Long.valueOf(userId));
 		if (userDb == null) {
+			throw new VeikkausServiceException("User with id: " + userId + " wasn't found, insert failed");
+		}
+
+		String tournamentId = betGe.getTournament().getId();
+		Tournament tournamentDb = tournamentDao.findOne(Long.valueOf(userId));
+		if (tournamentDb == null) {
 			throw new VeikkausServiceException(
-					"User with id: " + userId + " wasn't found, insert failed");
+					"Tournament with id: " + tournamentId + " wasn't found, insert failed");
 		}
 
 		String statusId = betGe.getStatus().getId();
@@ -41,6 +53,7 @@ public class BetService {
 		}
 
 		betGe.setUser(UserService.convertDbToGui(userDb));
+		betGe.setTournament(TournamentService.convertDbToGui(tournamentDb));
 		betGe.setStatus(StatusService.convertDbToGui(statusDb));
 
 		return betDao.save(convertGuiToDb(betGe)).getId();
@@ -59,6 +72,12 @@ public class BetService {
 			throw new VeikkausServiceException("User with id: " + id + " wasn't found, modify failed");
 		}
 
+		String tournamentId = betGe.getTournament().getId();
+		Tournament tournamentDb = tournamentDao.findOne(Long.valueOf(tournamentId));
+		if (tournamentDb == null) {
+			throw new VeikkausServiceException("Tournament with id: " + tournamentId + " wasn't found, modify failed");
+		}
+
 		String statusId = betGe.getStatus().getId();
 		Status statusDb = statusDao.findOne(Long.valueOf(statusId));
 		if (statusDb == null) {
@@ -66,6 +85,7 @@ public class BetService {
 		}
 
 		betGe.setUser(UserService.convertDbToGui(userDb));
+		betGe.setTournament(TournamentService.convertDbToGui(tournamentDb));
 		betGe.setStatus(StatusService.convertDbToGui(statusDb));
 
 		return betDao.save(convertGuiToDb(betGe)).getId();
@@ -98,6 +118,7 @@ public class BetService {
 
 		ge.setId(db.getId().toString());
 		ge.setUser(UserService.convertDbToGui(db.getUser()));
+		ge.setTournament(TournamentService.convertDbToGui(db.getTournament()));
 		ge.setStatus(StatusService.convertDbToGui(db.getStatus()));
 		return ge;
 	}
@@ -111,6 +132,7 @@ public class BetService {
 			db.setId(null);
 		}
 		db.setUser(UserService.convertGuiToDb(ge.getUser()));
+		db.setTournament(TournamentService.convertGuiToDb(ge.getTournament()));
 		db.setStatus(StatusService.convertGuiToDb(ge.getStatus()));
 
 		return db;

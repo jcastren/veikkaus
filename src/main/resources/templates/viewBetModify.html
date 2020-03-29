@@ -27,6 +27,14 @@
 			</select>
 		</div>
 		<div>
+			<label class="show-tooltip" title="Select a tournament for the bet">Select tournament</label>
+			<select th:field="*{tournament.id}">
+				<option th:each="tournament : ${allTournaments}"
+						th:value="${tournament.id}" th:text="${tournament.name}">
+				</option>
+			</select>
+		</div>
+		<div>
 			<label class="show-tooltip" title="Select a status to the Bet">Select status</label>
 			<select th:field="*{status.id}">
 				<option th:each="status : ${allStatuses}"

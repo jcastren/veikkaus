@@ -1,7 +1,12 @@
 package fi.joonas.veikkaus.controller;
 
-import fi.joonas.veikkaus.guientity.*;
+import fi.joonas.veikkaus.guientity.BetGuiEntity;
+import fi.joonas.veikkaus.guientity.StatusGuiEntity;
+import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
+import fi.joonas.veikkaus.guientity.UserGuiEntity;
+import fi.joonas.veikkaus.service.BetService;
 import fi.joonas.veikkaus.service.StatusService;
+import fi.joonas.veikkaus.service.TournamentService;
 import fi.joonas.veikkaus.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import fi.joonas.veikkaus.service.BetService;
 
 import java.util.List;
 
@@ -27,6 +30,9 @@ public class BetController {
 	private UserService userService;
 
 	@Autowired
+	private TournamentService tournamentService;
+
+	@Autowired
 	private StatusService statusService;
 
 	private static final Logger logger = LoggerFactory.getLogger(BetController.class);
@@ -34,6 +40,11 @@ public class BetController {
 	@ModelAttribute(ALL_USERS)
 	public List<UserGuiEntity> populateUsers() {
 		return userService.findAllUsers();
+	}
+
+	@ModelAttribute(ALL_TOURNAMENTS)
+	public List<TournamentGuiEntity> populateTournaments() {
+		return tournamentService.findAllTournaments();
 	}
 
 	@ModelAttribute(ALL_STATUSES)

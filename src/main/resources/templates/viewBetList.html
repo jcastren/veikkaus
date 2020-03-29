@@ -20,10 +20,12 @@
 	<table>
 		<tr>
 			<th>Bet user</th>
+			<th>Bet tournament</th>
 			<th>Bet status</th>
 		</tr>
 		<tr th:each="bet : ${bets}">
 			<td th:text="${bet.user.name}" />
+			<td th:text="${bet.tournament.name}" />
 			<td th:text="${bet.status.description}" />
 			<td><a class="show-tooltip"
 				th:href="@{/bet/getDetails(id=${bet.id})}"
