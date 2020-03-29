@@ -28,8 +28,8 @@
 			<th>Game date</th>
 		</tr>
 		<tr th:each="game : ${games}">
-			<td th:text="${game.homeTeam.tournament.name}"/>
-			<td th:text="${game.homeTeam.tournament.year}"/>
+			<td th:text="${game.tournament.name}"/>
+			<td th:text="${game.tournament.year}"/>
 			<td th:text="${game.homeTeam.team.name}"/>
 			<td th:text="${game.awayTeam.team.name}"/>
 			<td th:text="${game.homeScore}" />

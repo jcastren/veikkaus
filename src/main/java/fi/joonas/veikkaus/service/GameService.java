@@ -2,11 +2,13 @@ package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.GameDao;
+import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.dao.TournamentTeamDao;
 import fi.joonas.veikkaus.exception.VeikkausConversionException;
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
 import fi.joonas.veikkaus.guientity.GameGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Game;
+import fi.joonas.veikkaus.jpaentity.Tournament;
 import fi.joonas.veikkaus.jpaentity.TournamentTeam;
 import fi.joonas.veikkaus.util.VeikkausUtil;
 import org.slf4j.Logger;
@@ -27,12 +29,23 @@ public class GameService {
 	GameDao gameDao;
 
 	@Autowired
+	TournamentDao tournamentDao;
+
+	@Autowired
 	TournamentTeamDao tournamentTeamDao;
 	
 	private static final Logger logger = LoggerFactory.getLogger(GameService.class);
 
 	public Long insert(GameGuiEntity gameGe) throws VeikkausServiceException {
 		Long retGameId = null;
+
+		String tournamentId = gameGe.getTournament().getId();
+		Tournament tournamentDb = tournamentDao.findOne(Long.valueOf(tournamentId));
+		if (tournamentDb == null) {
+			throw new VeikkausServiceException(
+					String.format("Tournament with id: %s wasn't found, insert failed", tournamentId));
+		}
+
 		String homeTeamId = gameGe.getHomeTeam().getId();
 		TournamentTeam homeTeamDb = tournamentTeamDao.findOne(Long.valueOf(homeTeamId));
 		if (homeTeamDb == null) {
@@ -48,6 +61,7 @@ public class GameService {
 		}
 
 		/** TODO Why converting back ??? */
+		gameGe.setTournament(TournamentService.convertDbToGui(tournamentDb));
 		gameGe.setHomeTeam(TournamentTeamService.convertDbToGui(homeTeamDb));
 		gameGe.setAwayTeam(TournamentTeamService.convertDbToGui(awayTeamDb));
 
@@ -72,19 +86,29 @@ public class GameService {
 		if (gameDb == null) {
 			throw new VeikkausServiceException("Game with id: " + id + " wasn't found, modify failed");
 		}
-			
+
+		String tournamentId = gameGe.getTournament().getId();
+		Tournament tournamentDb = tournamentDao.findOne(Long.valueOf(tournamentId));
+		if (tournamentDb == null) {
+			throw new VeikkausServiceException(
+					String.format("Tournament with id: %s wasn't found, modify failed", tournamentId));
+		}
+
 		String homeTeamId = gameGe.getHomeTeam().getId();
 		TournamentTeam homeTeamDb = tournamentTeamDao.findOne(Long.valueOf(homeTeamId));
 		if (homeTeamDb == null) {
-			throw new VeikkausServiceException("Home team with id: " + homeTeamId + " wasn't found, modify failed");
+			throw new VeikkausServiceException(
+					String.format("Home team with id: %s wasn't found, modify failed", homeTeamId));
 		}
 		
 		String awayTeamId = gameGe.getAwayTeam().getId();
 		TournamentTeam awayTeamDb = tournamentTeamDao.findOne(Long.valueOf(awayTeamId));
 		if (awayTeamDb == null) {
-			throw new VeikkausServiceException("Away team with id: " + awayTeamId + " wasn't found, modify failed");
+			throw new VeikkausServiceException(
+					String.format("Away team with id: %s wasn't found, modify failed", awayTeamId));
 		}
 		
+		gameGe.setTournament(TournamentService.convertDbToGui(tournamentDb));
 		gameGe.setHomeTeam(TournamentTeamService.convertDbToGui(homeTeamDb));
 		gameGe.setAwayTeam(TournamentTeamService.convertDbToGui(awayTeamDb));
 		
@@ -101,8 +125,8 @@ public class GameService {
 	 * @param id
 	 * @return
 	 */
-	public boolean delete(String id) throws VeikkausServiceException {
-		boolean succeed = false;
+	public boolean delete(String id)  throws VeikkausServiceException {
+		boolean succeed;
 		gameDao.delete(Long.valueOf(id));
 		succeed = true;
 		return succeed;
@@ -123,11 +147,6 @@ public class GameService {
 		return geList;
 	}
 	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
 	public GameGuiEntity findOneGame(String id) {
 		GameGuiEntity gameGe = convertDbToGui(gameDao.findOne(Long.valueOf(id)));
 		return gameGe;
@@ -137,11 +156,12 @@ public class GameService {
 		GameGuiEntity ge = new GameGuiEntity();
 		
 		ge.setId(db.getId().toString());
+		ge.setTournament(TournamentService.convertDbToGui(db.getTournament()));
+		ge.setHomeTeam(TournamentTeamService.convertDbToGui(db.getHomeTeam()));
+		ge.setAwayTeam(TournamentTeamService.convertDbToGui(db.getAwayTeam()));
 		ge.setHomeScore(Integer.valueOf(db.getHomeScore()).toString());
 		ge.setAwayScore(Integer.valueOf(db.getAwayScore()).toString());
 		ge.setGameDate(VeikkausUtil.getDateAsString(db.getGameDate()));
-		ge.setHomeTeam(TournamentTeamService.convertDbToGui(db.getHomeTeam()));
-		ge.setAwayTeam(TournamentTeamService.convertDbToGui(db.getAwayTeam()));
 		return ge;
 	}
 	
@@ -172,6 +192,7 @@ public class GameService {
 			logger.error("Error while parsing date: " + ge.getGameDate(), pe);
 			throw new VeikkausConversionException("Error while parsing date: " + ge.getGameDate(), pe);
 		}
+		db.setTournament(TournamentService.convertGuiToDb(ge.getTournament()));
 		db.setHomeTeam(TournamentTeamService.convertGuiToDb(ge.getHomeTeam()));
 		db.setAwayTeam(TournamentTeamService.convertGuiToDb(ge.getAwayTeam()));
 		

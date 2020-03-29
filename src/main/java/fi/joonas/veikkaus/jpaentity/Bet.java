@@ -25,8 +25,9 @@ public class Bet {
 
     public Bet() {}
 
-	public Bet(User user, Status status) {
+	public Bet(User user, Tournament tournament, Status status) {
 		this.user = user;
+		this.tournament = tournament;
 		this.status = status;
 	}
 

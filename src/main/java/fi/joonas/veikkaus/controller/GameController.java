@@ -1,33 +1,5 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.ALL_TOURNAMENTS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.GAME_GET_ALL_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.GAME_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
 import fi.joonas.veikkaus.guientity.GameGuiEntity;
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
@@ -35,6 +7,17 @@ import fi.joonas.veikkaus.guientity.TournamentTeamGuiEntity;
 import fi.joonas.veikkaus.service.GameService;
 import fi.joonas.veikkaus.service.TournamentService;
 import fi.joonas.veikkaus.service.TournamentTeamService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(GAME_URL)
@@ -101,33 +84,27 @@ public class GameController {
 		return "viewGameCreate";
 	}
 
-	/**
-	 * POST /postCreate --> Create a new game and save it in the database.
-	 */
 	@PostMapping(URL_POST_CREATE)
 	public String postCreate(@ModelAttribute GameGuiEntity game) {
 		Long gameId = null;
 		try {
+			game.setTournament(new TournamentGuiEntity());
 			game.setHomeTeam(new TournamentTeamGuiEntity());
 			game.setAwayTeam(new TournamentTeamGuiEntity());
 			String[] split = game.getId().split(",");
-			game.getHomeTeam().setId(split[0]);
-			game.getAwayTeam().setId(split[1]);
+			game.getTournament().setId(split[0]);
+			game.getHomeTeam().setId(split[1]);
+			game.getAwayTeam().setId(split[2]);
 			game.setId(null);
 			gameId = gameService.insert(game);
 		} catch (Exception ex) {
 			logger.error("Error creating the game: ", ex);
 			return "Error creating the game: " + ex.toString();
 		}
-		logger.debug("Game succesfully created with id = " + gameId);
+		logger.debug("Game successfully created with id = " + gameId);
 		return "redirect:"+ GAME_GET_ALL_URL;
 	}
 	
-	/**
-	 * @param game
-	 * @param model
-	 * @return Tournament modify view
-	 */
 	@RequestMapping(URL_GET_MODIFY)
 	public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
 		GameGuiEntity game = gameService.findOneGame(id);
@@ -135,36 +112,27 @@ public class GameController {
 		return "viewGameModify";
 	}
 
-	/**
-	 * Saves modified game data to DB
-	 * 
-	 * @param game
-	 * @return
-	 */
 	@PostMapping(URL_POST_MODIFY)
 	public String postModify(@ModelAttribute GameGuiEntity game) {
 		String gameId = game.getId();
 		try {
+			game.setTournament(new TournamentGuiEntity());
 			game.setHomeTeam(new TournamentTeamGuiEntity());
 			game.setAwayTeam(new TournamentTeamGuiEntity());
 			String[] split = game.getId().split(",");
-			game.getHomeTeam().setId(split[0]);
-			game.getAwayTeam().setId(split[1]);
+			game.getTournament().setId(split[0]);
+			game.getHomeTeam().setId(split[1]);
+			game.getAwayTeam().setId(split[2]);
 			game.setId(gameId);
 			gameId = gameService.modify(game).toString();
 		} catch (Exception ex) {
 			logger.error("Error updating the game: ", ex);
 			return "Error updating the game: " + ex.toString();
 		}
-		logger.debug("Game succesfully updated for id = " + gameId);
+		logger.debug("Game successfully updated for id = " + gameId);
 		return "redirect:" + GAME_GET_ALL_URL;
 	}
 	
-	/**
-	 * @param game
-	 * @param model
-	 * @return Game modify view
-	 */
 	@RequestMapping(URL_GET_DELETE)
 	public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
 		GameGuiEntity game = gameService.findOneGame(id);

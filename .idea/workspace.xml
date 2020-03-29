@@ -2,18 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fb06dca5-7efa-47da-9ba3-9bafa7da0c46" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/constants/VeikkausConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/constants/VeikkausConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/controller/BetController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/controller/BetController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/controller/TournamentPlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/controller/TournamentPlayerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/controller/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/guientity/GameGuiEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/guientity/GameGuiEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/jpaentity/Bet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/jpaentity/Bet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/service/BetService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/service/BetService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/jpaentity/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/jpaentity/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fi/joonas/veikkaus/service/GameService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/viewGameCreate.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/viewGameCreate.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/viewGameList.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/viewGameList.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/viewGameModify.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/viewGameModify.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fi/joonas/veikkaus/util/JUnitTestUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fi/joonas/veikkaus/util/JUnitTestUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -50,7 +57,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.import" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -60,7 +67,7 @@
       <recent name="C:\veikkaus\src\main\resources\templates" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Application">
     <configuration name="Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="fi.joonas.veikkaus.Application" />
       <module name="veikkaus" />
@@ -68,9 +75,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="BetControllerTest.testCreateAndDelete" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="veikkaus" />
+      <option name="PACKAGE_NAME" value="fi.joonas.veikkaus.controller" />
+      <option name="MAIN_CLASS_NAME" value="fi.joonas.veikkaus.controller.BetControllerTest" />
+      <option name="METHOD_NAME" value="testCreateAndDelete" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Application" />
+        <item itemvalue="JUnit.BetControllerTest.testCreateAndDelete" />
       </list>
     </recent_temporary>
   </component>
@@ -89,65 +107,85 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="275" y="22" key="#Project_Structure/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584795026019" />
-    <state x="137" y="19" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584795182271">
+    <state x="137" y="19" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585465045779">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="137" y="19" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584795182271" />
-    <state x="488" y="48" key="#com.intellij.ide.util.MemberChooser" timestamp="1585406437716">
+    <state x="137" y="19" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585465045779" />
+    <state x="488" y="48" key="#com.intellij.ide.util.MemberChooser" timestamp="1585475021432">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="488" y="48" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585406437716" />
+    <state x="488" y="48" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585475021432" />
+    <state x="533" y="242" key="DBNavigator.ConnectionAuthenticationDialog" timestamp="1585463295047">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="533" y="242" key="DBNavigator.ConnectionAuthenticationDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585463295047" />
+    <state x="338" y="64" key="DBNavigator.ConnectionInfoDialog" timestamp="1585468442057">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="338" y="64" key="DBNavigator.ConnectionInfoDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585468442057" />
+    <state x="263" y="79" key="DBNavigator.DatasetFilterDialog" timestamp="1585472253225">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="263" y="79" key="DBNavigator.DatasetFilterDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585472253225" />
+    <state x="473" y="296" key="DBNavigator.ObjectNameFilterConditionDialog" timestamp="1585463365304">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="473" y="296" key="DBNavigator.ObjectNameFilterConditionDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585463365304" />
+    <state x="213" y="19" key="DBNavigator.ProjectSettingsDialog" timestamp="1585468391371">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="213" y="19" key="DBNavigator.ProjectSettingsDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585468391371" />
     <state x="463" y="118" key="FileChooserDialogImpl" timestamp="1584787448748">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584787448748" />
-    <state width="1323" height="257" key="GridCell.Tab.0.bottom" timestamp="1585408801627">
+    <state width="1323" height="300" key="GridCell.Tab.0.bottom" timestamp="1585476853789">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="257" key="GridCell.Tab.0.bottom/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585408801627" />
-    <state width="1323" height="257" key="GridCell.Tab.0.center" timestamp="1585408801627">
+    <state width="1323" height="300" key="GridCell.Tab.0.bottom/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585476853789" />
+    <state width="1323" height="300" key="GridCell.Tab.0.center" timestamp="1585476853789">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="257" key="GridCell.Tab.0.center/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585408801627" />
-    <state width="1323" height="257" key="GridCell.Tab.0.left" timestamp="1585408801626">
+    <state width="1323" height="300" key="GridCell.Tab.0.center/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585476853789" />
+    <state width="1323" height="300" key="GridCell.Tab.0.left" timestamp="1585476853788">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="257" key="GridCell.Tab.0.left/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585408801626" />
-    <state width="1323" height="257" key="GridCell.Tab.0.right" timestamp="1585408801627">
+    <state width="1323" height="300" key="GridCell.Tab.0.left/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585476853788" />
+    <state width="1323" height="300" key="GridCell.Tab.0.right" timestamp="1585476853789">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="257" key="GridCell.Tab.0.right/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585408801627" />
-    <state width="1323" height="257" key="GridCell.Tab.1.bottom" timestamp="1585408801369">
+    <state width="1323" height="300" key="GridCell.Tab.0.right/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585476853789" />
+    <state width="1323" height="300" key="GridCell.Tab.1.bottom" timestamp="1585476853558">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="257" key="GridCell.Tab.1.bottom/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585408801369" />
-    <state width="1323" height="257" key="GridCell.Tab.1.center" timestamp="1585408801369">
+    <state width="1323" height="300" key="GridCell.Tab.1.bottom/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585476853558" />
+    <state width="1323" height="300" key="GridCell.Tab.1.center" timestamp="1585476853558">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="257" key="GridCell.Tab.1.center/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585408801369" />
-    <state width="1323" height="257" key="GridCell.Tab.1.left" timestamp="1585408801368">
+    <state width="1323" height="300" key="GridCell.Tab.1.center/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585476853558" />
+    <state width="1323" height="300" key="GridCell.Tab.1.left" timestamp="1585476853558">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="257" key="GridCell.Tab.1.left/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585408801368" />
-    <state width="1323" height="257" key="GridCell.Tab.1.right" timestamp="1585408801369">
+    <state width="1323" height="300" key="GridCell.Tab.1.left/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585476853558" />
+    <state width="1323" height="300" key="GridCell.Tab.1.right" timestamp="1585476853558">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="257" key="GridCell.Tab.1.right/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585408801369" />
-    <state x="184" y="0" key="SettingsEditor" timestamp="1584795354592">
+    <state width="1323" height="300" key="GridCell.Tab.1.right/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585476853558" />
+    <state x="184" y="0" key="SettingsEditor" timestamp="1585413580338">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="184" y="0" key="SettingsEditor/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584795354592" />
-    <state x="379" y="188" key="com.intellij.ide.util.TipDialog" timestamp="1585403655688">
+    <state x="184" y="0" key="SettingsEditor/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585413580338" />
+    <state x="379" y="188" key="com.intellij.ide.util.TipDialog" timestamp="1585467190732">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="379" y="188" key="com.intellij.ide.util.TipDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585403655688" />
-    <state x="379" y="96" width="915" height="625" key="find.popup" timestamp="1584875840639">
+    <state x="379" y="188" key="com.intellij.ide.util.TipDialog/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585467190732" />
+    <state x="379" y="96" width="915" height="625" key="find.popup" timestamp="1585477089419">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="379" y="96" width="915" height="625" key="find.popup/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1584875840639" />
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1585408267457">
+    <state x="379" y="96" width="915" height="625" key="find.popup/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585477089419" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1585476807310">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585408267457" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728/-1920.-87.1920.1040@0.0.1366.728" timestamp="1585476807310" />
   </component>
 </project>

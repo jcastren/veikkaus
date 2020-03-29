@@ -1,13 +1,8 @@
 package fi.joonas.veikkaus.jpaentity;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 @Entity
 @Table
@@ -16,10 +11,16 @@ public class Game {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    
+
+    @NotNull
+    @OneToOne
+	private Tournament tournament;
+
+    @NotNull
     @OneToOne
     private TournamentTeam homeTeam;
-    
+
+    @NotNull
     @OneToOne
     private TournamentTeam awayTeam;
     
@@ -29,7 +30,8 @@ public class Game {
     
     public Game() {}
 
-	public Game(TournamentTeam homeTeam, TournamentTeam awayTeam, int homeScore, int awayScore, Date gameDate) {
+	public Game(Tournament tournament, TournamentTeam homeTeam, TournamentTeam awayTeam, int homeScore, int awayScore, Date gameDate) {
+		this.tournament = tournament;
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
 		this.homeScore = homeScore;
@@ -43,6 +45,14 @@ public class Game {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Tournament getTournament() {
+		return tournament;
+	}
+
+	public void setTournament(Tournament tournament) {
+		this.tournament = tournament;
 	}
 
 	public TournamentTeam getHomeTeam() {

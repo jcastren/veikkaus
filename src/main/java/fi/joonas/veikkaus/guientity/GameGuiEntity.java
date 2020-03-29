@@ -3,6 +3,7 @@ package fi.joonas.veikkaus.guientity;
 public class GameGuiEntity {
 	
     private String id;
+    private TournamentGuiEntity tournament;
     private TournamentTeamGuiEntity homeTeam;   
     private TournamentTeamGuiEntity awayTeam;
     private String homeScore;
@@ -14,6 +15,12 @@ public class GameGuiEntity {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public TournamentGuiEntity getTournament() {
+		return tournament;
+	}
+	public void setTournament(TournamentGuiEntity tournament) {
+		this.tournament = tournament;
 	}
 	public TournamentTeamGuiEntity getHomeTeam() {
 		return homeTeam;

@@ -1,6 +1,11 @@
 package fi.joonas.veikkaus.util;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_UNDER_WORK;
+import fi.joonas.veikkaus.config.VeikkausServerProperties;
+import fi.joonas.veikkaus.dao.*;
+import fi.joonas.veikkaus.jpaentity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,35 +18,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import fi.joonas.veikkaus.config.VeikkausServerProperties;
-import fi.joonas.veikkaus.dao.BetDao;
-import fi.joonas.veikkaus.dao.BetResultDao;
-import fi.joonas.veikkaus.dao.GameDao;
-import fi.joonas.veikkaus.dao.PlayerDao;
-import fi.joonas.veikkaus.dao.ScorerDao;
-import fi.joonas.veikkaus.dao.StatusDao;
-import fi.joonas.veikkaus.dao.TeamDao;
-import fi.joonas.veikkaus.dao.TournamentDao;
-import fi.joonas.veikkaus.dao.TournamentPlayerDao;
-import fi.joonas.veikkaus.dao.TournamentTeamDao;
-import fi.joonas.veikkaus.dao.UserDao;
-import fi.joonas.veikkaus.dao.UserRoleDao;
-import fi.joonas.veikkaus.jpaentity.Bet;
-import fi.joonas.veikkaus.jpaentity.BetResult;
-import fi.joonas.veikkaus.jpaentity.Game;
-import fi.joonas.veikkaus.jpaentity.Player;
-import fi.joonas.veikkaus.jpaentity.Scorer;
-import fi.joonas.veikkaus.jpaentity.Status;
-import fi.joonas.veikkaus.jpaentity.Team;
-import fi.joonas.veikkaus.jpaentity.Tournament;
-import fi.joonas.veikkaus.jpaentity.TournamentPlayer;
-import fi.joonas.veikkaus.jpaentity.TournamentTeam;
-import fi.joonas.veikkaus.jpaentity.User;
-import fi.joonas.veikkaus.jpaentity.UserRole;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_UNDER_WORK;
 
 public abstract class JUnitTestUtil {
 	
@@ -195,9 +172,10 @@ public abstract class JUnitTestUtil {
 	}
 	
 	public Bet addBet() throws Exception {
-		Status status = addStatus();
 		User user = addUser();
-		return betDao.save(new Bet(user, status));
+		Tournament tournament = addTournament();
+		Status status = addStatus();
+		return betDao.save(new Bet(user, tournament, status));
 	}
 	
 	public void deleteBet(Bet bet) throws Exception {
@@ -258,11 +236,12 @@ public abstract class JUnitTestUtil {
 		int homeScore = 7;
 		int awayScore = 3;
 		Date gameDate = new Date();
+		Tournament tournament = addTournament();
 		TournamentTeam homeTeam = addTournamentTeam();
 		TournamentTeam awayTeam = addTournamentTeam();
 		awayTeam.getTeam().setName(awayTeam.getTeam().getName() + "Cameroon");
 		
-		return gameDao.save(new Game(homeTeam, awayTeam, homeScore, awayScore, gameDate));
+		return gameDao.save(new Game(tournament, homeTeam, awayTeam, homeScore, awayScore, gameDate));
 	}
 	
 	public void deleteGame(Game game) throws Exception {

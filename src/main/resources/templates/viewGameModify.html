@@ -21,7 +21,7 @@
 
 		<div id="tournamentListDiv" th:object="${game}">
 			<label id="lblTournament" class="show-tooltip" title="Select a tournament">Select tournament</label>
-			<select id="selTournament" th:field="*{homeTeam.tournament.id}">
+			<select id="selTournament" th:field="*{tournament.id}">
 				<option th:each="tournament : ${allTournaments}" 
 						th:value="${tournament.id}" th:text="${tournament.name} + ' ' + ${tournament.year}">
 				</option>
