@@ -88,6 +88,18 @@ public class BetResultService {
 		return geList;
 	}
 
+	public List<BetResultGuiEntity> findBetBetResults(String betId) {
+		Bet dbBet = betDao.findOne(Long.valueOf(betId));
+
+		List<BetResultGuiEntity> geList = new ArrayList<>();
+		List<BetResult> dbBetResults = ImmutableList.copyOf(betResultDao.findByBet(dbBet));
+
+		for (BetResult dbBetResult : dbBetResults) {
+			geList.add(convertDbToGui(dbBetResult));
+		}
+		return geList;
+	}
+
 	public BetResultGuiEntity findOneBetResult(String id) {
 		BetResultGuiEntity betResultGe = convertDbToGui(betResultDao.findOne(Long.valueOf(id)));
 		return betResultGe;
@@ -118,6 +130,8 @@ public class BetResultService {
 		} catch (VeikkausConversionException e) {
 			e.printStackTrace();
 		}
+		db.setHomeScore(ge.getHomeScore());
+		db.setAwayScore(ge.getAwayScore());
 
 		return db;
 	}

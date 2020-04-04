@@ -1,13 +1,7 @@
 package fi.joonas.veikkaus.controller;
 
-import fi.joonas.veikkaus.guientity.BetGuiEntity;
-import fi.joonas.veikkaus.guientity.StatusGuiEntity;
-import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
-import fi.joonas.veikkaus.guientity.UserGuiEntity;
-import fi.joonas.veikkaus.service.BetService;
-import fi.joonas.veikkaus.service.StatusService;
-import fi.joonas.veikkaus.service.TournamentService;
-import fi.joonas.veikkaus.service.UserService;
+import fi.joonas.veikkaus.guientity.*;
+import fi.joonas.veikkaus.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +28,9 @@ public class BetController {
 
 	@Autowired
 	private StatusService statusService;
+
+	@Autowired
+	private BetResultService betResultService;
 
 	private static final Logger logger = LoggerFactory.getLogger(BetController.class);
 
@@ -62,6 +59,8 @@ public class BetController {
 	public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
 		BetGuiEntity bet = betService.findOneBet(id);
 		model.addAttribute("bet", bet);
+		List<BetResultGuiEntity> betResults = betResultService.findBetBetResults(id);
+		model.addAttribute("betResults", betResults);
 		return "viewBetDetails";
 	}
 
