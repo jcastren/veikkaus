@@ -43,6 +43,37 @@
 		</tr>
 	</table>
 
+	<form action="#" th:action="@{/bet/postBetResultCreate}" th:object="${newBetResult}" method="post">
+		<p th:text="'Bet id: ' + ${bet.id}"/>
+		<p th:field="'Bet: ' + ${newBetResult.bet}"/>
+
+		<div>
+			<label class="show-tooltip" title="Select a game to the Bet result">Select game</label>
+			<select th:field="*{game.id}">
+				<option th:each="game : ${tournamentGames}"
+						th:value="${game.id}" th:text="${game.homeTeam.team.name} + ' - ' + ${game.awayTeam.team.name}">
+				</option>
+			</select>
+		</div>
+		<p>
+			Home team score: <input type="text" th:field="*{homeScore}"/>
+		</p>
+		<p>
+			Away team score: <input type="text" th:field="*{awayScore}"/>
+		</p>
+
+		<p>
+			<button type="submit"
+					class="show-tooltip ui-button ui-corner-all ui-widget" title="Create Bet result">
+				Create Bet result
+			</button>
+			<button type="reset"
+					class="show-tooltip ui-button ui-corner-all ui-widget" title="Reset fields">
+				Reset fields
+			</button>
+		</p>
+	</form>
+
 	<script th:src="@{/js/common-navigation.js}"></script>
 </body>
 </html>

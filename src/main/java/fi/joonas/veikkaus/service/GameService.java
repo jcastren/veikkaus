@@ -6,10 +6,9 @@ import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.dao.TournamentTeamDao;
 import fi.joonas.veikkaus.exception.VeikkausConversionException;
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
+import fi.joonas.veikkaus.guientity.BetResultGuiEntity;
 import fi.joonas.veikkaus.guientity.GameGuiEntity;
-import fi.joonas.veikkaus.jpaentity.Game;
-import fi.joonas.veikkaus.jpaentity.Tournament;
-import fi.joonas.veikkaus.jpaentity.TournamentTeam;
+import fi.joonas.veikkaus.jpaentity.*;
 import fi.joonas.veikkaus.util.VeikkausUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,7 +145,20 @@ public class GameService {
 		
 		return geList;
 	}
-	
+
+	public List<GameGuiEntity> findTournamentGames(String tournamentId) {
+		Tournament dbTournament = tournamentDao.findOne(Long.valueOf(tournamentId));
+
+		List<GameGuiEntity> geList = new ArrayList<>();
+		List<Game> dbGames = ImmutableList.copyOf(gameDao.findByTournament(dbTournament));
+
+		for (Game dbGame : dbGames) {
+			geList.add(convertDbToGui(dbGame));
+		}
+		return geList;
+	}
+
+
 	public GameGuiEntity findOneGame(String id) {
 		GameGuiEntity gameGe = convertDbToGui(gameDao.findOne(Long.valueOf(id)));
 		return gameGe;

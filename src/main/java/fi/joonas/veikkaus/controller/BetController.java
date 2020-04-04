@@ -32,6 +32,9 @@ public class BetController {
 	@Autowired
 	private BetResultService betResultService;
 
+	@Autowired
+	private GameService gameService;
+
 	private static final Logger logger = LoggerFactory.getLogger(BetController.class);
 
 	@ModelAttribute(ALL_USERS)
@@ -59,8 +62,17 @@ public class BetController {
 	public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
 		BetGuiEntity bet = betService.findOneBet(id);
 		model.addAttribute("bet", bet);
+
 		List<BetResultGuiEntity> betResults = betResultService.findBetBetResults(id);
 		model.addAttribute("betResults", betResults);
+
+		BetResultGuiEntity newBetResult = new BetResultGuiEntity();
+		newBetResult.setBet(bet);
+		model.addAttribute("newBetResult", newBetResult);
+
+		List<GameGuiEntity> tournamentGames = gameService.findTournamentGames(bet.getTournament().getId());
+		model.addAttribute("tournamentGames", tournamentGames);
+
 		return "viewBetDetails";
 	}
 
@@ -80,6 +92,19 @@ public class BetController {
 			return "Error creating the bet: " + ex.toString();
 		}
 		logger.debug("Bet successfully created with id = " + betId);
+		return "redirect:" + BET_GET_ALL_URL;
+	}
+
+	@PostMapping("postBetResultCreate")
+	public String postBetResultCreate(@ModelAttribute BetResultGuiEntity betResult) {
+		Long betResultId = null;
+		try {
+			betResultId = betResultService.insert(betResult);
+		} catch (Exception ex) {
+			logger.error("Error creating the bet result: ", ex);
+			return "Error creating the bet result: " + ex.toString();
+		}
+		logger.debug("Bet result successfully created with id = " + betResultId);
 		return "redirect:" + BET_GET_ALL_URL;
 	}
 
