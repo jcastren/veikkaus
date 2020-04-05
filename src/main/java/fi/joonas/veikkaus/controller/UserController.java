@@ -80,7 +80,7 @@ public class UserController {
 		}
 		logger.debug("User succesfully created with id = " + userId);
 		
-		return "redirect:"+ USER_GET_ALL_URL;
+		return REDIRECT+ USER_GET_ALL_URL;
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class UserController {
 			return "Error updating the user: " + ex.toString();
 		}
 		logger.debug("User succesfully updated for id = " + userId);
-		return "redirect:" + USER_GET_ALL_URL;
+		return REDIRECT + USER_GET_ALL_URL;
 	}
 	
 	/**
@@ -134,6 +134,6 @@ public class UserController {
 			logger.error("Error deleting the user: ", ex);
 			return "Error deleting the user:" + ex.toString();
 		}
-		return "redirect:" + USER_GET_ALL_URL;
+		return REDIRECT + USER_GET_ALL_URL;
 	}
 }

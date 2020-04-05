@@ -98,7 +98,7 @@ public class ScorerController {
 			return "Error creating the scorer: " + ex.toString();
 		}
 		logger.debug("Scorer succesfully created with id = " + scorerId);
-		return "redirect:"+ SCORER_GET_ALL_URL;
+		return REDIRECT+ SCORER_GET_ALL_URL;
 	}
 
 	

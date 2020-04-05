@@ -66,7 +66,7 @@ public class UserRoleController {
 			return "Error creating the userRole: " + ex.toString();
 		}
 		logger.debug("UserRole succesfully created with id = " + userRoleId);
-		return "redirect:"+ USER_ROLE_GET_ALL_URL;
+		return REDIRECT+ USER_ROLE_GET_ALL_URL;
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public class UserRoleController {
 			return "Error updating the userRole: " + ex.toString();
 		}
 		logger.debug("UserRole succesfully updated for id = " + userRoleId);
-		return "redirect:" + USER_ROLE_GET_ALL_URL;
+		return REDIRECT + USER_ROLE_GET_ALL_URL;
 	}
 	
 	/**
@@ -120,7 +120,7 @@ public class UserRoleController {
 			logger.error("Error deleting the userRole: ", ex);
 			return "Error deleting the userRole:" + ex.toString();
 		}
-		return "redirect:" + USER_ROLE_GET_ALL_URL;
+		return REDIRECT + USER_ROLE_GET_ALL_URL;
 	}
 
 }

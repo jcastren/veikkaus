@@ -102,7 +102,7 @@ public class GameController {
 			return "Error creating the game: " + ex.toString();
 		}
 		logger.debug("Game successfully created with id = " + gameId);
-		return "redirect:"+ GAME_GET_ALL_URL;
+		return REDIRECT+ GAME_GET_ALL_URL;
 	}
 	
 	@RequestMapping(URL_GET_MODIFY)
@@ -130,7 +130,7 @@ public class GameController {
 			return "Error updating the game: " + ex.toString();
 		}
 		logger.debug("Game successfully updated for id = " + gameId);
-		return "redirect:" + GAME_GET_ALL_URL;
+		return REDIRECT + GAME_GET_ALL_URL;
 	}
 	
 	@RequestMapping(URL_GET_DELETE)
@@ -148,7 +148,7 @@ public class GameController {
 			logger.error("Error deleting the game: ", vse);
 			return "Error deleting the game:" + vse.toString();
 		}
-		return "redirect:" + GAME_GET_ALL_URL;
+		return REDIRECT + GAME_GET_ALL_URL;
 	}
 	
 }

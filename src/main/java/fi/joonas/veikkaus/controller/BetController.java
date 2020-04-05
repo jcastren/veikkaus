@@ -92,7 +92,7 @@ public class BetController {
 			return "Error creating the bet: " + ex.toString();
 		}
 		logger.debug("Bet successfully created with id = " + betId);
-		return "redirect:" + BET_GET_ALL_URL;
+		return REDIRECT + BET_GET_ALL_URL;
 	}
 
 	@PostMapping(BET_POST_BET_RESULT_CREATE)
@@ -105,7 +105,7 @@ public class BetController {
 			return "Error creating the bet result: " + ex.toString();
 		}
 		logger.debug("Bet result successfully created with id = " + betResultId);
-        return "redirect:" + BET_URL + URL_GET_DETAILS + "?id=" + betResult.getBet().getId();
+        return REDIRECT + BET_GET_DETAILS_URL + betResult.getBet().getId();
 	}
 
 	@RequestMapping(URL_GET_MODIFY)
@@ -125,7 +125,7 @@ public class BetController {
 			return "Error updating the bet: " + ex.toString();
 		}
 		logger.debug("Bet successfully updated for id = " + betId);
-		return "redirect:" + BET_GET_ALL_URL;
+		return REDIRECT + BET_GET_ALL_URL;
 	}
 
 	@RequestMapping(URL_GET_DELETE)
@@ -143,7 +143,7 @@ public class BetController {
 			logger.error("Error deleting the bet: ", ex);
 			return "Error deleting the bet:" + ex.toString();
 		}
-		return "redirect:" + BET_GET_ALL_URL;
+		return REDIRECT + BET_GET_ALL_URL;
 	}
 
 }

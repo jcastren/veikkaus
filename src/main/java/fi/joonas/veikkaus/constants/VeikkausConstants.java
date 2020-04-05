@@ -14,7 +14,10 @@ public abstract class VeikkausConstants {
     public static final String URL_POST_DELETE = "/postDelete";
     public static final String URL_POST_MODIFY = "/postModify";
     public static final String URL_GET_BY_EMAIL = "/get-by-email";
-    
+
+    public static final String REDIRECT = "redirect:";
+    public static final String GET_DETAILS_ID_QUERY_PARAM = "?id=";
+
     /** UserRole URLs*/
     public static final String USER_ROLE_URL = "/userRole";
     public static final String USER_ROLE_GET_ALL_URL = USER_ROLE_URL + URL_GET_ALL;
@@ -36,6 +39,7 @@ public abstract class VeikkausConstants {
     public static final String ALL_BETS = "allBets";
     public static final String BET_BET_RESULTS = "betResults";
     public static final String BET_POST_BET_RESULT_CREATE = "postBetResultCreate";
+    public static final String BET_GET_DETAILS_URL = BET_URL + URL_GET_DETAILS + GET_DETAILS_ID_QUERY_PARAM;
 
     /** Tournament URLs */
     public static final String TOURNAMENT_URL = "/tournament";

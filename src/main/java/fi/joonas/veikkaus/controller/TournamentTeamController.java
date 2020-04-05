@@ -91,7 +91,7 @@ public class TournamentTeamController {
 		}
 		logger.debug("Tournament team succesfully created with id = " + tournamentTeamId);
 		
-		return "redirect:"+ TOURNAMENT_TEAM_GET_ALL_URL;
+		return REDIRECT+ TOURNAMENT_TEAM_GET_ALL_URL;
 	}
 	
 	/**
@@ -122,7 +122,7 @@ public class TournamentTeamController {
 			return "Error updating the tournamentTeam: " + ex.toString();
 		}
 		logger.debug("Tournament team succesfully updated for id = " + tournamentTeamId);
-		return "redirect:" + TOURNAMENT_TEAM_GET_ALL_URL;
+		return REDIRECT + TOURNAMENT_TEAM_GET_ALL_URL;
 	}
 	
 	/**
@@ -145,7 +145,7 @@ public class TournamentTeamController {
 			logger.error("Error deleting the tournamentTeam: ", ex);
 			return "Error deleting the tournamentTeam:" + ex.toString();
 		}
-		return "redirect:" + TOURNAMENT_TEAM_GET_ALL_URL;
+		return REDIRECT + TOURNAMENT_TEAM_GET_ALL_URL;
 	}
 
 }

@@ -67,7 +67,7 @@ public class TournamentController extends WebMvcConfigurerAdapter {
 			return "Error creating the tournament: " + ex.toString();
 		}
 		logger.debug("Tournament succesfully created with id = " + tournamentId);
-		return "redirect:"+ TOURNAMENT_GET_ALL_URL;
+		return REDIRECT+ TOURNAMENT_GET_ALL_URL;
 	}
 	
 	/**
@@ -98,7 +98,7 @@ public class TournamentController extends WebMvcConfigurerAdapter {
 			return "Error updating the tournament: " + ex.toString();
 		}
 		logger.debug("Tournament succesfully updated for id = " + tournamentId);
-		return "redirect:" + TOURNAMENT_GET_ALL_URL;
+		return REDIRECT + TOURNAMENT_GET_ALL_URL;
 	}
 	
 	/**
@@ -121,7 +121,7 @@ public class TournamentController extends WebMvcConfigurerAdapter {
 			logger.error("Error deleting the tournament: ", ex);
 			return "Error deleting the tournament:" + ex.toString();
 		}
-		return "redirect:" + TOURNAMENT_GET_ALL_URL;
+		return REDIRECT + TOURNAMENT_GET_ALL_URL;
 	}
 
 }

@@ -75,7 +75,7 @@ public class StatusController {
 			return "Error creating the status: " + ex.toString();
 		}
 		logger.debug("Status succesfully created with id = " + statusId);
-		return "redirect:"+ STATUS_GET_ALL_URL;
+		return REDIRECT+ STATUS_GET_ALL_URL;
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class StatusController {
 			return "Error updating the status: " + ex.toString();
 		}
 		logger.debug("Status succesfully updated for id = " + statusId);
-		return "redirect:" + STATUS_GET_ALL_URL;
+		return REDIRECT + STATUS_GET_ALL_URL;
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class StatusController {
 			logger.error("Error deleting the status: ", ex);
 			return "Error deleting the status:" + ex.toString();
 		}
-		return "redirect:" + STATUS_GET_ALL_URL;
+		return REDIRECT + STATUS_GET_ALL_URL;
 	}
 
 

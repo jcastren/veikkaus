@@ -66,7 +66,7 @@ public class TeamController {
 			return "Error creating the team: " + ex.toString();
 		}
 		logger.debug("Team succesfully created with id = " + teamId);
-		return "redirect:"+ TEAM_GET_ALL_URL;
+		return REDIRECT+ TEAM_GET_ALL_URL;
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public class TeamController {
 			return "Error updating the team: " + ex.toString();
 		}
 		logger.debug("Team succesfully updated for id = " + teamId);
-		return "redirect:" + TEAM_GET_ALL_URL;
+		return REDIRECT + TEAM_GET_ALL_URL;
 	}
 	
 	/**
@@ -125,7 +125,7 @@ public class TeamController {
 			logger.error("Error deleting the team: ", ex);
 			return "Error deleting the team:" + ex.toString();
 		}
-		return "redirect:" + TEAM_GET_ALL_URL;
+		return REDIRECT + TEAM_GET_ALL_URL;
 	}
 
 }

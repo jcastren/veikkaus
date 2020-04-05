@@ -90,7 +90,7 @@ public class TournamentPlayerController {
             return "Error creating the tournamentPlayer: " + ex.toString();
         }
         logger.debug("Tournament player succesfully created with id = " + tournamentPlayerId);
-        return "redirect:" + TOURNAMENT_PLAYER_GET_ALL_URL;
+        return REDIRECT + TOURNAMENT_PLAYER_GET_ALL_URL;
     }
 
     /**
@@ -121,7 +121,7 @@ public class TournamentPlayerController {
             return "Error updating the tournamentPlayer: " + ex.toString();
         }
         logger.debug("Tournament player succesfully updated for id = " + tournamentPlayerId);
-        return "redirect:" + TOURNAMENT_PLAYER_GET_ALL_URL;
+        return REDIRECT + TOURNAMENT_PLAYER_GET_ALL_URL;
     }
 
     /**
@@ -144,6 +144,6 @@ public class TournamentPlayerController {
             logger.error("Error deleting the tournamentPlayer: ", ex);
             return "Error deleting the tournamentPlayer:" + ex.toString();
         }
-        return "redirect:" + TOURNAMENT_PLAYER_GET_ALL_URL;
+        return REDIRECT + TOURNAMENT_PLAYER_GET_ALL_URL;
     }
 }

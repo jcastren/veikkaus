@@ -66,7 +66,7 @@ public class PlayerController {
 			return "Error creating the player: " + ex.toString();
 		}
 		logger.debug("Player succesfully created with id = " + playerId);
-		return "redirect:"+ PLAYER_GET_ALL_URL;
+		return REDIRECT+ PLAYER_GET_ALL_URL;
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public class PlayerController {
 			return "Error updating the player: " + ex.toString();
 		}
 		logger.debug("Player succesfully updated for id = " + playerId);
-		return "redirect:" + PLAYER_GET_ALL_URL;
+		return REDIRECT + PLAYER_GET_ALL_URL;
 	}
 	
 	/**
@@ -120,7 +120,7 @@ public class PlayerController {
 			logger.error("Error deleting the player: ", ex);
 			return "Error deleting the player:" + ex.toString();
 		}
-		return "redirect:" + PLAYER_GET_ALL_URL;
+		return REDIRECT + PLAYER_GET_ALL_URL;
 	}
 
 }
