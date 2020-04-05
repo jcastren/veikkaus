@@ -111,5 +111,5 @@ public class BetResultController {
 		}
 		return REDIRECT + BET_RESULT_GET_ALL_URL;
 	}
-	
+
 }

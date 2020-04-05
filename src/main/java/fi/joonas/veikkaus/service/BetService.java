@@ -40,7 +40,7 @@ public class BetService {
 		}
 
 		String tournamentId = betGe.getTournament().getId();
-		Tournament tournamentDb = tournamentDao.findOne(Long.valueOf(userId));
+		Tournament tournamentDb = tournamentDao.findOne(Long.valueOf(tournamentId));
 		if (tournamentDb == null) {
 			throw new VeikkausServiceException(
 					"Tournament with id: " + tournamentId + " wasn't found, insert failed");
