@@ -91,7 +91,7 @@ public class BetResultController {
 			return "Error updating the bet result: " + ex.toString();
 		}
 		logger.debug("Bet result successfully updated for id = " + betResultId);
-		return REDIRECT + BET_RESULT_GET_ALL_URL;
+		return REDIRECT + BET_GET_DETAILS_URL + betResult.getBet().getId();
 	}
 
 	@RequestMapping(URL_GET_DELETE)
@@ -109,7 +109,7 @@ public class BetResultController {
 			logger.error("Error deleting the bet result: ", ex);
 			return "Error deleting the bet result:" + ex.toString();
 		}
-		return REDIRECT + BET_RESULT_GET_ALL_URL;
+		return REDIRECT + BET_GET_DETAILS_URL + betResult.getBet().getId();
 	}
 
 }

@@ -32,9 +32,6 @@
 			<td th:text="${betResult.homeScore}" />
 			<td th:text="${betResult.awayScore}" />
 			<td><a class="show-tooltip"
-				   th:href="@{/betResult/getDetails(id=${betResult.id})}"
-				   title="Show details of Bet result">Show details</a></td>
-			<td><a class="show-tooltip"
 				   th:href="@{/betResult/getModify(id=${betResult.id})}"
 				   title="Modify details of Bet result">Modify</a></td>
 			<td><a class="show-tooltip"

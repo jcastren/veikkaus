@@ -60,7 +60,7 @@ public class BetResultService {
 		}
 
 		String gameId = betResultGe.getGame().getId();
-		Game gameDb = gameDao.findOne(Long.valueOf(betId));
+		Game gameDb = gameDao.findOne(Long.valueOf(gameId));
 		if (gameDb == null) {
 			throw new VeikkausServiceException("Game with id: " + id + " wasn't found, modify failed");
 		}
