@@ -1,37 +1,21 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.ALL_TEAMS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.ALL_TOURNAMENTS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_TEAM_GET_ALL_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_TEAM_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
-
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import fi.joonas.veikkaus.guientity.TeamGuiEntity;
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.guientity.TournamentTeamGuiEntity;
 import fi.joonas.veikkaus.service.TeamService;
 import fi.joonas.veikkaus.service.TournamentService;
 import fi.joonas.veikkaus.service.TournamentTeamService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(TOURNAMENT_TEAM_URL)
@@ -89,13 +73,13 @@ public class TournamentTeamController {
 			logger.error("Error creating the tournamentTeam: ", ex);
 			return "Error creating the tournamentTeam: " + ex.toString();
 		}
-		logger.debug("Tournament team succesfully created with id = " + tournamentTeamId);
+		logger.debug("Tournament team successfully created with id = " + tournamentTeamId);
 		
-		return REDIRECT+ TOURNAMENT_TEAM_GET_ALL_URL;
+		return REDIRECT + TOURNAMENT_TEAM_GET_ALL_URL;
 	}
 	
 	/**
-	 * @param tournamentTeam
+	 * @param id tournamentTeam Id
 	 * @param model
 	 * @return Tournament modify view
 	 */
@@ -121,7 +105,7 @@ public class TournamentTeamController {
 			logger.error("Error updating the tournamentTeam: ", ex);
 			return "Error updating the tournamentTeam: " + ex.toString();
 		}
-		logger.debug("Tournament team succesfully updated for id = " + tournamentTeamId);
+		logger.debug("Tournament team successfully updated for id = " + tournamentTeamId);
 		return REDIRECT + TOURNAMENT_TEAM_GET_ALL_URL;
 	}
 	

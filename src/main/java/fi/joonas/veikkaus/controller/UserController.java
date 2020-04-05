@@ -1,34 +1,19 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.ALL_USER_ROLES;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_GET_ALL_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_URL;
-
-import java.util.List;
-
+import fi.joonas.veikkaus.guientity.UserGuiEntity;
+import fi.joonas.veikkaus.guientity.UserRoleGuiEntity;
+import fi.joonas.veikkaus.service.UserRoleService;
+import fi.joonas.veikkaus.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import fi.joonas.veikkaus.guientity.UserGuiEntity;
-import fi.joonas.veikkaus.guientity.UserRoleGuiEntity;
-import fi.joonas.veikkaus.service.UserRoleService;
-import fi.joonas.veikkaus.service.UserService;
+import java.util.List;
+
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(USER_URL)
@@ -78,15 +63,15 @@ public class UserController {
 			logger.error("Error creating the user: ", ex);
 			return "Error creating the user: " + ex.toString();
 		}
-		logger.debug("User succesfully created with id = " + userId);
+		logger.debug("User successfully created with id = " + userId);
 		
-		return REDIRECT+ USER_GET_ALL_URL;
+		return REDIRECT + USER_GET_ALL_URL;
 	}
 	
 	/**
-	 * @param user
+	 * @param id user Id
 	 * @param model
-	 * @return Tournament modify view
+	 * @return User modify view
 	 */
 	@RequestMapping(URL_GET_MODIFY)
 	public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
@@ -110,7 +95,7 @@ public class UserController {
 			logger.error("Error updating the user: ", ex);
 			return "Error updating the user: " + ex.toString();
 		}
-		logger.debug("User succesfully updated for id = " + userId);
+		logger.debug("User successfully updated for id = " + userId);
 		return REDIRECT + USER_GET_ALL_URL;
 	}
 	

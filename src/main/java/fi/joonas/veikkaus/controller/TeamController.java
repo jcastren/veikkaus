@@ -1,16 +1,5 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TEAM_GET_ALL_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TEAM_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import fi.joonas.veikkaus.guientity.TeamGuiEntity;
 import fi.joonas.veikkaus.service.TeamService;
+
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(TEAM_URL)
@@ -65,8 +56,8 @@ public class TeamController {
 			logger.error("Error creating the team: ", ex);
 			return "Error creating the team: " + ex.toString();
 		}
-		logger.debug("Team succesfully created with id = " + teamId);
-		return REDIRECT+ TEAM_GET_ALL_URL;
+		logger.debug("Team successfully created with id = " + teamId);
+		return REDIRECT + TEAM_GET_ALL_URL;
 	}
 	
 	/**
@@ -96,7 +87,7 @@ public class TeamController {
 			logger.error("Error updating the team: ", ex);
 			return "Error updating the team: " + ex.toString();
 		}
-		logger.debug("Team succesfully updated for id = " + teamId);
+		logger.debug("Team successfully updated for id = " + teamId);
 		return REDIRECT + TEAM_GET_ALL_URL;
 	}
 	

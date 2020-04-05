@@ -102,7 +102,7 @@ public class GameController {
 			return "Error creating the game: " + ex.toString();
 		}
 		logger.debug("Game successfully created with id = " + gameId);
-		return REDIRECT+ GAME_GET_ALL_URL;
+		return REDIRECT + GAME_GET_ALL_URL;
 	}
 	
 	@RequestMapping(URL_GET_MODIFY)

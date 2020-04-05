@@ -74,8 +74,8 @@ public class StatusController {
 			logger.error("Error creating the status: ", ex);
 			return "Error creating the status: " + ex.toString();
 		}
-		logger.debug("Status succesfully created with id = " + statusId);
-		return REDIRECT+ STATUS_GET_ALL_URL;
+		logger.debug("Status successfully created with id = " + statusId);
+		return REDIRECT + STATUS_GET_ALL_URL;
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class StatusController {
 			logger.error("Error updating the status: ", ex);
 			return "Error updating the status: " + ex.toString();
 		}
-		logger.debug("Status succesfully updated for id = " + statusId);
+		logger.debug("Status successfully updated for id = " + statusId);
 		return REDIRECT + STATUS_GET_ALL_URL;
 	}
 

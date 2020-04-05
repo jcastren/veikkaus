@@ -1,16 +1,5 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PLAYER_GET_ALL_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PLAYER_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import fi.joonas.veikkaus.guientity.PlayerGuiEntity;
 import fi.joonas.veikkaus.service.PlayerService;
+
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(PLAYER_URL)
@@ -65,12 +56,12 @@ public class PlayerController {
 			logger.error("Error creating the player: ", ex);
 			return "Error creating the player: " + ex.toString();
 		}
-		logger.debug("Player succesfully created with id = " + playerId);
-		return REDIRECT+ PLAYER_GET_ALL_URL;
+		logger.debug("Player successfully created with id = " + playerId);
+		return REDIRECT + PLAYER_GET_ALL_URL;
 	}
 	
 	/**
-	 * @param player
+	 * @param id player Id
 	 * @param model
 	 * @return Player modify view
 	 */
@@ -96,7 +87,7 @@ public class PlayerController {
 			logger.error("Error updating the player: ", ex);
 			return "Error updating the player: " + ex.toString();
 		}
-		logger.debug("Player succesfully updated for id = " + playerId);
+		logger.debug("Player successfully updated for id = " + playerId);
 		return REDIRECT + PLAYER_GET_ALL_URL;
 	}
 	

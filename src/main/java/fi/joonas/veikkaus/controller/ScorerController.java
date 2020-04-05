@@ -1,36 +1,21 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.ALL_GAMES;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.ALL_TOURNAMENT_PLAYERS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.SCORER_GET_ALL_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.SCORER_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_PLAYER_GET_ALL_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_MODIFY;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
-
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import fi.joonas.veikkaus.guientity.GameGuiEntity;
 import fi.joonas.veikkaus.guientity.ScorerGuiEntity;
 import fi.joonas.veikkaus.guientity.TournamentPlayerGuiEntity;
 import fi.joonas.veikkaus.service.GameService;
 import fi.joonas.veikkaus.service.ScorerService;
 import fi.joonas.veikkaus.service.TournamentPlayerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(SCORER_URL)
@@ -66,19 +51,6 @@ public class ScorerController {
 	/**
 	 * GET /create --> Create a new scorer and save it in the database.
 	 */
-//	@RequestMapping(URL_CREATE)
-//	@ResponseBody
-//	public String create(String tournamentPlayerId, String gameId) {
-//		Long scorerId = null;
-//		try {
-//			scorerId = scorerService.insert(tournamentPlayerId, gameId);
-//		} catch (Exception ex) {
-//			logger.error("Error creating the scorer: ", ex);
-//			return "Error creating the scorer: " + ex.toString();
-//		}
-//		return "Scorer succesfully created with id = " + scorerId;
-//	}
-
 	@GetMapping(URL_GET_CREATE)
 	public String getCreate(Model model) {
 		model.addAttribute("scorer", new ScorerGuiEntity());
@@ -97,8 +69,8 @@ public class ScorerController {
 			logger.error("Error creating the scorer: ", ex);
 			return "Error creating the scorer: " + ex.toString();
 		}
-		logger.debug("Scorer succesfully created with id = " + scorerId);
-		return REDIRECT+ SCORER_GET_ALL_URL;
+		logger.debug("Scorer successfully created with id = " + scorerId);
+		return REDIRECT + SCORER_GET_ALL_URL;
 	}
 
 	
@@ -115,7 +87,7 @@ public class ScorerController {
 			logger.error("Error updating the scorer: ", ex);
 			return "Error updating the scorer: " + ex.toString();
 		}
-		return "Scorer succesfully updated for id = " + id;
+		return "Scorer successfully updated for id = " + id;
 	}
 
 	/**
@@ -130,7 +102,7 @@ public class ScorerController {
 			logger.error("Error deleting the scorer: ", ex);
 			return "Error deleting the scorer:" + ex.toString();
 		}
-		return "Scorer succesfully deleted!";
+		return "Scorer successfully deleted!";
 	}
 
 }

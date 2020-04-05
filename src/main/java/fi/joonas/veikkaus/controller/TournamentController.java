@@ -1,16 +1,5 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_GET_ALL_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.service.TournamentService;
+
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(TOURNAMENT_URL)
@@ -66,12 +57,12 @@ public class TournamentController extends WebMvcConfigurerAdapter {
 			logger.error("Error creating the tournament: ", ex);
 			return "Error creating the tournament: " + ex.toString();
 		}
-		logger.debug("Tournament succesfully created with id = " + tournamentId);
-		return REDIRECT+ TOURNAMENT_GET_ALL_URL;
+		logger.debug("Tournament successfully created with id = " + tournamentId);
+		return REDIRECT + TOURNAMENT_GET_ALL_URL;
 	}
 	
 	/**
-	 * @param tournament
+	 * @param id tournament Id
 	 * @param model
 	 * @return Tournament modify view
 	 */
@@ -97,7 +88,7 @@ public class TournamentController extends WebMvcConfigurerAdapter {
 			logger.error("Error updating the tournament: ", ex);
 			return "Error updating the tournament: " + ex.toString();
 		}
-		logger.debug("Tournament succesfully updated for id = " + tournamentId);
+		logger.debug("Tournament successfully updated for id = " + tournamentId);
 		return REDIRECT + TOURNAMENT_GET_ALL_URL;
 	}
 	
