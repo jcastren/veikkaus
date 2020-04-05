@@ -95,7 +95,7 @@ public class BetController {
 		return "redirect:" + BET_GET_ALL_URL;
 	}
 
-	@PostMapping("postBetResultCreate")
+	@PostMapping(BET_POST_BET_RESULT_CREATE)
 	public String postBetResultCreate(@ModelAttribute BetResultGuiEntity betResult) {
 		Long betResultId = null;
 		try {
@@ -105,7 +105,7 @@ public class BetController {
 			return "Error creating the bet result: " + ex.toString();
 		}
 		logger.debug("Bet result successfully created with id = " + betResultId);
-		return "redirect:" + BET_GET_ALL_URL;
+        return "redirect:" + BET_URL + URL_GET_DETAILS + "?id=" + betResult.getBet().getId();
 	}
 
 	@RequestMapping(URL_GET_MODIFY)
