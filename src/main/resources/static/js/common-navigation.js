@@ -15,7 +15,6 @@ $("<li><a class='showTooltip' href='/userRole/getAll' title='Go see user roles'>
 $("<li><a class='showTooltip' href='/user/getAll' title='Go see users'>Users</a>").appendTo("#navigationList");
 $("<li><a class='showTooltip' href='/status/getAll' title='Go see statuses'>Statuses</a>").appendTo("#navigationList");
 $("<li><a class='showTooltip' href='/bet/getAll' title='Go see bets'>Bets</a>").appendTo("#navigationList");
-$("<li><a class='showTooltip' href='/betResult/getAll' title='Go see bet results'>Bet results</a>").appendTo("#navigationList");
 
 // Following code snippet loops all items whose id ends with Link and adds a JQuery tooltip to them
 /*$("[id$=Link]").each(function() {
