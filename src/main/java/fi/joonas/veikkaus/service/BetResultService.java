@@ -1,18 +1,21 @@
 package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
-import fi.joonas.veikkaus.exception.VeikkausConversionException;
-import fi.joonas.veikkaus.guientity.BetResultGuiEntity;
-import fi.joonas.veikkaus.jpaentity.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import fi.joonas.veikkaus.dao.BetDao;
 import fi.joonas.veikkaus.dao.BetResultDao;
 import fi.joonas.veikkaus.dao.GameDao;
+import fi.joonas.veikkaus.exception.VeikkausConversionException;
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
+import fi.joonas.veikkaus.guientity.BetResultGuiEntity;
+import fi.joonas.veikkaus.jpaentity.Bet;
+import fi.joonas.veikkaus.jpaentity.BetResult;
+import fi.joonas.veikkaus.jpaentity.Game;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -26,6 +29,13 @@ public class BetResultService {
 	
 	@Autowired
 	GameDao gameDao;
+
+	private class SortByGameDate implements Comparator<BetResult> {
+		// Used for sorting in ascending order of gameDate of BetResults
+		public int compare(BetResult a, BetResult b) {
+			return a.getGame().getGameDate().compareTo(b.getGame().getGameDate());
+		}
+	}
 
 	public Long insert(BetResultGuiEntity betResultGe) throws VeikkausServiceException {
 		String betId = betResultGe.getBet().getId();
@@ -100,6 +110,47 @@ public class BetResultService {
 		return geList;
 	}
 
+	/**
+	 * Method populates betResults list with missing games if user hasn't yet saved a bet result
+	 * @param betId
+	 * @return
+	 */
+	public List<BetResultGuiEntity> findBetGamesAndBetResults(String betId) {
+		Bet dbBet = betDao.findOne(Long.valueOf(betId));
+		List<BetResult> betResultListPopulatedWithMissingGames = betResultDao.findByBet(dbBet) ;
+		List<BetResult> dbBetResults = ImmutableList.copyOf(betResultListPopulatedWithMissingGames);
+		List<Game> dbGames = ImmutableList.copyOf(gameDao.findByTournamentOrderByGameDate(dbBet.getTournament()));
+
+		List<BetResultGuiEntity> geList = new ArrayList<>();
+		for (Game dbGame : dbGames) {
+
+			BetResult match = null;
+
+			for (BetResult betResult : dbBetResults) {
+				if (dbGame.equals(betResult.getGame())) {
+					match = betResult;
+					break;
+				}
+			}
+
+			if (match == null) {
+				BetResult betResultWithoutScore = new BetResult();
+				betResultWithoutScore.setId(-999L);
+				betResultWithoutScore.setBet(dbBet);
+				betResultWithoutScore.setGame(dbGame);
+				betResultWithoutScore.setHomeScore(-999);
+				betResultWithoutScore.setAwayScore(-999);
+				betResultListPopulatedWithMissingGames.add(betResultWithoutScore);
+			}
+		}
+		Collections.sort(betResultListPopulatedWithMissingGames, new SortByGameDate());
+
+		for (BetResult dbBetResult : betResultListPopulatedWithMissingGames) {
+			geList.add(convertDbToGui(dbBetResult));
+		}
+		return geList;
+	}
+
 	public BetResultGuiEntity findOneBetResult(String id) {
 		BetResultGuiEntity betResultGe = convertDbToGui(betResultDao.findOne(Long.valueOf(id)));
 		return betResultGe;
@@ -107,7 +158,6 @@ public class BetResultService {
 
 	protected static BetResultGuiEntity convertDbToGui(BetResult db) {
 		BetResultGuiEntity ge = new BetResultGuiEntity();
-
 		ge.setId(db.getId().toString());
 		ge.setBet(BetService.convertDbToGui(db.getBet()));
 		ge.setGame(GameService.convertDbToGui(db.getGame()));

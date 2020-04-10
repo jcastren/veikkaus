@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface GameDao extends CrudRepository<Game, Long> {
     List<Game> findByTournament(Tournament tournament);
+    List<Game> findByTournamentOrderByGameDate(Tournament tournament);
 }

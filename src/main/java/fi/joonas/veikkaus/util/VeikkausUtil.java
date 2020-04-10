@@ -2,6 +2,7 @@ package fi.joonas.veikkaus.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public abstract class VeikkausUtil {
@@ -33,8 +34,15 @@ public abstract class VeikkausUtil {
 		}
 		return sdf.parse(str);
 	}	
+
 	public static Date getStringAsDate(String str) throws ParseException {
 		return getStringAsDate(str, null);
+	}
+
+	public static Date getDate(int year, int month, int day) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(year, month - 1, day, 0, 0, 0);
+		return calendar.getTime();
 	}
 	
 }

@@ -63,7 +63,7 @@ public class BetController {
 		BetGuiEntity bet = betService.findOneBet(id);
 		model.addAttribute("bet", bet);
 
-		List<BetResultGuiEntity> betResults = betResultService.findBetBetResults(id);
+		List<BetResultGuiEntity> betResults = betResultService.findBetGamesAndBetResults(id);
 		model.addAttribute("betResults", betResults);
 
 		BetResultGuiEntity newBetResult = new BetResultGuiEntity();
