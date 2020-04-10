@@ -28,7 +28,7 @@ public abstract class JUnitTestUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JUnitTestUtil.class);
 	
-	public static final boolean CLEAN_BEFORE_RUN_JUNIT_TESTS = true;
+	public static final boolean CLEAN_BEFORE_RUN_JUNIT_TESTS = false;
 	public static final String CHARSET = java.nio.charset.StandardCharsets.UTF_8.name();
 	
 	public Map<String, String> paramMap;
