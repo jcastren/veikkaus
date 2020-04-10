@@ -21,12 +21,14 @@
 
 	<table>
 		<tr>
+			<th>Date</th>
 			<th>Home team</th>
 			<th>Away team</th>
 			<th>Home score</th>
 			<th>Away score</th>
 		</tr>
 		<tr th:each="betResult : ${betResults}">
+			<td th:text="${betResult.game.gameDate}" />
 			<td th:text="${betResult.game.homeTeam.team.name}" />
 			<td th:text="${betResult.game.awayTeam.team.name}" />
 			<td th:text="${betResult.homeScore}" />
