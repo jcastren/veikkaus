@@ -1,80 +1,66 @@
 <!doctype html>
 <html lang="fi" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>VEIKKAUS ### Bet details ###</title>
-	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
-	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
-	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
-	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>VEIKKAUS ### Bet details ###</title>
+    <link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet"/>
+    <link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet"/>
+    <script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+    <script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+
+    <script>
+    $(document).ready(function(){
+        $('button[name="modify"]').prop("disabled", false);
+        $('button[name="save"]').prop("disabled", true);
+        console.log("Document ready");
+
+        $('button[name="modify"]').click(function(){
+            $('button[name="modify"]').prop("disabled", true);
+            $('button[name="save"]').prop("disabled", false);
+            console.log("Modify clicked");
+        });
+
+    });
+    </script>
+
 </head>
 <body>
-	<h1>Details</h1>
-	<p>
-		<a class="show-tooltip" th:href="@{/bet/getAll}"
-			title="Go back to bet list">Back to Bet list</a>
-	</p>
-	<br/>
-	<p th:text="'User name: ' + ${bet.user.name}"/>
-	<p th:text="'Tournament name: ' + ${bet.tournament.name}"/>
-	<p th:text="'Status: ' + ${bet.status.description}"/>
+<h1>Details</h1>
+<p>
+    <a class="show-tooltip" th:href="@{/bet/getAll}"
+       title="Go back to bet list">Back to Bet list</a>
+</p>
+<br/>
+<p th:text="'User name: ' + ${bet.user.name}"/>
+<p th:text="'Tournament name: ' + ${bet.tournament.name}"/>
+<p th:text="'Status: ' + ${bet.status.description}"/>
 
-	<table>
-		<tr>
-			<th>Date</th>
-			<th>Home team</th>
-			<th>Away team</th>
-			<th>Home score</th>
-			<th>Away score</th>
-		</tr>
-		<tr th:each="betResult : ${betResults}">
-			<td th:text="${betResult.game.gameDate}" />
-			<td th:text="${betResult.game.homeTeam.team.name}" />
-			<td th:text="${betResult.game.awayTeam.team.name}" />
-			<td th:text="${betResult.homeScore}" />
-			<td th:text="${betResult.awayScore}" />
-			<td><a class="show-tooltip"
-				   th:href="@{/betResult/getModify(id=${betResult.id})}"
-				   title="Modify details of Bet result">Modify</a></td>
-			<td><a class="show-tooltip"
-				   th:href="@{/betResult/getDelete(id=${betResult.id})}"
-				   title="Delete Bet result">Delete</a></td>
-		</tr>
-	</table>
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Home team</th>
+        <th>Away team</th>
+        <th>Home score</th>
+        <th>Away score</th>
+    </tr>
+    <tr th:each="betResult : ${betResults}">
+        <form name="singleBetResult" action="#" th:action="@{/bet/postBetResultCreate}" th:object="${betResult}" method="post">
+            <input type="hidden" th:value="*{id}" id="id" name="id"/>
+            <td th:text="*{game.gameDate}" th:field="*{game.gameDate}"/>
+            <td th:text="*{game.homeTeam.team.name}" th:field="*{game.homeTeam.team.name}"/>
+            <td th:text="*{game.awayTeam.team.name}" th:field="*{game.awayTeam.team.name}"/>
+            <td th:text="*{homeScore}" th:field="*{homeScore}" th:disabled="true"/>
+            <td th:text="*{awayScore}" th:field="*{awayScore}" th:disabled="true"/>
+            <td>
+                <button type="button" name="modify" th:disabled="${disabled}">Modify</button>
+            </td>
+            <td>
+                <button type="submit" name="save" th:disabled="!${disabled}">Save</button>
+            </td>
+        </form>
+    </tr>
+</table>
 
-	<table>
-		<tr>
-			<form action="#" th:action="@{/bet/postBetResultCreate}" th:object="${newBetResult}" method="post">
-				<input type="text" th:field="*{bet.id}" hidden="hidden"/>
-				<div>
-					<label class="show-tooltip" title="Select a game to the Bet result">Select game</label>
-					<select th:field="*{game.id}">
-						<option th:each="game : ${tournamentGames}"
-								th:value="${game.id}" th:text="${game.homeTeam.team.name} + ' - ' + ${game.awayTeam.team.name}">
-						</option>
-					</select>
-				</div>
-				<p>
-					Home team score: <input type="text" th:field="*{homeScore}"/>
-				</p>
-				<p>
-					Away team score: <input type="text" th:field="*{awayScore}"/>
-				</p>
-
-				<p>
-					<button type="submit"
-							class="show-tooltip ui-button ui-corner-all ui-widget" title="Create Bet result">
-						Create Bet result
-					</button>
-					<button type="reset"
-							class="show-tooltip ui-button ui-corner-all ui-widget" title="Reset fields">
-						Reset fields
-					</button>
-				</p>
-			</form>
-		</tr>
-	</table>
-
-	<script th:src="@{/js/common-navigation.js}"></script>
+<script th:src="@{/js/common-navigation.js}"></script>
 </body>
 </html>

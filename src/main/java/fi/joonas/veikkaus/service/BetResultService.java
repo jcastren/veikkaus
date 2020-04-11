@@ -98,18 +98,6 @@ public class BetResultService {
 		return geList;
 	}
 
-	public List<BetResultGuiEntity> findBetBetResults(String betId) {
-		Bet dbBet = betDao.findOne(Long.valueOf(betId));
-
-		List<BetResultGuiEntity> geList = new ArrayList<>();
-		List<BetResult> dbBetResults = ImmutableList.copyOf(betResultDao.findByBet(dbBet));
-
-		for (BetResult dbBetResult : dbBetResults) {
-			geList.add(convertDbToGui(dbBetResult));
-		}
-		return geList;
-	}
-
 	/**
 	 * Method populates betResults list with missing games if user hasn't yet saved a bet result
 	 * @param betId
