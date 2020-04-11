@@ -25,15 +25,15 @@
     <show-object-properties value="false" />
     <loaded-nodes>
       <connection connection-id="01bf86d3-110a-4956-a6d9-48278e03c3f6">
-        <schema name="veikkaus" object-types="view, index, dataset trigger, function, procedure, table, constraint, column" />
+        <schema name="veikkaus" object-types="table, view" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="01bf86d3-110a-4956-a6d9-48278e03c3f6">
-      <console name="Veikkaus" type="STANDARD" schema="veikkaus" session="Main"><![CDATA[select tt.id, t.name 
+      <console name="Veikkaus" type="STANDARD" schema="veikkaus" session="Main">select tt.id, t.name 
 from tournament_team tt
-JOIN team t ON tt.team_id = t.id ;]]></console>
+JOIN team t ON tt.team_id = t.id ;</console>
     </connection>
     <connection id="c31968eb-c637-44a4-bd90-f46038fb5a17">
       <console name="Connection" type="STANDARD" schema="" session="Main" />
