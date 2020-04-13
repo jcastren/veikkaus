@@ -1,14 +1,9 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_NAME;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TEAM_CREATE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TEAM_DELETE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TEAM_MODIFY_URL;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
+import com.google.common.collect.ImmutableMap;
+import fi.joonas.veikkaus.dao.TeamDao;
+import fi.joonas.veikkaus.jpaentity.Team;
+import fi.joonas.veikkaus.util.JUnitTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,11 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.google.common.collect.ImmutableMap;
-
-import fi.joonas.veikkaus.dao.TeamDao;
-import fi.joonas.veikkaus.jpaentity.Team;
-import fi.joonas.veikkaus.util.JUnitTestUtil;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -44,14 +38,14 @@ public class TeamControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_NAME, name)
 				.build();
 		String teamId = callUrl(TEAM_CREATE_URL + getQuery(paramMap), true);
-		Team dbTeam = teamDao.findOne(Long.valueOf(teamId));
+		Team dbTeam = teamDao.findById(Long.valueOf(teamId)).get();
 		assertNotNull(dbTeam);
 		assertThat(dbTeam.getId().equals(Long.valueOf(teamId)));
 		assertThat(dbTeam.getName().equals(name));
 		
 		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, teamId).build();
 		callUrl(TEAM_DELETE_URL + getQuery(paramMap), false);
-		assertNull(teamDao.findOne(Long.valueOf(teamId)));
+		assertNull(teamDao.findById(Long.valueOf(teamId)));
 	}
 	
 	@Test
@@ -63,7 +57,7 @@ public class TeamControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_NAME, name)
 						.build();
 		String dbTeamId = callUrl(TEAM_MODIFY_URL + getQuery(paramMap), true);
-		Team dbTeam = teamDao.findOne(Long.valueOf(dbTeamId));
+		Team dbTeam = teamDao.findById(Long.valueOf(dbTeamId)).get();
 		assertNotNull(dbTeam);
 		assertThat(dbTeamId.equals(teamId));
 		assertThat(dbTeam.getName().equals(name));

@@ -1,16 +1,11 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_GOALS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_PLAYER_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_TOURNAMENT_TEAM_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_PLAYER_CREATE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_PLAYER_DELETE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_PLAYER_MODIFY_URL;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
+import com.google.common.collect.ImmutableMap;
+import fi.joonas.veikkaus.dao.TournamentPlayerDao;
+import fi.joonas.veikkaus.jpaentity.Player;
+import fi.joonas.veikkaus.jpaentity.TournamentPlayer;
+import fi.joonas.veikkaus.jpaentity.TournamentTeam;
+import fi.joonas.veikkaus.util.JUnitTestUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,13 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.google.common.collect.ImmutableMap;
-
-import fi.joonas.veikkaus.dao.TournamentPlayerDao;
-import fi.joonas.veikkaus.jpaentity.Player;
-import fi.joonas.veikkaus.jpaentity.TournamentPlayer;
-import fi.joonas.veikkaus.jpaentity.TournamentTeam;
-import fi.joonas.veikkaus.util.JUnitTestUtil;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -64,7 +56,7 @@ public class TournamentPlayerControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_GOALS, Integer.valueOf(goals).toString())
 				.build();
 		String tournamentPlayerId = callUrl(TOURNAMENT_PLAYER_CREATE_URL + getQuery(paramMap), true);
-		TournamentPlayer dbTournamentPlayer = tournamentPlayerDao.findOne(Long.valueOf(tournamentPlayerId));
+		TournamentPlayer dbTournamentPlayer = tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId)).get();
 		assertNotNull(dbTournamentPlayer);
 		assertThat(dbTournamentPlayer.getId().equals(Long.valueOf(tournamentPlayerId)));
 		assertThat(dbTournamentPlayer.getTournamentTeam().getId().equals(tournamentTeam.getId()));
@@ -73,7 +65,7 @@ public class TournamentPlayerControllerTest extends JUnitTestUtil {
 				
 		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, tournamentPlayerId).build();
 		callUrl(TOURNAMENT_PLAYER_DELETE_URL + getQuery(paramMap), false);
-		assertNull(tournamentPlayerDao.findOne(Long.valueOf(tournamentPlayerId)));
+		assertNull(tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId)));
 	}
 	
 	@Test
@@ -91,7 +83,7 @@ public class TournamentPlayerControllerTest extends JUnitTestUtil {
 				.build();
 		
 		String dbTournamentPlayerId = callUrl(TOURNAMENT_PLAYER_MODIFY_URL + getQuery(paramMap), true);
-		TournamentPlayer dbTournamentPlayer = tournamentPlayerDao.findOne(Long.valueOf(dbTournamentPlayerId));
+		TournamentPlayer dbTournamentPlayer = tournamentPlayerDao.findById(Long.valueOf(dbTournamentPlayerId)).get();
 		assertNotNull(dbTournamentPlayer);
 		assertThat(dbTournamentPlayer.getId().equals(tournamentPlayer.getId()));
 		assertThat(dbTournamentPlayer.getTournamentTeam().getId().equals(tournamentTeam.getId()));

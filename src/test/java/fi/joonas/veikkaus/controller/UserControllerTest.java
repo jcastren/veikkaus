@@ -1,17 +1,10 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_EMAIL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_NAME;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_PASSWORD;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_USER_ROLE_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_CREATE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_DELETE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.USER_MODIFY_URL;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
+import com.google.common.collect.ImmutableMap;
+import fi.joonas.veikkaus.dao.UserDao;
+import fi.joonas.veikkaus.jpaentity.User;
+import fi.joonas.veikkaus.jpaentity.UserRole;
+import fi.joonas.veikkaus.util.JUnitTestUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,12 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.google.common.collect.ImmutableMap;
-
-import fi.joonas.veikkaus.dao.UserDao;
-import fi.joonas.veikkaus.jpaentity.User;
-import fi.joonas.veikkaus.jpaentity.UserRole;
-import fi.joonas.veikkaus.util.JUnitTestUtil;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -65,7 +56,7 @@ public class UserControllerTest extends JUnitTestUtil {
 				.build();
 		
 		String userId = callUrl(USER_CREATE_URL + getQuery(paramMap), true);
-		User dbUser = userDao.findOne(Long.valueOf(userId));
+		User dbUser = userDao.findById(Long.valueOf(userId)).get();
 		assertNotNull(dbUser);
 		assertThat(dbUser.getId().equals(Long.valueOf(userId)));
 		assertThat(dbUser.getEmail().equals(email));
@@ -77,7 +68,7 @@ public class UserControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_ID, userId)
 				.build();
 		callUrl(USER_DELETE_URL + getQuery(paramMap), false);
-		assertNull(userDao.findOne(Long.valueOf(userId)));
+		assertNull(userDao.findById(Long.valueOf(userId)));
 	}
 	
 	@Test
@@ -103,7 +94,7 @@ public class UserControllerTest extends JUnitTestUtil {
 				.build();
 		
 		String dbUserId = callUrl(USER_MODIFY_URL + getQuery(paramMap), true);
-		User dbUser = userDao.findOne(Long.valueOf(dbUserId));
+		User dbUser = userDao.findById(Long.valueOf(dbUserId)).get();
 		assertNotNull(dbUser);
 		assertThat(dbUserId.equals(userId));
 		assertThat(dbUser.getEmail().equals(email));

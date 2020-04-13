@@ -1,25 +1,19 @@
 package fi.joonas.veikkaus.controller;
 
+import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
+import fi.joonas.veikkaus.service.TournamentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
-import fi.joonas.veikkaus.service.TournamentService;
+import org.springframework.web.bind.annotation.*;
 
 import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(TOURNAMENT_URL)
-public class TournamentController extends WebMvcConfigurerAdapter {
+public class TournamentController {
 
 	@Autowired
 	private TournamentService tournamentService;

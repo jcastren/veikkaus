@@ -1,15 +1,9 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_FIRST_NAME;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_LAST_NAME;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PLAYER_CREATE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PLAYER_DELETE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PLAYER_MODIFY_URL;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
+import com.google.common.collect.ImmutableMap;
+import fi.joonas.veikkaus.dao.PlayerDao;
+import fi.joonas.veikkaus.jpaentity.Player;
+import fi.joonas.veikkaus.util.JUnitTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,11 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.google.common.collect.ImmutableMap;
-
-import fi.joonas.veikkaus.dao.PlayerDao;
-import fi.joonas.veikkaus.jpaentity.Player;
-import fi.joonas.veikkaus.util.JUnitTestUtil;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -47,7 +40,7 @@ public class PlayerControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_LAST_NAME, lastName)
 				.build();
 		String playerId = callUrl(PLAYER_CREATE_URL + getQuery(paramMap), true);
-		Player dbPlayer = playerDao.findOne(Long.valueOf(playerId));
+		Player dbPlayer = playerDao.findById(Long.valueOf(playerId)).get();
 		assertNotNull(dbPlayer);
 		assertThat(dbPlayer.getId().equals(Long.valueOf(playerId)));
 		assertThat(dbPlayer.getFirstName().equals(firstName));
@@ -55,7 +48,7 @@ public class PlayerControllerTest extends JUnitTestUtil {
 		
 		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, playerId).build();
 		callUrl(PLAYER_DELETE_URL + getQuery(paramMap), false);
-		assertNull(playerDao.findOne(Long.valueOf(playerId)));
+		assertNull(playerDao.findById(Long.valueOf(playerId)));
 	}
 	
 	@Test
@@ -71,7 +64,7 @@ public class PlayerControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_LAST_NAME, lastName)
 				.build();
 		String dbPlayerId = callUrl(PLAYER_MODIFY_URL + getQuery(paramMap), true);
-		Player dbPlayer = playerDao.findOne(Long.valueOf(dbPlayerId));
+		Player dbPlayer = playerDao.findById(Long.valueOf(dbPlayerId)).get();
 		assertNotNull(dbPlayer);
 		assertThat(dbPlayerId.equals(playerId));
 		assertThat(dbPlayer.getFirstName().equals(firstName));

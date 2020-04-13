@@ -45,6 +45,8 @@ public class GameDaoTest extends JUnitTestUtil {
 
     @Before
     public void setup() throws Exception {
+//        cleanDb();
+
         tournament = new Tournament("Käpä Cup", 2026);
         tournamentDao.save(tournament);
 
@@ -89,10 +91,10 @@ public class GameDaoTest extends JUnitTestUtil {
 
     @After
     public void clean() {
-        gameList.forEach(game -> gameDao.delete(game.getId()));
-        tournamentTeamList.forEach(tournamentTeam -> tournamentTeamDao.delete(tournamentTeam.getId()));
-        teamList.forEach(team -> teamDao.delete(team.getId()));
-        tournamentDao.delete(tournament.getId());
+        gameList.forEach(game -> gameDao.deleteById(game.getId()));
+        tournamentTeamList.forEach(tournamentTeam -> tournamentTeamDao.deleteById(tournamentTeam.getId()));
+        teamList.forEach(team -> teamDao.deleteById(team.getId()));
+        tournamentDao.deleteById(tournament.getId());
     }
 
     @Test

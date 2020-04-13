@@ -1,16 +1,14 @@
 package fi.joonas.veikkaus.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.ImmutableList;
-
 import fi.joonas.veikkaus.dao.PlayerDao;
 import fi.joonas.veikkaus.guientity.PlayerGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Player;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Business logic level class for DB handling of Player
@@ -43,7 +41,7 @@ public class PlayerService {
 	 */
 	public boolean delete(String id) {
 		boolean succeed = false;
-		playerDao.delete(Long.valueOf(id));
+		playerDao.deleteById(Long.valueOf(id));
 		succeed = true;
 		return succeed;
 	}
@@ -69,7 +67,7 @@ public class PlayerService {
 	 * @return
 	 */
 	public PlayerGuiEntity findOnePlayer(String id) {
-		PlayerGuiEntity playerGe = convertDbToGui(playerDao.findOne(Long.valueOf(id)));
+		PlayerGuiEntity playerGe = convertDbToGui(playerDao.findById(Long.valueOf(id)).get());
 		return playerGe;
 	}
 	

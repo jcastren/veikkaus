@@ -1,16 +1,14 @@
 package fi.joonas.veikkaus.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.ImmutableList;
-
 import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Tournament;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Business logic level class for DB handling of Tournament
@@ -48,7 +46,7 @@ public class TournamentService {
 	 */
 	public boolean delete(String id) {
 		boolean succeed = false;
-		tournamentDao.delete(Long.valueOf(id));
+		tournamentDao.deleteById(Long.valueOf(id));
 		succeed = true;
 		return succeed;
 	}
@@ -74,7 +72,7 @@ public class TournamentService {
 	 * @return
 	 */
 	public TournamentGuiEntity findOneTournament(String id) {
-		TournamentGuiEntity tournGe = convertDbToGui(tournamentDao.findOne(Long.valueOf(id)));
+		TournamentGuiEntity tournGe = convertDbToGui(tournamentDao.findById(Long.valueOf(id)).get());
 		return tournGe;
 	}
 	

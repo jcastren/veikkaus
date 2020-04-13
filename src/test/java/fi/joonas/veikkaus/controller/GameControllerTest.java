@@ -1,20 +1,11 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.GAME_CREATE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.GAME_DELETE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.GAME_MODIFY_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_AWAY_SCORE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_AWAY_TEAM_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_GAME_DATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_HOME_SCORE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_HOME_TEAM_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.util.Date;
-
+import com.google.common.collect.ImmutableMap;
+import fi.joonas.veikkaus.dao.GameDao;
+import fi.joonas.veikkaus.jpaentity.Game;
+import fi.joonas.veikkaus.jpaentity.TournamentTeam;
+import fi.joonas.veikkaus.util.JUnitTestUtil;
+import fi.joonas.veikkaus.util.VeikkausUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,13 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.Date;
 
-import fi.joonas.veikkaus.dao.GameDao;
-import fi.joonas.veikkaus.jpaentity.Game;
-import fi.joonas.veikkaus.jpaentity.TournamentTeam;
-import fi.joonas.veikkaus.util.JUnitTestUtil;
-import fi.joonas.veikkaus.util.VeikkausUtil;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -72,7 +62,7 @@ public class GameControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_GAME_DATE, VeikkausUtil.getDateAsString(gameDate))
 				.build();
 		String gameId = callUrl(GAME_CREATE_URL + getQuery(paramMap), true);
-		Game dbGame = gameDao.findOne(Long.valueOf(gameId));
+		Game dbGame = gameDao.findById(Long.valueOf(gameId)).get();
 		assertNotNull(dbGame);
 		assertThat(dbGame.getId().equals(Long.valueOf(gameId)));
 		assertThat(dbGame.getHomeTeam().getId().equals(homeTeam.getId()));
@@ -83,7 +73,7 @@ public class GameControllerTest extends JUnitTestUtil {
 		
 		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, gameId).build();
 		callUrl(GAME_DELETE_URL + getQuery(paramMap), false);
-		assertNull(gameDao.findOne(Long.valueOf(gameId)));
+		assertNull(gameDao.findById(Long.valueOf(gameId)));
 	}
 	
 	@Test
@@ -110,7 +100,7 @@ public class GameControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_GAME_DATE, VeikkausUtil.getDateAsString(gameDate))
 				.build();
 		String dbGameId = callUrl(GAME_MODIFY_URL + getQuery(paramMap), true);
-		Game dbGame = gameDao.findOne(Long.valueOf(dbGameId));
+		Game dbGame = gameDao.findById(Long.valueOf(dbGameId)).get();
 		assertNotNull(dbGame);
 		assertThat(dbGameId.equals(gameId));
 		assertThat(dbGame.getHomeTeam().getId().toString().equals(homeTeamId));

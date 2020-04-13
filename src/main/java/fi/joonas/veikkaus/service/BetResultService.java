@@ -13,10 +13,7 @@ import fi.joonas.veikkaus.jpaentity.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class BetResultService {
@@ -39,51 +36,51 @@ public class BetResultService {
 
 	public Long insert(BetResultGuiEntity betResultGe) throws VeikkausServiceException {
 		String betId = betResultGe.getBet().getId();
-		Bet betDb = betDao.findOne(Long.valueOf(betId));
-		if (betDb == null) {
+		Optional<Bet> betDb = betDao.findById(Long.valueOf(betId));
+		if (!betDb.isPresent()) {
 			throw new VeikkausServiceException("Bet with id: " + betId + " wasn't found, insert failed");
 		}
 
 		String gameId = betResultGe.getGame().getId();
-		Game gameDb = gameDao.findOne(Long.valueOf(gameId));
-		if (gameDb == null) {
+		Optional<Game> gameDb = gameDao.findById(Long.valueOf(gameId));
+		if (!gameDb.isPresent()) {
 			throw new VeikkausServiceException("Game with id: " + gameId + " wasn't found, insert failed");
 		}
 
-		betResultGe.setBet(BetService.convertDbToGui(betDb));
-		betResultGe.setGame(GameService.convertDbToGui(gameDb));
+		betResultGe.setBet(BetService.convertDbToGui(betDb.get()));
+		betResultGe.setGame(GameService.convertDbToGui(gameDb.get()));
 
 		return betResultDao.save(convertGuiToDb(betResultGe)).getId();
 	}
 
 	public Long modify(BetResultGuiEntity betResultGe) throws VeikkausServiceException {
 		String id = betResultGe.getId();
-		BetResult betResultDb = betResultDao.findOne(Long.valueOf(id));
-		if (betResultDb == null) {
+		Optional<BetResult> betResultDb = betResultDao.findById(Long.valueOf(id));
+		if (!betResultDb.isPresent()) {
 			throw new VeikkausServiceException("Bet result with id: " + id + " wasn't found, modify failed");
 		}
 
 		String betId = betResultGe.getBet().getId();
-		Bet betDb = betDao.findOne(Long.valueOf(betId));
-		if (betDb == null) {
+		Optional<Bet> betDb = betDao.findById(Long.valueOf(betId));
+		if (!betDb.isPresent()) {
 			throw new VeikkausServiceException("Bet with id: " + id + " wasn't found, modify failed");
 		}
 
 		String gameId = betResultGe.getGame().getId();
-		Game gameDb = gameDao.findOne(Long.valueOf(gameId));
-		if (gameDb == null) {
+		Optional<Game> gameDb = gameDao.findById(Long.valueOf(gameId));
+		if (!gameDb.isPresent()) {
 			throw new VeikkausServiceException("Game with id: " + id + " wasn't found, modify failed");
 		}
 
-		betResultGe.setBet(BetService.convertDbToGui(betDb));
-		betResultGe.setGame(GameService.convertDbToGui(gameDb));
+		betResultGe.setBet(BetService.convertDbToGui(betDb.get()));
+		betResultGe.setGame(GameService.convertDbToGui(gameDb.get()));
 
 		return betResultDao.save(convertGuiToDb(betResultGe)).getId();
 	}
 
 	public boolean delete(String id) {
-		boolean succeed = false;
-		betResultDao.delete(Long.valueOf(id));
+		boolean succeed;
+		betResultDao.deleteById(Long.valueOf(id));
 		succeed = true;
 		return succeed;
 	}
@@ -104,10 +101,10 @@ public class BetResultService {
 	 * @return
 	 */
 	public List<BetResultGuiEntity> findBetGamesAndBetResults(String betId) {
-		Bet dbBet = betDao.findOne(Long.valueOf(betId));
-		List<BetResult> betResultListPopulatedWithMissingGames = betResultDao.findByBet(dbBet) ;
+		Optional<Bet> dbBet = betDao.findById(Long.valueOf(betId));
+		List<BetResult> betResultListPopulatedWithMissingGames = betResultDao.findByBet(dbBet.get()) ;
 		List<BetResult> dbBetResults = ImmutableList.copyOf(betResultListPopulatedWithMissingGames);
-		List<Game> dbGames = ImmutableList.copyOf(gameDao.findByTournamentOrderByGameDate(dbBet.getTournament()));
+		List<Game> dbGames = ImmutableList.copyOf(gameDao.findByTournamentOrderByGameDate(dbBet.get().getTournament()));
 
 		List<BetResultGuiEntity> geList = new ArrayList<>();
 		for (Game dbGame : dbGames) {
@@ -124,7 +121,7 @@ public class BetResultService {
 			if (match == null) {
 				BetResult betResultWithoutScore = new BetResult();
 				betResultWithoutScore.setId(-999L);
-				betResultWithoutScore.setBet(dbBet);
+				betResultWithoutScore.setBet(dbBet.get());
 				betResultWithoutScore.setGame(dbGame);
 				betResultWithoutScore.setHomeScore(-999);
 				betResultWithoutScore.setAwayScore(-999);
@@ -140,7 +137,7 @@ public class BetResultService {
 	}
 
 	public BetResultGuiEntity findOneBetResult(String id) {
-		BetResultGuiEntity betResultGe = convertDbToGui(betResultDao.findOne(Long.valueOf(id)));
+		BetResultGuiEntity betResultGe = convertDbToGui(betResultDao.findById(Long.valueOf(id)).get());
 		return betResultGe;
 	}
 

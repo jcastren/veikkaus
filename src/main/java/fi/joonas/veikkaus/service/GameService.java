@@ -6,9 +6,10 @@ import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.dao.TournamentTeamDao;
 import fi.joonas.veikkaus.exception.VeikkausConversionException;
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
-import fi.joonas.veikkaus.guientity.BetResultGuiEntity;
 import fi.joonas.veikkaus.guientity.GameGuiEntity;
-import fi.joonas.veikkaus.jpaentity.*;
+import fi.joonas.veikkaus.jpaentity.Game;
+import fi.joonas.veikkaus.jpaentity.Tournament;
+import fi.joonas.veikkaus.jpaentity.TournamentTeam;
 import fi.joonas.veikkaus.util.VeikkausUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static fi.joonas.veikkaus.constants.VeikkausConstants.INT_NOT_DEFINED;
 
@@ -39,30 +41,30 @@ public class GameService {
 		Long retGameId = null;
 
 		String tournamentId = gameGe.getTournament().getId();
-		Tournament tournamentDb = tournamentDao.findOne(Long.valueOf(tournamentId));
-		if (tournamentDb == null) {
+		Optional<Tournament> tournamentDb = tournamentDao.findById(Long.valueOf(tournamentId));
+		if (!tournamentDb.isPresent()) {
 			throw new VeikkausServiceException(
 					String.format("Tournament with id: %s wasn't found, insert failed", tournamentId));
 		}
 
 		String homeTeamId = gameGe.getHomeTeam().getId();
-		TournamentTeam homeTeamDb = tournamentTeamDao.findOne(Long.valueOf(homeTeamId));
-		if (homeTeamDb == null) {
+		Optional<TournamentTeam> homeTeamDb = tournamentTeamDao.findById(Long.valueOf(homeTeamId));
+		if (!homeTeamDb.isPresent()) {
 			throw new VeikkausServiceException(
 				String.format("TournamentTeam (homeTeam) with id: %s wasn't found, insert failed", homeTeamId));
 		}
 
 		String awayTeamId = gameGe.getAwayTeam().getId();
-		TournamentTeam awayTeamDb = tournamentTeamDao.findOne(Long.valueOf(awayTeamId));
-		if (awayTeamDb == null) {
+		Optional<TournamentTeam> awayTeamDb = tournamentTeamDao.findById(Long.valueOf(awayTeamId));
+		if (!awayTeamDb.isPresent()) {
 			throw new VeikkausServiceException(
 				String.format("TournamentTeam (awayTeam) with id: %s wasn't found, insert failed", awayTeamId));
 		}
 
 		/** TODO Why converting back ??? */
-		gameGe.setTournament(TournamentService.convertDbToGui(tournamentDb));
-		gameGe.setHomeTeam(TournamentTeamService.convertDbToGui(homeTeamDb));
-		gameGe.setAwayTeam(TournamentTeamService.convertDbToGui(awayTeamDb));
+		gameGe.setTournament(TournamentService.convertDbToGui(tournamentDb.get()));
+		gameGe.setHomeTeam(TournamentTeamService.convertDbToGui(homeTeamDb.get()));
+		gameGe.setAwayTeam(TournamentTeamService.convertDbToGui(awayTeamDb.get()));
 
 		try {
 			retGameId = gameDao.save(convertGuiToDb(gameGe)).getId();
@@ -81,35 +83,35 @@ public class GameService {
 		Long retGameId = null;
 		
 		String id = gameGe.getId();
-		Game gameDb = gameDao.findOne(Long.valueOf(id));
-		if (gameDb == null) {
+		Optional<Game> gameDb = gameDao.findById(Long.valueOf(id));
+		if (!gameDb.isPresent()) {
 			throw new VeikkausServiceException("Game with id: " + id + " wasn't found, modify failed");
 		}
 
 		String tournamentId = gameGe.getTournament().getId();
-		Tournament tournamentDb = tournamentDao.findOne(Long.valueOf(tournamentId));
-		if (tournamentDb == null) {
+		Optional<Tournament> tournamentDb = tournamentDao.findById(Long.valueOf(tournamentId));
+		if (!tournamentDb.isPresent()) {
 			throw new VeikkausServiceException(
 					String.format("Tournament with id: %s wasn't found, modify failed", tournamentId));
 		}
 
 		String homeTeamId = gameGe.getHomeTeam().getId();
-		TournamentTeam homeTeamDb = tournamentTeamDao.findOne(Long.valueOf(homeTeamId));
-		if (homeTeamDb == null) {
+		Optional<TournamentTeam> homeTeamDb = tournamentTeamDao.findById(Long.valueOf(homeTeamId));
+		if (!homeTeamDb.isPresent()) {
 			throw new VeikkausServiceException(
 					String.format("Home team with id: %s wasn't found, modify failed", homeTeamId));
 		}
 		
 		String awayTeamId = gameGe.getAwayTeam().getId();
-		TournamentTeam awayTeamDb = tournamentTeamDao.findOne(Long.valueOf(awayTeamId));
-		if (awayTeamDb == null) {
+		Optional<TournamentTeam> awayTeamDb = tournamentTeamDao.findById(Long.valueOf(awayTeamId));
+		if (!awayTeamDb.isPresent()) {
 			throw new VeikkausServiceException(
 					String.format("Away team with id: %s wasn't found, modify failed", awayTeamId));
 		}
 		
-		gameGe.setTournament(TournamentService.convertDbToGui(tournamentDb));
-		gameGe.setHomeTeam(TournamentTeamService.convertDbToGui(homeTeamDb));
-		gameGe.setAwayTeam(TournamentTeamService.convertDbToGui(awayTeamDb));
+		gameGe.setTournament(TournamentService.convertDbToGui(tournamentDb.get()));
+		gameGe.setHomeTeam(TournamentTeamService.convertDbToGui(homeTeamDb.get()));
+		gameGe.setAwayTeam(TournamentTeamService.convertDbToGui(awayTeamDb.get()));
 		
 		try {
 			retGameId = gameDao.save(convertGuiToDb(gameGe)).getId();
@@ -126,7 +128,7 @@ public class GameService {
 	 */
 	public boolean delete(String id)  throws VeikkausServiceException {
 		boolean succeed;
-		gameDao.delete(Long.valueOf(id));
+		gameDao.deleteById(Long.valueOf(id));
 		succeed = true;
 		return succeed;
 	}
@@ -147,10 +149,10 @@ public class GameService {
 	}
 
 	public List<GameGuiEntity> findTournamentGames(String tournamentId) {
-		Tournament dbTournament = tournamentDao.findOne(Long.valueOf(tournamentId));
+		Optional<Tournament> dbTournament = tournamentDao.findById(Long.valueOf(tournamentId));
 
 		List<GameGuiEntity> geList = new ArrayList<>();
-		List<Game> dbGames = ImmutableList.copyOf(gameDao.findByTournament(dbTournament));
+		List<Game> dbGames = ImmutableList.copyOf(gameDao.findByTournament(dbTournament.get()));
 
 		for (Game dbGame : dbGames) {
 			geList.add(convertDbToGui(dbGame));
@@ -160,7 +162,7 @@ public class GameService {
 
 
 	public GameGuiEntity findOneGame(String id) {
-		GameGuiEntity gameGe = convertDbToGui(gameDao.findOne(Long.valueOf(id)));
+		GameGuiEntity gameGe = convertDbToGui(gameDao.findById(Long.valueOf(id)).get());
 		return gameGe;
 	}
 	

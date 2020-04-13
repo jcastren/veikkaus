@@ -1,19 +1,18 @@
 package fi.joonas.veikkaus.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.ImmutableList;
-
 import fi.joonas.veikkaus.dao.UserDao;
 import fi.joonas.veikkaus.dao.UserRoleDao;
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
 import fi.joonas.veikkaus.guientity.UserGuiEntity;
 import fi.joonas.veikkaus.jpaentity.User;
 import fi.joonas.veikkaus.jpaentity.UserRole;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -31,13 +30,13 @@ public class UserService {
 	 */
 	public Long insert(UserGuiEntity userGe) throws VeikkausServiceException {
 		String userRoleId = userGe.getUserRole().getId();
-		UserRole userRoleDb = userRoleDao.findOne(Long.valueOf(userRoleId));
-		if (userRoleDb == null) {
+		Optional<UserRole> userRoleDb = userRoleDao.findById(Long.valueOf(userRoleId));
+		if (!userRoleDb.isPresent()) {
 			throw new VeikkausServiceException("User role with id: " + userRoleId + " wasn't found, insert failed");
 		}
 
 		/** TODO Why is userRole set again? Did it miss originally some fields????? */
-		userGe.setUserRole(UserRoleService.convertDbToGui(userRoleDb));
+		userGe.setUserRole(UserRoleService.convertDbToGui(userRoleDb.get()));
 
 		return userDao.save(convertGuiToDb(userGe)).getId();
 	}
@@ -49,18 +48,18 @@ public class UserService {
 	 */
 	public Long modify(UserGuiEntity userGe) throws VeikkausServiceException {
 		String id = userGe.getId();
-		User userDb = userDao.findOne(Long.valueOf(id));
-		if (userDb == null) {
+		Optional<User> userDb = userDao.findById(Long.valueOf(id));
+		if (!userDb.isPresent()) {
 			throw new VeikkausServiceException("User with id: " + id + " wasn't found, modify failed");
 		}
 			
 		String userRoleId = userGe.getUserRole().getId();
-		UserRole userRoleDb = userRoleDao.findOne(Long.valueOf(userRoleId));
-		if (userRoleDb == null) {
+		Optional<UserRole> userRoleDb = userRoleDao.findById(Long.valueOf(userRoleId));
+		if (!userRoleDb.isPresent()) {
 			throw new VeikkausServiceException("User role with id: " + id + " wasn't found, modify failed");
 		}
 		
-		userGe.setUserRole(UserRoleService.convertDbToGui(userRoleDb));
+		userGe.setUserRole(UserRoleService.convertDbToGui(userRoleDb.get()));
 		
 		return userDao.save(convertGuiToDb(userGe)).getId();
 	}
@@ -72,7 +71,7 @@ public class UserService {
 	 */
 	public boolean delete(String id) throws VeikkausServiceException {
 		boolean succeed = false;
-		userDao.delete(Long.valueOf(id));
+		userDao.deleteById(Long.valueOf(id));
 		succeed = true;
 		return succeed;
 	}
@@ -98,7 +97,7 @@ public class UserService {
 	 * @return
 	 */
 	public UserGuiEntity findOneUser(String id) {
-		UserGuiEntity userGe = convertDbToGui(userDao.findOne(Long.valueOf(id)));
+		UserGuiEntity userGe = convertDbToGui(userDao.findById(Long.valueOf(id)).get());
 		return userGe;
 	}
 	

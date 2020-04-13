@@ -1,16 +1,14 @@
 package fi.joonas.veikkaus.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.ImmutableList;
-
 import fi.joonas.veikkaus.dao.TeamDao;
 import fi.joonas.veikkaus.guientity.TeamGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Team;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Business logic level class for DB handling of Team
@@ -48,7 +46,7 @@ public class TeamService {
 	 */
 	public boolean delete(String id) {
 		boolean succeed = false;
-		teamDao.delete(Long.valueOf(id));
+		teamDao.deleteById(Long.valueOf(id));
 		succeed = true;
 		return succeed;
 	}
@@ -74,7 +72,7 @@ public class TeamService {
 	 * @return
 	 */
 	public TeamGuiEntity findOneTeam(String id) {
-		TeamGuiEntity teamGe = convertDbToGui(teamDao.findOne(Long.valueOf(id)));
+		TeamGuiEntity teamGe = convertDbToGui(teamDao.findById(Long.valueOf(id)).get());
 		return teamGe;
 	}
 	

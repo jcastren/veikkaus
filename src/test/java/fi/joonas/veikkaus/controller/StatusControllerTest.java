@@ -1,17 +1,9 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_DESCRIPTION;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_STATUS_NUMBER;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_COMPLETED;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_CREATE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_DELETE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_MODIFY_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_UNDER_WORK;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
+import com.google.common.collect.ImmutableMap;
+import fi.joonas.veikkaus.dao.StatusDao;
+import fi.joonas.veikkaus.jpaentity.Status;
+import fi.joonas.veikkaus.util.JUnitTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,11 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.google.common.collect.ImmutableMap;
-
-import fi.joonas.veikkaus.dao.StatusDao;
-import fi.joonas.veikkaus.jpaentity.Status;
-import fi.joonas.veikkaus.util.JUnitTestUtil;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -48,14 +39,14 @@ public class StatusControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_DESCRIPTION, description)
 				.build();
 		String statusId = callUrl(STATUS_CREATE_URL + getQuery(paramMap), true);
-		Status dbStatus = statusDao.findOne(Long.valueOf(statusId));
+		Status dbStatus = statusDao.findById(Long.valueOf(statusId)).get();
 		assertNotNull(dbStatus);
 		assertThat(dbStatus.getId().equals(Long.valueOf(statusId)));
 		assertThat(dbStatus.getStatusNumber() == STATUS_UNDER_WORK);
 		
 		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, statusId).build();
 		callUrl(STATUS_DELETE_URL + getQuery(paramMap), false);
-		assertNull(statusDao.findOne(Long.valueOf(statusId)));
+		assertNull(statusDao.findById(Long.valueOf(statusId)));
 	}
 	
 	@Test
@@ -68,7 +59,7 @@ public class StatusControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_DESCRIPTION, description)
 						.build();
 		String dbStatusId = callUrl(STATUS_MODIFY_URL + getQuery(paramMap), true);
-		Status dbStatus = statusDao.findOne(Long.valueOf(dbStatusId));
+		Status dbStatus = statusDao.findById(Long.valueOf(dbStatusId)).get();
 		assertNotNull(dbStatus);
 		assertThat(dbStatusId.equals(statusId));
 		assertThat(dbStatus.getStatusNumber() == STATUS_COMPLETED);

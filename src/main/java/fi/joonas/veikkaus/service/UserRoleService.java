@@ -1,16 +1,14 @@
 package fi.joonas.veikkaus.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.ImmutableList;
-
 import fi.joonas.veikkaus.dao.UserRoleDao;
 import fi.joonas.veikkaus.guientity.UserRoleGuiEntity;
 import fi.joonas.veikkaus.jpaentity.UserRole;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserRoleService {
@@ -43,7 +41,7 @@ public class UserRoleService {
 	 */
 	public boolean delete(String id) {
 		boolean succeed = false;
-		userRoleDao.delete(Long.valueOf(id));
+		userRoleDao.deleteById(Long.valueOf(id));
 		succeed = true;
 		return succeed;
 	}
@@ -69,7 +67,7 @@ public class UserRoleService {
 	 * @return
 	 */
 	public UserRoleGuiEntity findOneUserRole(String id) {
-		UserRoleGuiEntity tournGe = convertDbToGui(userRoleDao.findOne(Long.valueOf(id)));
+		UserRoleGuiEntity tournGe = convertDbToGui(userRoleDao.findById(Long.valueOf(id)).get());
 		return tournGe;
 	}
 	

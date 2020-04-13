@@ -1,15 +1,11 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.BET_CREATE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.BET_DELETE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.BET_MODIFY_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_STATUS_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_USER_ID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
+import com.google.common.collect.ImmutableMap;
+import fi.joonas.veikkaus.dao.BetDao;
+import fi.joonas.veikkaus.jpaentity.Bet;
+import fi.joonas.veikkaus.jpaentity.Status;
+import fi.joonas.veikkaus.jpaentity.User;
+import fi.joonas.veikkaus.util.JUnitTestUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,13 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.google.common.collect.ImmutableMap;
-
-import fi.joonas.veikkaus.dao.BetDao;
-import fi.joonas.veikkaus.jpaentity.Bet;
-import fi.joonas.veikkaus.jpaentity.Status;
-import fi.joonas.veikkaus.jpaentity.User;
-import fi.joonas.veikkaus.util.JUnitTestUtil;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -59,7 +52,7 @@ public class BetControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_STATUS_ID, status.getId().toString())
 				.build();
 		String betId = callUrl(BET_CREATE_URL + getQuery(paramMap), true);
-		Bet dbBet = betDao.findOne(Long.valueOf(betId));
+		Bet dbBet = betDao.findById(Long.valueOf(betId)).get();
 		assertNotNull(dbBet);
 		assertThat(dbBet.getId().equals(Long.valueOf(betId)));
 		assertThat(dbBet.getUser().getId().equals(user.getId()));
@@ -67,7 +60,7 @@ public class BetControllerTest extends JUnitTestUtil {
 		
 		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, betId).build();
 		callUrl(BET_DELETE_URL + getQuery(paramMap), false);
-		assertNull(betDao.findOne(Long.valueOf(betId)));
+		assertNull(betDao.findById(Long.valueOf(betId)));
 	}
 	
 	@Test
@@ -87,7 +80,7 @@ public class BetControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_STATUS_ID, statusId)
 				.build();
 		String dbBetId = callUrl(BET_MODIFY_URL + getQuery(paramMap), true);
-		Bet dbBet = betDao.findOne(Long.valueOf(dbBetId));
+		Bet dbBet = betDao.findById(Long.valueOf(dbBetId)).get();
 		assertNotNull(dbBet);
 		assertThat(dbBetId.equals(betId));
 		assertThat(dbBet.getUser().getId().equals(userId));

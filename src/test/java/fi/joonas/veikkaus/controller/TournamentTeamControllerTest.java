@@ -1,15 +1,11 @@
 package fi.joonas.veikkaus.controller;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_TEAM_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.PARAM_NAME_TOURNAMENT_ID;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_TEAM_CREATE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_TEAM_DELETE_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_TEAM_MODIFY_URL;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
+import com.google.common.collect.ImmutableMap;
+import fi.joonas.veikkaus.dao.TournamentTeamDao;
+import fi.joonas.veikkaus.jpaentity.Team;
+import fi.joonas.veikkaus.jpaentity.Tournament;
+import fi.joonas.veikkaus.jpaentity.TournamentTeam;
+import fi.joonas.veikkaus.util.JUnitTestUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,13 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.google.common.collect.ImmutableMap;
-
-import fi.joonas.veikkaus.dao.TournamentTeamDao;
-import fi.joonas.veikkaus.jpaentity.Team;
-import fi.joonas.veikkaus.jpaentity.Tournament;
-import fi.joonas.veikkaus.jpaentity.TournamentTeam;
-import fi.joonas.veikkaus.util.JUnitTestUtil;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -61,7 +54,7 @@ public class TournamentTeamControllerTest extends JUnitTestUtil {
 				.put(PARAM_NAME_TEAM_ID, team.getId().toString())
 				.build();
 		String tournamentTeamId = callUrl(TOURNAMENT_TEAM_CREATE_URL + getQuery(paramMap), true);
-		TournamentTeam dbTournamentTeam = tournamentTeamDao.findOne(Long.valueOf(tournamentTeamId));
+		TournamentTeam dbTournamentTeam = tournamentTeamDao.findById(Long.valueOf(tournamentTeamId)).get();
 		assertNotNull(dbTournamentTeam);
 		assertThat(dbTournamentTeam.getId().equals(Long.valueOf(tournamentTeamId)));
 		assertThat(dbTournamentTeam.getTournament().getId().equals(tournament.getId()));
@@ -69,7 +62,7 @@ public class TournamentTeamControllerTest extends JUnitTestUtil {
 		
 		paramMap = ImmutableMap.<String, String>builder().put(PARAM_NAME_ID, tournamentTeamId).build();
 		callUrl(TOURNAMENT_TEAM_DELETE_URL + getQuery(paramMap), false);
-		assertNull(tournamentTeamDao.findOne(Long.valueOf(tournamentTeamId)));
+		assertNull(tournamentTeamDao.findById(Long.valueOf(tournamentTeamId)));
 	}
 	
 	@Test
@@ -85,7 +78,7 @@ public class TournamentTeamControllerTest extends JUnitTestUtil {
 				.build();
 		
 		String dbTournamentTeamId = callUrl(TOURNAMENT_TEAM_MODIFY_URL + getQuery(paramMap), true);
-		TournamentTeam dbTournamentTeam = tournamentTeamDao.findOne(Long.valueOf(dbTournamentTeamId));
+		TournamentTeam dbTournamentTeam = tournamentTeamDao.findById(Long.valueOf(dbTournamentTeamId)).get();
 		assertNotNull(dbTournamentTeam);
 		assertThat(dbTournamentTeamId.equals(tournamentTeam.getId()));
 		assertThat(dbTournamentTeam.getTournament().getId().equals(tournamentId));

@@ -32,7 +32,7 @@ public class StatusService {
 
 	public boolean delete(String id) {
 		boolean succeed = false;
-		statusDao.delete(Long.valueOf(id));
+		statusDao.deleteById(Long.valueOf(id));
 		succeed = true;
 		return succeed;
 	}
@@ -49,7 +49,7 @@ public class StatusService {
 	}
 
 	public StatusGuiEntity findOneStatus(String id) {
-		StatusGuiEntity statusGe = convertDbToGui(statusDao.findOne(Long.valueOf(id)));
+		StatusGuiEntity statusGe = convertDbToGui(statusDao.findById(Long.valueOf(id)).get());
 		return statusGe;
 	}
 
