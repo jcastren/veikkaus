@@ -37,7 +37,7 @@ public class GameController {
 	@ModelAttribute(ALL_TOURNAMENTS)
     public List<TournamentGuiEntity> populateTournaments() {
 		List<TournamentGuiEntity> tournamentList = new ArrayList<TournamentGuiEntity>();
-		TournamentGuiEntity emptyEntry = new TournamentGuiEntity("-999", "-- empty choice --", "");
+		TournamentGuiEntity emptyEntry = new TournamentGuiEntity(STRING_NOT_DEFINED, "-- empty choice --", "");
 		tournamentList.add(emptyEntry);
 		tournamentList.addAll(tournamentService.findAllTournaments());
 		return tournamentList;

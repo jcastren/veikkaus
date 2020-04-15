@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static fi.joonas.veikkaus.constants.VeikkausConstants.INT_NOT_DEFINED;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.LONG_NOT_DEFINED;
+
 @Service
 public class BetResultService {
 	
@@ -120,11 +123,11 @@ public class BetResultService {
 
 			if (match == null) {
 				BetResult betResultWithoutScore = new BetResult();
-				betResultWithoutScore.setId(-999L);
+				betResultWithoutScore.setId(LONG_NOT_DEFINED);
 				betResultWithoutScore.setBet(dbBet.get());
 				betResultWithoutScore.setGame(dbGame);
-				betResultWithoutScore.setHomeScore(-999);
-				betResultWithoutScore.setAwayScore(-999);
+				betResultWithoutScore.setHomeScore(INT_NOT_DEFINED);
+				betResultWithoutScore.setAwayScore(INT_NOT_DEFINED);
 				betResultListPopulatedWithMissingGames.add(betResultWithoutScore);
 			}
 		}

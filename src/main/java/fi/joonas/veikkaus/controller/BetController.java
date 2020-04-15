@@ -95,16 +95,25 @@ public class BetController {
 		return REDIRECT + BET_GET_ALL_URL;
 	}
 
-	@PostMapping(BET_POST_BET_RESULT_CREATE)
-	public String postBetResultCreate(@ModelAttribute BetResultGuiEntity betResult) {
+	/**
+	 * Method creates a new bet result / modifies an existing one
+	 * @param betResult
+	 * @return
+	 */
+	@PostMapping(BET_POST_BET_RESULT_SAVE)
+	public String postBetResultSave(@ModelAttribute BetResultGuiEntity betResult) {
 		Long betResultId = null;
 		try {
-			betResultId = betResultService.insert(betResult);
+			if (betResult.getId() == STRING_NOT_DEFINED) {
+				betResultId = betResultService.insert(betResult);
+			} else {
+				betResultId = betResultService.modify(betResult);
+			}
 		} catch (Exception ex) {
-			logger.error("Error creating the bet result: ", ex);
-			return "Error creating the bet result: " + ex.toString();
+			logger.error("Error saving the bet result: ", ex);
+			return "Error saving the bet result: " + ex.toString();
 		}
-		logger.debug("Bet result successfully created with id = " + betResultId);
+		logger.debug("Bet result successfully saved with id = " + betResultId);
         return REDIRECT + BET_GET_DETAILS_URL + betResult.getBet().getId();
 	}
 

@@ -38,7 +38,7 @@ public abstract class VeikkausConstants {
     public static final String BET_GET_ALL_URL = BET_URL + URL_GET_ALL;
     public static final String ALL_BETS = "allBets";
     public static final String BET_BET_RESULTS = "betResults";
-    public static final String BET_POST_BET_RESULT_CREATE = "postBetResultCreate";
+    public static final String BET_POST_BET_RESULT_SAVE = "postBetResultSave";
     public static final String BET_GET_DETAILS_URL = BET_URL + URL_GET_DETAILS + GET_DETAILS_ID_QUERY_PARAM;
 
     /** Tournament URLs */
@@ -178,4 +178,6 @@ public abstract class VeikkausConstants {
         public static final String SCORER_MODIFY_URL = SCORER_URL + URL_MODIFY;
 
         public static final int INT_NOT_DEFINED = -999;
+        public static final long LONG_NOT_DEFINED = -999L;
+        public static final String STRING_NOT_DEFINED = "-999";
 }
