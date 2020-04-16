@@ -59,16 +59,16 @@
             <td th:text="*{game.homeTeam.team.name}" th:field="*{game.homeTeam.team.name}"/>
             <td th:text="*{game.awayTeam.team.name}" th:field="*{game.awayTeam.team.name}"/>
 
-            <td id="homeScoreReadOnly" th:text="*{homeScore}" th:field="*{homeScore}"/>
+            <td id="homeScoreReadOnly" th:text="(*{homeScore} == '-999') ? '' : *{homeScore}" th:field="*{homeScore}"/>
 
             <td id="homeScoreEditable">
-                <input type="text" th:value="*{homeScore}" name="homeScore">
+                <input type="text" th:value="(*{homeScore} == '-999') ? '' : *{homeScore}" name="homeScore">
             </td>
 
-            <td id="awayScoreReadOnly" th:text="*{awayScore}" th:field="*{awayScore}"/>
+            <td id="awayScoreReadOnly" th:text="(*{awayScore} == '-999') ? '' : *{awayScore}" th:field="*{awayScore}"/>
 
             <td id="awayScoreEditable">
-                <input type="text" th:value="*{awayScore}" id="awayScore" name="awayScore">
+                <input type="text" th:value="(*{awayScore} == '-999') ? '' : *{awayScore}" id="awayScore" name="awayScore">
             </td>
 
             <td id="td-modify">
