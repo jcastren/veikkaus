@@ -59,16 +59,12 @@ public class BetController {
 	}
 
 	@RequestMapping(URL_GET_DETAILS)
-	public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
+	public String getDetails(@RequestParam(value = "id") String id, Model model) {
 		BetGuiEntity bet = betService.findOneBet(id);
 		model.addAttribute("bet", bet);
 
 		List<BetResultGuiEntity> betResults = betResultService.findBetGamesAndBetResults(id);
 		model.addAttribute("betResults", betResults);
-
-		BetResultGuiEntity newBetResult = new BetResultGuiEntity();
-		newBetResult.setBet(bet);
-		model.addAttribute("newBetResult", newBetResult);
 
 		List<GameGuiEntity> tournamentGames = gameService.findTournamentGames(bet.getTournament().getId());
 		model.addAttribute("tournamentGames", tournamentGames);
