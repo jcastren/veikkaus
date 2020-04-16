@@ -104,7 +104,7 @@ public class BetController {
 	public String postBetResultSave(@ModelAttribute BetResultGuiEntity betResult) {
 		Long betResultId = null;
 		try {
-			if (betResult.getId() == STRING_NOT_DEFINED) {
+			if (betResult.getId().equals(STRING_NOT_DEFINED)) {
 				betResultId = betResultService.insert(betResult);
 			} else {
 				betResultId = betResultService.modify(betResult);
