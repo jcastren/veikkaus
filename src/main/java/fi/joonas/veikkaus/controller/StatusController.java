@@ -1,26 +1,33 @@
 package fi.joonas.veikkaus.controller;
 
 import fi.joonas.veikkaus.guientity.StatusGuiEntity;
-import fi.joonas.veikkaus.guientity.TeamGuiEntity;
+import fi.joonas.veikkaus.service.StatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import fi.joonas.veikkaus.service.StatusService;
+import javax.validation.Valid;
 
 import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(STATUS_URL)
 public class StatusController {
+//public class StatusController implements WebMvcConfigurer {
 
 	@Autowired
 	private StatusService statusService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(StatusController.class);
+
+//	@Override
+//	public void addViewControllers(ViewControllerRegistry registry) {
+//		registry.addViewController("/status/getAll").setViewName("viewStatusList");
+//	}
 
 	/**
 	 * Method is called by Thymeleaf view to get status list view
@@ -50,12 +57,11 @@ public class StatusController {
 	/**
 	 * Method is called by Thymeleaf template to get create status view
 	 *
-	 * @param model UI model
+	 * @param status
 	 * @return Status create view
 	 */
 	@GetMapping(URL_GET_CREATE)
-	public String getCreate(Model model) {
-		model.addAttribute("status", new StatusGuiEntity());
+	public String getCreate(@ModelAttribute(value="status") StatusGuiEntity status) {
 		return "viewStatusCreate";
 	}
 
@@ -63,10 +69,15 @@ public class StatusController {
 	 * Saves created status data to DB
 	 *
 	 * @param status Status UI entity
+	 * @param bindingResult Used for checking validation errors
 	 * @return Redirect URL for getting all statuses
 	 */
 	@PostMapping(URL_POST_CREATE)
-	public String postCreate(@ModelAttribute StatusGuiEntity status) {
+	public String postCreate(@Valid @ModelAttribute(value="status") StatusGuiEntity status, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "viewStatusCreate";
+		}
+
 		Long statusId = null;
 		try {
 			statusId = statusService.insert(status);

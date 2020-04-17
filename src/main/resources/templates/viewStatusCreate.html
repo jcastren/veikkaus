@@ -14,22 +14,33 @@
 		<a id="tooltipList" th:href="@{/status/getAll}" title="Go back to status list">Back to status list</a>
 	</p>
 	<br/>
-	<form action="#" th:action="@{/status/postCreate}"
-		th:object="${status}" method="post">
-		<p>
-			Status number: <input type="text" th:field="*{statusNumber}"/>
-		</p>
-		<p>
-			Description: <input type="text" th:field="*{description}"/>
-		</p>
-		<p>
-			<button type="submit"
-				class="show-tooltip ui-button ui-corner-all ui-widget" title="Create status">Create status
-			</button>
-			<button type="reset"
-				class="show-tooltip ui-button ui-corner-all ui-widget" title="Reset fields">Reset fields
-			</button>
-		</p>
+	<form action="#" th:action="@{/status/postCreate}" th:object="${status}" method="post">
+		<table>
+
+			<tr>
+				<td>Status number:</td>
+				<td><input type="number" th:field="*{statusNumber}"/></td>
+				<td th:if="${#fields.hasErrors('statusNumber')}" th:errors="*{statusNumber}">Status Error</td>
+			</tr>
+			<tr>
+				<td>Description:</td>
+				<td> <input type="text" th:field="*{description}"/></td>
+				<td th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</td>
+			</tr>
+			<tr>
+				<td>
+					<button type="submit"
+							class="show-tooltip ui-button ui-corner-all ui-widget" title="Create status">Create status
+					</button>
+				</td>
+				<td>
+					<button type="reset"
+							class="show-tooltip ui-button ui-corner-all ui-widget" title="Reset fields">Reset fields
+					</button>
+				</td>
+			</tr>
+		</table>
+
 	</form>
 	<script th:src="@{/js/common-navigation.js}"></script>
 </body>

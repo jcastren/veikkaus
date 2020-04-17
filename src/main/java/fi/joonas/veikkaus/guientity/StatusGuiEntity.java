@@ -1,8 +1,16 @@
 package fi.joonas.veikkaus.guientity;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+
 public class StatusGuiEntity {
+
 	private String id;
+
+	@NotNull
+	@Max(5)
     private int statusNumber;
+
     private String description;
 
 	public StatusGuiEntity() {
