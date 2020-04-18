@@ -65,6 +65,15 @@ public class BetController {
 
 		List<BetResultGuiEntity> betResults = betResultService.findBetGamesAndBetResults(id);
 		model.addAttribute("betResults", betResults);
+//		List<ModelAttribute> betResultAttributes = new ArrayList<>();
+//		betResults.forEach(betResult ->
+////				betResultAttributes.add(new ModelAttribute(value = "betResult" BetResultGuiEntity betResult))
+//				ModelAttribute attr = new ModelAttribute();
+//				);
+
+//		for (BetResultGuiEntity betResult : betResults) {
+//			ModelAttribute attr = new ModelAttribute(betResult);
+//		}
 
 		List<GameGuiEntity> tournamentGames = gameService.findTournamentGames(bet.getTournament().getId());
 		model.addAttribute("tournamentGames", tournamentGames);
@@ -97,7 +106,12 @@ public class BetController {
 	 * @return
 	 */
 	@PostMapping(BET_POST_BET_RESULT_SAVE)
+//	public String postBetResultSave(@ModelAttribute(value="betResult") BetResultGuiEntity betResult, BindingResult bindingResult) {
 	public String postBetResultSave(@ModelAttribute BetResultGuiEntity betResult) {
+//		if (bindingResult.hasErrors()) {
+//			return "viewBetDetails";
+//		}
+
 		Long betResultId = null;
 		try {
 			if (betResult.getId().equals(STRING_NOT_DEFINED)) {

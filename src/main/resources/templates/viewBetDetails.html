@@ -20,12 +20,12 @@
             $('button[id="button-modify"]').hide(); <!-- Hiding all Modify buttons -->
             $(this).parent().find('#button-save').show(); <!-- Showing Save button on this row. -->
             $(this).parent().find('#button-cancel').show(); <!-- Showing Cancel button on this row. -->
-            <!-- Hiding score read only fields -->
-            $('td[id="homeScoreReadOnly"]').hide();
-            $('td[id="awayScoreReadOnly"]').hide();
-            <!-- Showing score editable fields -->
-            $('td[id="homeScoreEditable"]').show();
-            $('td[id="awayScoreEditable"]').show();
+            <!-- Hiding score read only fields on this row-->
+            $(this).parent().parent().find('#homeScoreReadOnly').hide();
+            $(this).parent().parent().find('#awayScoreReadOnly').hide();
+            <!-- Showing score editable fields on this row-->
+            $(this).parent().parent().find('#homeScoreEditable').show();
+            $(this).parent().parent().find('#awayScoreEditable').show();
         });
 
         $('button[name="cancel"]').click(function() {
@@ -63,6 +63,7 @@
         <th>Away score</th>
     </tr>
 
+<!--    <tr th:each="betResult, i : ${betResults}">-->
     <tr th:each="betResult : ${betResults}">
         <form action="#" th:action="@{/bet/postBetResultSave}" th:object="${betResult}" method="post">
             <input type="hidden" th:value="*{id}" id="id" name="id"/>
@@ -77,7 +78,10 @@
 
             <td id="homeScoreEditable">
                 <input type="text" th:value="(*{homeScore} == '-999') ? '' : *{homeScore}" name="homeScore">
+<!--                <input type="text" th:value="(*{homeScore} == '-999') ? '' : *{homeScore}" name="homeScore" th:errorclass="fieldError">-->
+<!--                <div th:if="${#fields.hasErrors('homeScore')}" th:errors="*{betResults[__${i.index}__].homeScore}">Home score Error</div>-->
             </td>
+<!--            <td th:if="${#fields.hasErrors('homeScore')}" th:errors="${betResults[__${i.index}__].homeScore}">Home score Error</td>-->
 
             <td id="awayScoreReadOnly" th:text="(*{awayScore} == '-999') ? '' : *{awayScore}" th:field="*{awayScore}"/>
 
