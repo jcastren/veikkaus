@@ -12,18 +12,32 @@
         console.log("document ready");
         $('button[id="button-modify"]').show();
         $('button[id="button-save"]').hide();
+        $('button[id="button-cancel"]').hide();
         $('td[id="homeScoreEditable"]').hide();
         $('td[id="awayScoreEditable"]').hide();
 
         $('button[name="modify"]').click(function(){
-            $('button[name="modify"]').hide(); <!-- Hiding all Modify buttons -->
-            $(this).parent().find('#button-save').show(); <!-- Showing only Save button on this row. -->
+            $('button[id="button-modify"]').hide(); <!-- Hiding all Modify buttons -->
+            $(this).parent().find('#button-save').show(); <!-- Showing Save button on this row. -->
+            $(this).parent().find('#button-cancel').show(); <!-- Showing Cancel button on this row. -->
             <!-- Hiding score read only fields -->
             $('td[id="homeScoreReadOnly"]').hide();
             $('td[id="awayScoreReadOnly"]').hide();
-            <!-- Showing score read only fields -->
+            <!-- Showing score editable fields -->
             $('td[id="homeScoreEditable"]').show();
             $('td[id="awayScoreEditable"]').show();
+        });
+
+        $('button[name="cancel"]').click(function() {
+            $('button[id="button-modify"]').show(); <!-- Showing all modify buttons -->
+            $('button[id="button-save"]').hide(); <!-- Hiding all save buttons -->
+            $('button[id="button-cancel"]').hide(); <!-- Hiding all Cancel buttons -->
+            <!-- Showing score read only fields -->
+            $('td[id="homeScoreReadOnly"]').show();
+            $('td[id="awayScoreReadOnly"]').show();
+            <!-- Hiding score editable fields -->
+            $('td[id="homeScoreEditable"]').hide();
+            $('td[id="awayScoreEditable"]').hide();
         });
     });
     </script>
@@ -83,6 +97,12 @@
                         class="show-tooltip ui-button ui-corner-all ui-widget"
                         name="save">
                     Save
+                </button>
+                <button type="button"
+                        id="button-cancel"
+                        class="show-tooltip ui-button ui-corner-all ui-widget"
+                        name="cancel">
+                    Cancel
                 </button>
             </td>
         </form>
