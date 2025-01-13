@@ -6,20 +6,20 @@ import fi.joonas.veikkaus.jpaentity.Tournament;
 import fi.joonas.veikkaus.jpaentity.TournamentTeam;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
 import fi.joonas.veikkaus.util.VeikkausUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class GameDaoTest extends JUnitTestUtil {
 
@@ -43,7 +43,7 @@ public class GameDaoTest extends JUnitTestUtil {
 
     private List<Game> gameList;
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
 //        cleanDb();
 
@@ -89,7 +89,7 @@ public class GameDaoTest extends JUnitTestUtil {
         gameList.forEach(game -> gameDao.save(game));
     }
 
-    @After
+    @AfterEach
     public void clean() {
         gameList.forEach(game -> gameDao.deleteById(game.getId()));
         tournamentTeamList.forEach(tournamentTeam -> tournamentTeamDao.deleteById(tournamentTeam.getId()));

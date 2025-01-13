@@ -1,38 +1,37 @@
 package fi.joonas.veikkaus.controller;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-
 import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @WebAppConfiguration
 public class TournamentControllerTest extends JUnitTestUtil {
 
-	// private static final Logger logger =
-	// LoggerFactory.getLogger(TournamentControllerTest.class);
+    // private static final Logger logger =
+    // LoggerFactory.getLogger(TournamentControllerTest.class);
 
-	@Autowired
-	private TournamentDao tournamentDao;
+    @Autowired
+    private TournamentDao tournamentDao;
 
-	@Before
-	public void setup() throws Exception {
-		cleanDb();
-	}
-	
-	@Test
-	public void testNothing() {
-		assertTrue(true);
-	}
+    @BeforeEach
+    public void setup() throws Exception {
+        cleanDb();
+    }
+
+    @Test
+    public void testNothing() {
+        assertTrue(true);
+    }
 
 	/*@Test
 	public void testCreateAndDelete() throws Exception {

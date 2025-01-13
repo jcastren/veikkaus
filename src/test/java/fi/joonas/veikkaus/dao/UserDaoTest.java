@@ -3,49 +3,49 @@ package fi.joonas.veikkaus.dao;
 import fi.joonas.veikkaus.jpaentity.User;
 import fi.joonas.veikkaus.jpaentity.UserRole;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class UserDaoTest extends JUnitTestUtil {
-	
+
     @Autowired
     private UserDao userDao;
-    
+
     @Autowired
     private UserRoleDao userRoleDao;
-    
+
     private User user;
     private UserRole userRole;
-    
+
     private String ROLENAME_ADMIN = "ADMIN";
-    
-    @Before
+
+    @BeforeEach
     public void setup() throws Exception {
-    	cleanDb();
-    	userRole = new UserRole(ROLENAME_ADMIN);
-    	userRoleDao.save(userRole);
-    	
-    	user = new User("email", "name", "password", userRole);
+        cleanDb();
+        userRole = new UserRole(ROLENAME_ADMIN);
+        userRoleDao.save(userRole);
+
+        user = new User("email", "name", "password", userRole);
     }
-    
-    @After
+
+    @AfterEach
     public void clean() {
-    	userDao.deleteById(user.getId());
-    	userRoleDao.deleteById(userRole.getId());
+        userDao.deleteById(user.getId());
+        userRoleDao.deleteById(userRole.getId());
     }
 
     @Test
     public void testFindByEmail() {
-    	String email = user.getEmail();
+        String email = user.getEmail();
         userDao.save(user);
 
         User findByEmail = userDao.findByEmail(email);
@@ -53,18 +53,18 @@ public class UserDaoTest extends JUnitTestUtil {
         assertThat(findByEmail.getEmail().equals(email));
         assertThat(findByEmail.getEmail().equals(email));
     }
-    
+
     @Test
     public void testModifyUser() {
         User userDb = userDao.save(user);
-        
+
         String email = userDb.getEmail();
-        
+
         String newEmail = email + "_new";
         user.setEmail(newEmail);
-        
+
         userDb = userDao.save(user);
-        
+
         assertThat(userDb.getEmail().equals(newEmail));
     }
     
