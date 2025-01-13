@@ -1,6 +1,6 @@
 package fi.joonas.veikkaus.jpaentity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 public class TournamentTeam {
@@ -8,41 +8,42 @@ public class TournamentTeam {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @OneToOne
     private Tournament tournament;
-    
+
     @OneToOne
     private Team team;
-    
-    public TournamentTeam() {}
 
-	public TournamentTeam(Tournament tournament, Team team) {
-		this.tournament = tournament;
-		this.team = team;
-	}
+    public TournamentTeam() {
+    }
 
-	public Long getId() {
-		return id;
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public TournamentTeam(Tournament tournament, Team team) {
+        this.tournament = tournament;
+        this.team = team;
+    }
 
-	public Tournament getTournament() {
-		return tournament;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setTournament(Tournament tournament) {
-		this.tournament = tournament;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Team getTeam() {
-		return team;
-	}
+    public Tournament getTournament() {
+        return tournament;
+    }
 
-	public void setTeam(Team team) {
-		this.team = team;
-	}
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }

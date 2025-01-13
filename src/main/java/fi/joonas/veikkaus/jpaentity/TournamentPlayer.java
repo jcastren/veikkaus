@@ -1,6 +1,6 @@
 package fi.joonas.veikkaus.jpaentity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 public class TournamentPlayer {
@@ -8,54 +8,55 @@ public class TournamentPlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @ManyToOne
     private TournamentTeam tournamentTeam;
-    
+
     @OneToOne
     private Player player;
-    
+
     private int goals;
-    
-    public TournamentPlayer() {}
 
-	public TournamentPlayer(TournamentTeam tournamentTeam, Player player, int goals) {
-		this.tournamentTeam = tournamentTeam;
-		this.player = player;
-		this.goals = goals;
-	}
-    
-	public Long getId() {
-		return id;
-	}
+    public TournamentPlayer() {
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public TournamentPlayer(TournamentTeam tournamentTeam, Player player, int goals) {
+        this.tournamentTeam = tournamentTeam;
+        this.player = player;
+        this.goals = goals;
+    }
 
-	public TournamentTeam getTournamentTeam() {
-		return tournamentTeam;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setTournamentTeam(TournamentTeam tournamentTeam) {
-		this.tournamentTeam = tournamentTeam;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public TournamentTeam getTournamentTeam() {
+        return tournamentTeam;
+    }
 
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
+    public void setTournamentTeam(TournamentTeam tournamentTeam) {
+        this.tournamentTeam = tournamentTeam;
+    }
 
-	public int getGoals() {
-		return goals;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public void setGoals(int goals) {
-		this.goals = goals;
-	}
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public int getGoals() {
+        return goals;
+    }
+
+    public void setGoals(int goals) {
+        this.goals = goals;
+    }
 
 }
 

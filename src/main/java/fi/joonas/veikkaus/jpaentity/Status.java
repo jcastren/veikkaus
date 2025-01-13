@@ -1,9 +1,9 @@
 package fi.joonas.veikkaus.jpaentity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Status {
@@ -15,37 +15,38 @@ public class Status {
     private int statusNumber;
 
     private String description;
-    
-    public Status() {}
 
-	public Status(int statusNumber, String description) {
-		this.statusNumber = statusNumber;
-		this.description = description;
-	}
+    public Status() {
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Status(int statusNumber, String description) {
+        this.statusNumber = statusNumber;
+        this.description = description;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public int getStatusNumber() {
-		return statusNumber;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setStatusNumber(int statusNumber) {
-		this.statusNumber = statusNumber;
-	}
+    public int getStatusNumber() {
+        return statusNumber;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setStatusNumber(int statusNumber) {
+        this.statusNumber = statusNumber;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }
 

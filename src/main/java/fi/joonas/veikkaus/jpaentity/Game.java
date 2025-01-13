@@ -1,7 +1,8 @@
 package fi.joonas.veikkaus.jpaentity;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Date;
 
 @Entity
@@ -13,7 +14,7 @@ public class Game {
 
     @NotNull
     @OneToOne
-	private Tournament tournament;
+    private Tournament tournament;
 
     @NotNull
     @OneToOne
@@ -22,76 +23,77 @@ public class Game {
     @NotNull
     @OneToOne
     private TournamentTeam awayTeam;
-    
+
     private int homeScore;
-	private int awayScore;
-	private Date gameDate;
-    
-    public Game() {}
+    private int awayScore;
+    private Date gameDate;
 
-	public Game(Tournament tournament, TournamentTeam homeTeam, TournamentTeam awayTeam, int homeScore, int awayScore, Date gameDate) {
-		this.tournament = tournament;
-		this.homeTeam = homeTeam;
-		this.awayTeam = awayTeam;
-		this.homeScore = homeScore;
-		this.awayScore = awayScore;
-		this.gameDate = gameDate;
-	}	
+    public Game() {
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Game(Tournament tournament, TournamentTeam homeTeam, TournamentTeam awayTeam, int homeScore, int awayScore, Date gameDate) {
+        this.tournament = tournament;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.homeScore = homeScore;
+        this.awayScore = awayScore;
+        this.gameDate = gameDate;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Tournament getTournament() {
-		return tournament;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setTournament(Tournament tournament) {
-		this.tournament = tournament;
-	}
+    public Tournament getTournament() {
+        return tournament;
+    }
 
-	public TournamentTeam getHomeTeam() {
-		return homeTeam;
-	}
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
+    }
 
-	public void setHomeTeam(TournamentTeam homeTeam) {
-		this.homeTeam = homeTeam;
-	}
+    public TournamentTeam getHomeTeam() {
+        return homeTeam;
+    }
 
-	public TournamentTeam getAwayTeam() {
-		return awayTeam;
-	}
+    public void setHomeTeam(TournamentTeam homeTeam) {
+        this.homeTeam = homeTeam;
+    }
 
-	public void setAwayTeam(TournamentTeam awayTeam) {
-		this.awayTeam = awayTeam;
-	}
+    public TournamentTeam getAwayTeam() {
+        return awayTeam;
+    }
 
-	public int getHomeScore() {
-		return homeScore;
-	}
+    public void setAwayTeam(TournamentTeam awayTeam) {
+        this.awayTeam = awayTeam;
+    }
 
-	public void setHomeScore(int homeScore) {
-		this.homeScore = homeScore;
-	}
+    public int getHomeScore() {
+        return homeScore;
+    }
 
-	public int getAwayScore() {
-		return awayScore;
-	}
+    public void setHomeScore(int homeScore) {
+        this.homeScore = homeScore;
+    }
 
-	public void setAwayScore(int awayScore) {
-		this.awayScore = awayScore;
-	}
+    public int getAwayScore() {
+        return awayScore;
+    }
 
-	public Date getGameDate() {
-		return gameDate;
-	}
+    public void setAwayScore(int awayScore) {
+        this.awayScore = awayScore;
+    }
 
-	public void setGameDate(Date gameDate) {
-		this.gameDate = gameDate;
-	}
+    public Date getGameDate() {
+        return gameDate;
+    }
+
+    public void setGameDate(Date gameDate) {
+        this.gameDate = gameDate;
+    }
 
 }
