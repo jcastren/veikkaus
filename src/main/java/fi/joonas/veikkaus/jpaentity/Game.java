@@ -13,15 +13,15 @@ public class Game {
     private Long id;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
     private Tournament tournament;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
     private TournamentTeam homeTeam;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
     private TournamentTeam awayTeam;
 
     private int homeScore;

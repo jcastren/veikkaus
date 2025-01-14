@@ -12,7 +12,7 @@ public class TournamentPlayer {
     @ManyToOne
     private TournamentTeam tournamentTeam;
 
-    @OneToOne
+    @ManyToOne
     private Player player;
 
     private int goals;

@@ -9,10 +9,10 @@ public class TournamentTeam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     private Tournament tournament;
 
-    @OneToOne
+    @ManyToOne
     private Team team;
 
     public TournamentTeam() {
