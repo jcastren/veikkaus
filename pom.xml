@@ -19,9 +19,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>fi.joonas.veikkaus.VeikkausApplication</start-class>
         <java.version>23</java.version>
-        <guava.version>19.0</guava.version>
-        <speedment.version>3.0.1</speedment.version>
-        <mysql.version>8.0.28</mysql.version>
+        <guava.version>33.4.0-jre</guava.version>
+        <speedment.version>3.2.10</speedment.version>
+        <mysql.version>8.0.33</mysql.version>
     </properties>
 
     <dependencies>
