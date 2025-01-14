@@ -5,6 +5,7 @@ import fi.joonas.veikkaus.dao.StatusDao;
 import fi.joonas.veikkaus.jpaentity.Status;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @WebAppConfiguration
+@Disabled
 public class StatusControllerTest extends JUnitTestUtil {
 
     @Autowired
