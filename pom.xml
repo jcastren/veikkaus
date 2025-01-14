@@ -17,7 +17,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>fi.joonas.veikkaus.Application</start-class>
+        <start-class>fi.joonas.veikkaus.VeikkausApplication</start-class>
         <java.version>23</java.version>
         <guava.version>19.0</guava.version>
         <speedment.version>3.0.1</speedment.version>
