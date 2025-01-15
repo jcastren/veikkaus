@@ -22,6 +22,8 @@
         <guava.version>33.4.0-jre</guava.version>
         <speedment.version>3.2.10</speedment.version>
         <mysql.version>8.0.33</mysql.version>
+        <lombok.version>1.18.36</lombok.version>
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
     </properties>
 
     <dependencies>
@@ -73,6 +75,15 @@
             <type>pom</type>
         </dependency>
 
+        <!-- BUILD PHASE -->
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- TEST PHASE -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -99,6 +110,21 @@
                         <version>${mysql.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version> <!-- Use a recent version -->
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version> <!-- Use the same version -->
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
 
         </plugins>

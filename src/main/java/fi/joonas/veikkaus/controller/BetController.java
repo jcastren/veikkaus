@@ -17,54 +17,54 @@ import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 @RequestMapping(BET_URL)
 public class BetController {
 
-	@Autowired
-	private BetService betService;
+    @Autowired
+    private BetService betService;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private TournamentService tournamentService;
+    @Autowired
+    private TournamentService tournamentService;
 
-	@Autowired
-	private StatusService statusService;
+    @Autowired
+    private StatusService statusService;
 
-	@Autowired
-	private BetResultService betResultService;
+    @Autowired
+    private BetResultService betResultService;
 
-	@Autowired
-	private GameService gameService;
+    @Autowired
+    private GameService gameService;
 
-	private static final Logger logger = LoggerFactory.getLogger(BetController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BetController.class);
 
-	@ModelAttribute(ALL_USERS)
-	public List<UserGuiEntity> populateUsers() {
-		return userService.findAllUsers();
-	}
+    @ModelAttribute(ALL_USERS)
+    public List<UserGuiEntity> populateUsers() {
+        return userService.findAllUsers();
+    }
 
-	@ModelAttribute(ALL_TOURNAMENTS)
-	public List<TournamentGuiEntity> populateTournaments() {
-		return tournamentService.findAllTournaments();
-	}
+    @ModelAttribute(ALL_TOURNAMENTS)
+    public List<TournamentGuiEntity> populateTournaments() {
+        return tournamentService.findAllTournaments();
+    }
 
-	@ModelAttribute(ALL_STATUSES)
-	public List<StatusGuiEntity> populateStatuses() {
-		return statusService.findAllStatuses();
-	}
+    @ModelAttribute(ALL_STATUSES)
+    public List<StatusGuiEntity> populateStatuses() {
+        return statusService.findAllStatuses();
+    }
 
-	@GetMapping(URL_GET_ALL)
-	public String getAll(Model model) {
-		model.addAttribute("bets", betService.findAllBets());
-		return "viewBetList";
-	}
+    @GetMapping(URL_GET_ALL)
+    public String getAll(Model model) {
+        model.addAttribute("bets", betService.findAllBets());
+        return "viewBetList";
+    }
 
-	@RequestMapping(URL_GET_DETAILS)
-	public String getDetails(@RequestParam(value = "id") String id, Model model) {
-		BetGuiEntity bet = betService.findOneBet(id);
-		model.addAttribute("bet", bet);
+    @RequestMapping(URL_GET_DETAILS)
+    public String getDetails(@RequestParam(value = "id") String id, Model model) {
+        BetGuiEntity bet = betService.findOneBet(id);
+        model.addAttribute("bet", bet);
 
-		List<BetResultGuiEntity> betResults = betResultService.findBetGamesAndBetResults(id);
-		model.addAttribute("betResults", betResults);
+        List<BetResultGuiEntity> betResults = betResultService.findBetGamesAndBetResults(id);
+        model.addAttribute("betResults", betResults);
 //		List<ModelAttribute> betResultAttributes = new ArrayList<>();
 //		betResults.forEach(betResult ->
 ////				betResultAttributes.add(new ModelAttribute(value = "betResult" BetResultGuiEntity betResult))
@@ -75,94 +75,95 @@ public class BetController {
 //			ModelAttribute attr = new ModelAttribute(betResult);
 //		}
 
-		List<GameGuiEntity> tournamentGames = gameService.findTournamentGames(bet.getTournament().getId());
-		model.addAttribute("tournamentGames", tournamentGames);
+        List<GameGuiEntity> tournamentGames = gameService.findTournamentGames(bet.getTournament().getId());
+        model.addAttribute("tournamentGames", tournamentGames);
 
-		return "viewBetDetails";
-	}
+        return "viewBetDetails";
+    }
 
-	@GetMapping(URL_GET_CREATE)
-	public String getCreate(Model model) {
-		model.addAttribute("bet", new BetGuiEntity());
-		return "viewBetCreate";
-	}
+    @GetMapping(URL_GET_CREATE)
+    public String getCreate(Model model) {
+        model.addAttribute("bet", new BetGuiEntity());
+        return "viewBetCreate";
+    }
 
-	@PostMapping(URL_POST_CREATE)
-	public String postCreate(@ModelAttribute BetGuiEntity bet) {
-		Long betId = null;
-		try {
-			betId = betService.insert(bet);
-		} catch (Exception ex) {
-			logger.error("Error creating the bet: ", ex);
-			return "Error creating the bet: " + ex.toString();
-		}
-		logger.debug("Bet successfully created with id = " + betId);
-		return REDIRECT + BET_GET_ALL_URL;
-	}
+    @PostMapping(URL_POST_CREATE)
+    public String postCreate(@ModelAttribute BetGuiEntity bet) {
+        Long betId = null;
+        try {
+            betId = betService.insert(bet);
+        } catch (Exception ex) {
+            logger.error("Error creating the bet: ", ex);
+            return "Error creating the bet: " + ex.toString();
+        }
+        logger.debug("Bet successfully created with id = " + betId);
+        return REDIRECT + BET_GET_ALL_URL;
+    }
 
-	/**
-	 * Method creates a new bet result / modifies an existing one
-	 * @param betResult
-	 * @return
-	 */
-	@PostMapping(BET_POST_BET_RESULT_SAVE)
+    /**
+     * Method creates a new bet result / modifies an existing one
+     *
+     * @param betResult
+     * @return
+     */
+    @PostMapping(BET_POST_BET_RESULT_SAVE)
 //	public String postBetResultSave(@ModelAttribute(value="betResult") BetResultGuiEntity betResult, BindingResult bindingResult) {
-	public String postBetResultSave(@ModelAttribute BetResultGuiEntity betResult) {
+    public String postBetResultSave(@ModelAttribute BetResultGuiEntity betResult) {
 //		if (bindingResult.hasErrors()) {
 //			return "viewBetDetails";
 //		}
 
-		Long betResultId = null;
-		try {
-			if (betResult.getId().equals(STRING_NOT_DEFINED)) {
-				betResultId = betResultService.insert(betResult);
-			} else {
-				betResultId = betResultService.modify(betResult);
-			}
-		} catch (Exception ex) {
-			logger.error("Error saving the bet result: ", ex);
-			return "Error saving the bet result: " + ex.toString();
-		}
-		logger.debug("Bet result successfully saved with id = " + betResultId);
+        Long betResultId = null;
+        try {
+            if (betResult.getId().equals(STRING_NOT_DEFINED)) {
+                betResultId = betResultService.insert(betResult);
+            } else {
+                betResultId = betResultService.modify(betResult);
+            }
+        } catch (Exception ex) {
+            logger.error("Error saving the bet result: ", ex);
+            return "Error saving the bet result: " + ex.toString();
+        }
+        logger.debug("Bet result successfully saved with id = " + betResultId);
         return REDIRECT + BET_GET_DETAILS_URL + betResult.getBet().getId();
-	}
+    }
 
-	@RequestMapping(URL_GET_MODIFY)
-	public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
-		BetGuiEntity bet = betService.findOneBet(id);
-		model.addAttribute("bet", bet);
-		return "viewBetModify";
-	}
+    @RequestMapping(URL_GET_MODIFY)
+    public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
+        BetGuiEntity bet = betService.findOneBet(id);
+        model.addAttribute("bet", bet);
+        return "viewBetModify";
+    }
 
-	@PostMapping(URL_POST_MODIFY)
-	public String postModify(@ModelAttribute BetGuiEntity bet) {
-		Long betId = null;
-		try {
-			betId = betService.modify(bet);
-		} catch (Exception ex) {
-			logger.error("Error updating the bet: ", ex);
-			return "Error updating the bet: " + ex.toString();
-		}
-		logger.debug("Bet successfully updated for id = " + betId);
-		return REDIRECT + BET_GET_ALL_URL;
-	}
+    @PostMapping(URL_POST_MODIFY)
+    public String postModify(@ModelAttribute BetGuiEntity bet) {
+        Long betId = null;
+        try {
+            betId = betService.modify(bet);
+        } catch (Exception ex) {
+            logger.error("Error updating the bet: ", ex);
+            return "Error updating the bet: " + ex.toString();
+        }
+        logger.debug("Bet successfully updated for id = " + betId);
+        return REDIRECT + BET_GET_ALL_URL;
+    }
 
-	@RequestMapping(URL_GET_DELETE)
-	public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
-		BetGuiEntity bet = betService.findOneBet(id);
-		model.addAttribute("bet", bet);
-		return "viewBetDelete";
-	}
+    @RequestMapping(URL_GET_DELETE)
+    public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
+        BetGuiEntity bet = betService.findOneBet(id);
+        model.addAttribute("bet", bet);
+        return "viewBetDelete";
+    }
 
-	@PostMapping(URL_POST_DELETE)
-	public String postDelete(@ModelAttribute BetGuiEntity bet) {
-		try {
-			betService.delete(bet.getId());
-		} catch (Exception ex) {
-			logger.error("Error deleting the bet: ", ex);
-			return "Error deleting the bet:" + ex.toString();
-		}
-		return REDIRECT + BET_GET_ALL_URL;
-	}
+    @PostMapping(URL_POST_DELETE)
+    public String postDelete(@ModelAttribute BetGuiEntity bet) {
+        try {
+            betService.delete(bet.getId());
+        } catch (Exception ex) {
+            logger.error("Error deleting the bet: ", ex);
+            return "Error deleting the bet:" + ex.toString();
+        }
+        return REDIRECT + BET_GET_ALL_URL;
+    }
 
 }

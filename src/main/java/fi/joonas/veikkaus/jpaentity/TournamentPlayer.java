@@ -1,8 +1,12 @@
 package fi.joonas.veikkaus.jpaentity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class TournamentPlayer {
 
     @Id
@@ -17,46 +21,10 @@ public class TournamentPlayer {
 
     private int goals;
 
-    public TournamentPlayer() {
-    }
-
     public TournamentPlayer(TournamentTeam tournamentTeam, Player player, int goals) {
+
         this.tournamentTeam = tournamentTeam;
         this.player = player;
         this.goals = goals;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public TournamentTeam getTournamentTeam() {
-        return tournamentTeam;
-    }
-
-    public void setTournamentTeam(TournamentTeam tournamentTeam) {
-        this.tournamentTeam = tournamentTeam;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public int getGoals() {
-        return goals;
-    }
-
-    public void setGoals(int goals) {
-        this.goals = goals;
-    }
-
 }
-
