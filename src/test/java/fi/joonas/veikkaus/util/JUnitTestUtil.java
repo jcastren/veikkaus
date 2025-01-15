@@ -3,8 +3,7 @@ package fi.joonas.veikkaus.util;
 import fi.joonas.veikkaus.config.VeikkausServerProperties;
 import fi.joonas.veikkaus.dao.*;
 import fi.joonas.veikkaus.jpaentity.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -20,13 +19,12 @@ import java.util.regex.Pattern;
 
 import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_UNDER_WORK;
 
+@Slf4j
 public abstract class JUnitTestUtil {
 
     @Autowired
     private
     VeikkausServerProperties veikkausServerProperties;
-
-    private static final Logger logger = LoggerFactory.getLogger(JUnitTestUtil.class);
 
     public static final boolean CLEAN_BEFORE_RUN_JUNIT_TESTS = false;
     public static final String CHARSET = java.nio.charset.StandardCharsets.UTF_8.name();
@@ -88,14 +86,14 @@ public abstract class JUnitTestUtil {
             String serverUrl = getServerUrl();
             response = new URL(serverUrl + url).openStream();
         } catch (IOException e) {
-            logger.error("Getting response from URL: " + url + " failed: ", e);
+            log.error("Getting response from URL: " + url + " failed: ", e);
             throw e;
         }
 
-        String responseBody = null;
+        String responseBody;
         try (Scanner scanner = new Scanner(response)) {
             responseBody = scanner.useDelimiter("\\A").next();
-            logger.info("URL: " + url + " produced responseBody: " + responseBody);
+            log.info("URL: " + url + " produced responseBody: " + responseBody);
         }
 
         if (getId) {
@@ -103,7 +101,7 @@ public abstract class JUnitTestUtil {
             Matcher matcher = p.matcher(responseBody);
 
             if (matcher.find()) {
-                logger.info("id found: " + matcher.group(1));
+                log.info("id found: " + matcher.group(1));
                 id = matcher.group(1);
             }
         }

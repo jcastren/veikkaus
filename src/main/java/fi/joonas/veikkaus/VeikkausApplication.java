@@ -1,8 +1,7 @@
 package fi.joonas.veikkaus;
 
 import fi.joonas.veikkaus.config.VeikkausServerProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -17,12 +16,11 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 @SpringBootApplication
 @Configuration
 @EnableConfigurationProperties(VeikkausServerProperties.class)
+@Slf4j
 public class VeikkausApplication extends SpringBootServletInitializer {
 
-    private static final Logger logger = LoggerFactory.getLogger(VeikkausApplication.class);
-
     public static void main(String[] args) {
-        logger.info("Start application");
+        log.info("Start application");
         SpringApplication.run(VeikkausApplication.class, args);
     }
 

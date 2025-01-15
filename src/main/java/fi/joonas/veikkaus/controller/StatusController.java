@@ -3,8 +3,7 @@ package fi.joonas.veikkaus.controller;
 import fi.joonas.veikkaus.guientity.StatusGuiEntity;
 import fi.joonas.veikkaus.service.StatusService;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,18 +14,11 @@ import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(STATUS_URL)
+@Slf4j
 public class StatusController {
-//public class StatusController implements WebMvcConfigurer {
 
     @Autowired
     private StatusService statusService;
-
-    private static final Logger logger = LoggerFactory.getLogger(StatusController.class);
-
-//	@Override
-//	public void addViewControllers(ViewControllerRegistry registry) {
-//		registry.addViewController("/status/getAll").setViewName("viewStatusList");
-//	}
 
     /**
      * Method is called by Thymeleaf view to get status list view
@@ -36,6 +28,7 @@ public class StatusController {
      */
     @GetMapping(URL_GET_ALL)
     public String getAll(Model model) {
+
         model.addAttribute("statuses", statusService.findAllStatuses());
         return "viewStatusList";
     }
@@ -47,7 +40,8 @@ public class StatusController {
      * @return Status details view
      */
     @RequestMapping(URL_GET_DETAILS)
-    public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
+    public String getDetails(@RequestParam(value = "id") String id, Model model) {
+
         StatusGuiEntity status = statusService.findOneStatus(id);
         model.addAttribute("status", status);
         return "viewStatusDetails";
@@ -61,6 +55,7 @@ public class StatusController {
      */
     @GetMapping(URL_GET_CREATE)
     public String getCreate(@ModelAttribute(value = "status") StatusGuiEntity status) {
+
         return "viewStatusCreate";
     }
 
@@ -73,18 +68,20 @@ public class StatusController {
      */
     @PostMapping(URL_POST_CREATE)
     public String postCreate(@Valid @ModelAttribute(value = "status") StatusGuiEntity status, BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             return "viewStatusCreate";
         }
 
-        Long statusId = null;
+        Long statusId;
         try {
             statusId = statusService.insert(status);
         } catch (Exception ex) {
-            logger.error("Error creating the status: ", ex);
-            return "Error creating the status: " + ex.toString();
+            String msg = "Error creating the status: %s".formatted(ex);
+            log.error(msg);
+            return msg;
         }
-        logger.debug("Status successfully created with id = " + statusId);
+        log.debug("Status successfully created with id = %s".formatted(statusId));
         return REDIRECT + STATUS_GET_ALL_URL;
     }
 
@@ -96,7 +93,8 @@ public class StatusController {
      * @return Status modify view
      */
     @RequestMapping(URL_GET_MODIFY)
-    public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
+    public String getModify(@RequestParam(value = "id") String id, Model model) {
+
         StatusGuiEntity status = statusService.findOneStatus(id);
         model.addAttribute("status", status);
         return "viewStatusModify";
@@ -110,14 +108,16 @@ public class StatusController {
      */
     @PostMapping(URL_POST_MODIFY)
     public String postModify(@ModelAttribute StatusGuiEntity status) {
-        Long statusId = null;
+
+        Long statusId;
         try {
             statusId = statusService.modify(status);
         } catch (Exception ex) {
-            logger.error("Error updating the status: ", ex);
-            return "Error updating the status: " + ex.toString();
+            String msg = "Error updating the status: %s".formatted(ex);
+            log.error(msg);
+            return msg;
         }
-        logger.debug("Status successfully updated for id = " + statusId);
+        log.debug("Status successfully updated for id = " + statusId);
         return REDIRECT + STATUS_GET_ALL_URL;
     }
 
@@ -129,7 +129,8 @@ public class StatusController {
      * @return Status delete view
      */
     @RequestMapping(URL_GET_DELETE)
-    public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
+    public String getDelete(@RequestParam(value = "id") String id, Model model) {
+
         StatusGuiEntity status = statusService.findOneStatus(id);
         model.addAttribute("status", status);
         return "viewStatusDelete";
@@ -143,14 +144,15 @@ public class StatusController {
      */
     @PostMapping(URL_POST_DELETE)
     public String postDelete(@ModelAttribute StatusGuiEntity status) {
+
         try {
             statusService.delete(status.getId());
         } catch (Exception ex) {
-            logger.error("Error deleting the status: ", ex);
-            return "Error deleting the status:" + ex.toString();
+            String msg = "Error deleting the status: %s".formatted(ex);
+            log.error(msg);
+            return msg;
         }
         return REDIRECT + STATUS_GET_ALL_URL;
     }
-
 
 }

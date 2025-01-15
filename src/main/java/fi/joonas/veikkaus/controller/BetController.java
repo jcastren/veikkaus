@@ -2,8 +2,7 @@ package fi.joonas.veikkaus.controller;
 
 import fi.joonas.veikkaus.guientity.*;
 import fi.joonas.veikkaus.service.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +14,7 @@ import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(BET_URL)
+@Slf4j
 public class BetController {
 
     @Autowired
@@ -35,31 +35,34 @@ public class BetController {
     @Autowired
     private GameService gameService;
 
-    private static final Logger logger = LoggerFactory.getLogger(BetController.class);
-
     @ModelAttribute(ALL_USERS)
     public List<UserGuiEntity> populateUsers() {
+
         return userService.findAllUsers();
     }
 
     @ModelAttribute(ALL_TOURNAMENTS)
     public List<TournamentGuiEntity> populateTournaments() {
+
         return tournamentService.findAllTournaments();
     }
 
     @ModelAttribute(ALL_STATUSES)
     public List<StatusGuiEntity> populateStatuses() {
+
         return statusService.findAllStatuses();
     }
 
     @GetMapping(URL_GET_ALL)
     public String getAll(Model model) {
+
         model.addAttribute("bets", betService.findAllBets());
         return "viewBetList";
     }
 
     @RequestMapping(URL_GET_DETAILS)
     public String getDetails(@RequestParam(value = "id") String id, Model model) {
+
         BetGuiEntity bet = betService.findOneBet(id);
         model.addAttribute("bet", bet);
 
@@ -78,25 +81,30 @@ public class BetController {
         List<GameGuiEntity> tournamentGames = gameService.findTournamentGames(bet.getTournament().getId());
         model.addAttribute("tournamentGames", tournamentGames);
 
+        log.debug("Bet successfully retrieved for id = %s".formatted(id));
+
         return "viewBetDetails";
     }
 
     @GetMapping(URL_GET_CREATE)
     public String getCreate(Model model) {
+
         model.addAttribute("bet", new BetGuiEntity());
         return "viewBetCreate";
     }
 
     @PostMapping(URL_POST_CREATE)
     public String postCreate(@ModelAttribute BetGuiEntity bet) {
-        Long betId = null;
+
+        Long betId;
         try {
             betId = betService.insert(bet);
         } catch (Exception ex) {
-            logger.error("Error creating the bet: ", ex);
-            return "Error creating the bet: " + ex.toString();
+            String msg = "Error creating the bet: %s".formatted(ex);
+            log.error(msg);
+            return msg;
         }
-        logger.debug("Bet successfully created with id = " + betId);
+        log.debug("Bet successfully created with id = %s".formatted(betId));
         return REDIRECT + BET_GET_ALL_URL;
     }
 
@@ -113,7 +121,7 @@ public class BetController {
 //			return "viewBetDetails";
 //		}
 
-        Long betResultId = null;
+        Long betResultId;
         try {
             if (betResult.getId().equals(STRING_NOT_DEFINED)) {
                 betResultId = betResultService.insert(betResult);
@@ -121,15 +129,17 @@ public class BetController {
                 betResultId = betResultService.modify(betResult);
             }
         } catch (Exception ex) {
-            logger.error("Error saving the bet result: ", ex);
-            return "Error saving the bet result: " + ex.toString();
+            String msg = "Error updating the betResult: %s".formatted(ex);
+            log.error(msg);
+            return msg;
         }
-        logger.debug("Bet result successfully saved with id = " + betResultId);
+        log.debug("Bet result successfully saved with id = %s".formatted(betResultId));
         return REDIRECT + BET_GET_DETAILS_URL + betResult.getBet().getId();
     }
 
     @RequestMapping(URL_GET_MODIFY)
-    public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
+    public String getModify(@RequestParam(value = "id") String id, Model model) {
+
         BetGuiEntity bet = betService.findOneBet(id);
         model.addAttribute("bet", bet);
         return "viewBetModify";
@@ -137,19 +147,22 @@ public class BetController {
 
     @PostMapping(URL_POST_MODIFY)
     public String postModify(@ModelAttribute BetGuiEntity bet) {
-        Long betId = null;
+
+        Long betId;
         try {
             betId = betService.modify(bet);
         } catch (Exception ex) {
-            logger.error("Error updating the bet: ", ex);
-            return "Error updating the bet: " + ex.toString();
+            String msg = "Error updating the bet: %s".formatted(ex);
+            log.error(msg);
+            return msg;
         }
-        logger.debug("Bet successfully updated for id = " + betId);
+        log.debug("Bet successfully updated for id = %s".formatted(betId));
         return REDIRECT + BET_GET_ALL_URL;
     }
 
     @RequestMapping(URL_GET_DELETE)
-    public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
+    public String getDelete(@RequestParam(value = "id") String id, Model model) {
+
         BetGuiEntity bet = betService.findOneBet(id);
         model.addAttribute("bet", bet);
         return "viewBetDelete";
@@ -157,13 +170,14 @@ public class BetController {
 
     @PostMapping(URL_POST_DELETE)
     public String postDelete(@ModelAttribute BetGuiEntity bet) {
+
         try {
             betService.delete(bet.getId());
         } catch (Exception ex) {
-            logger.error("Error deleting the bet: ", ex);
-            return "Error deleting the bet:" + ex.toString();
+            String msg = "Error deleting the bet: %s".formatted(ex);
+            log.error(msg);
+            return msg;
         }
         return REDIRECT + BET_GET_ALL_URL;
     }
-
 }

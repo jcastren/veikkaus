@@ -2,8 +2,7 @@ package fi.joonas.veikkaus.controller;
 
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.service.TournamentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,100 +12,109 @@ import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(TOURNAMENT_URL)
+@Slf4j
 public class TournamentController {
 
-	@Autowired
-	private TournamentService tournamentService;
+    @Autowired
+    private TournamentService tournamentService;
 
-	private static final Logger logger = LoggerFactory.getLogger(TournamentController.class);
-	
-	@GetMapping(URL_GET_ALL)
-	public String getAll(Model model) {
-		model.addAttribute("tournaments", tournamentService.findAllTournaments());
-		return "viewTournamentList";
-	}
+    @GetMapping(URL_GET_ALL)
+    public String getAll(Model model) {
+        model.addAttribute("tournaments", tournamentService.findAllTournaments());
+        return "viewTournamentList";
+    }
 
-	@RequestMapping(URL_GET_DETAILS)
-	public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
-		TournamentGuiEntity tournament = tournamentService.findOneTournament(id);
-		model.addAttribute("tournament", tournament);
-		return "viewTournamentDetails";
-	}
+    @RequestMapping(URL_GET_DETAILS)
+    public String getDetails(@RequestParam(value = "id") String id, Model model) {
 
-	@GetMapping(URL_GET_CREATE)
-	public String getCreate(Model model) {
-		model.addAttribute("tournament", new TournamentGuiEntity());
-		return "viewTournamentCreate";
-	}
+        TournamentGuiEntity tournament = tournamentService.findOneTournament(id);
+        model.addAttribute("tournament", tournament);
+        return "viewTournamentDetails";
+    }
 
-	/**
-	 * POST /postCreate --> Create a new tournament and save it in the database.
-	 */
-	@PostMapping(URL_POST_CREATE)
-	public String postCreate(@ModelAttribute TournamentGuiEntity tournament) {
-		Long tournamentId = null;
-		try {
-			tournamentId = tournamentService.insert(tournament);
-		} catch (Exception ex) {
-			logger.error("Error creating the tournament: ", ex);
-			return "Error creating the tournament: " + ex.toString();
-		}
-		logger.debug("Tournament successfully created with id = " + tournamentId);
-		return REDIRECT + TOURNAMENT_GET_ALL_URL;
-	}
-	
-	/**
-	 * @param id tournament Id
-	 * @param model
-	 * @return Tournament modify view
-	 */
-	@RequestMapping(URL_GET_MODIFY)
-	public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
-		TournamentGuiEntity tournament = tournamentService.findOneTournament(id);
-		model.addAttribute("tournament", tournament);
-		return "viewTournamentModify";
-	}
+    @GetMapping(URL_GET_CREATE)
+    public String getCreate(Model model) {
 
-	/**
-	 * Saves modified tournament data to DB
-	 * 
-	 * @param tournament
-	 * @return
-	 */
-	@PostMapping(URL_POST_MODIFY)
-	public String postModify(@ModelAttribute TournamentGuiEntity tournament) {
-		Long tournamentId = null;
-		try {
-			tournamentId = tournamentService.modify(tournament);
-		} catch (Exception ex) {
-			logger.error("Error updating the tournament: ", ex);
-			return "Error updating the tournament: " + ex.toString();
-		}
-		logger.debug("Tournament successfully updated for id = " + tournamentId);
-		return REDIRECT + TOURNAMENT_GET_ALL_URL;
-	}
-	
-	/**
-	 * @param tournament
-	 * @param model
-	 * @return Tournament modify view
-	 */
-	@RequestMapping(URL_GET_DELETE)
-	public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
-		TournamentGuiEntity tournament = tournamentService.findOneTournament(id);
-		model.addAttribute("tournament", tournament);
-		return "viewTournamentDelete";
-	}
+        model.addAttribute("tournament", new TournamentGuiEntity());
+        return "viewTournamentCreate";
+    }
 
-	@PostMapping(URL_POST_DELETE)
-	public String postDelete(@ModelAttribute TournamentGuiEntity tournament) {
-		try {
-			tournamentService.delete(tournament.getId());
-		} catch (Exception ex) {
-			logger.error("Error deleting the tournament: ", ex);
-			return "Error deleting the tournament:" + ex.toString();
-		}
-		return REDIRECT + TOURNAMENT_GET_ALL_URL;
-	}
+    /**
+     * POST /postCreate --> Create a new tournament and save it in the database.
+     */
+    @PostMapping(URL_POST_CREATE)
+    public String postCreate(@ModelAttribute TournamentGuiEntity tournament) {
+
+        Long tournamentId;
+        try {
+            tournamentId = tournamentService.insert(tournament);
+        } catch (Exception ex) {
+            String msg = "Error creating the tournament: %s".formatted(ex);
+            log.error(msg);
+            return msg;
+        }
+        log.debug("Tournament successfully created with id = %s".formatted(tournamentId));
+        return REDIRECT + TOURNAMENT_GET_ALL_URL;
+    }
+
+    /**
+     * @param id    tournament Id
+     * @param model
+     * @return Tournament modify view
+     */
+    @RequestMapping(URL_GET_MODIFY)
+    public String getModify(@RequestParam(value = "id") String id, Model model) {
+
+        TournamentGuiEntity tournament = tournamentService.findOneTournament(id);
+        model.addAttribute("tournament", tournament);
+        return "viewTournamentModify";
+    }
+
+    /**
+     * Saves modified tournament data to DB
+     *
+     * @param tournament
+     * @return
+     */
+    @PostMapping(URL_POST_MODIFY)
+    public String postModify(@ModelAttribute TournamentGuiEntity tournament) {
+
+        Long tournamentId;
+        try {
+            tournamentId = tournamentService.modify(tournament);
+        } catch (Exception ex) {
+            String msg = "Error updating the tournament: %s".formatted(ex);
+            log.error(msg);
+            return msg;
+        }
+        log.debug("Tournament successfully updated for id = %s ".formatted(tournamentId));
+        return REDIRECT + TOURNAMENT_GET_ALL_URL;
+    }
+
+    /**
+     * @param id
+     * @param model
+     * @return delete view
+     */
+    @RequestMapping(URL_GET_DELETE)
+    public String getDelete(@RequestParam(value = "id") String id, Model model) {
+
+        TournamentGuiEntity tournament = tournamentService.findOneTournament(id);
+        model.addAttribute("tournament", tournament);
+        return "viewTournamentDelete";
+    }
+
+    @PostMapping(URL_POST_DELETE)
+    public String postDelete(@ModelAttribute TournamentGuiEntity tournament) {
+
+        try {
+            tournamentService.delete(tournament.getId());
+        } catch (Exception ex) {
+            String msg = "Error deleting the tournament: %s".formatted(ex);
+            log.error(msg);
+            return msg;
+        }
+        return REDIRECT + TOURNAMENT_GET_ALL_URL;
+    }
 
 }

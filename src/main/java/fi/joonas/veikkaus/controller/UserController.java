@@ -4,8 +4,7 @@ import fi.joonas.veikkaus.guientity.UserGuiEntity;
 import fi.joonas.veikkaus.guientity.UserRoleGuiEntity;
 import fi.joonas.veikkaus.service.UserRoleService;
 import fi.joonas.veikkaus.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,108 +16,116 @@ import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
 
 @Controller
 @RequestMapping(USER_URL)
+@Slf4j
 public class UserController {
 
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private UserRoleService userRoleService;
+    @Autowired
+    private UserService userService;
 
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    @Autowired
+    private UserRoleService userRoleService;
 
     @ModelAttribute(ALL_USER_ROLES)
     public List<UserRoleGuiEntity> populateTournaments() {
+
         return userRoleService.findAllUserRoles();
     }
 
     @GetMapping(URL_GET_ALL)
-	public String getAll(Model model) {
-		model.addAttribute("users", userService.findAllUsers());
-		return "viewUserList";
-	}
+    public String getAll(Model model) {
 
-	@RequestMapping(URL_GET_DETAILS)
-	public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
-		UserGuiEntity user = userService.findOneUser(id);
-		model.addAttribute("user", user);
-		return "viewUserDetails";
-	}
+        model.addAttribute("users", userService.findAllUsers());
+        return "viewUserList";
+    }
 
-	@GetMapping(URL_GET_CREATE)
-	public String getCreate(Model model) {
-		model.addAttribute("user", new UserGuiEntity());
-		return "viewUserCreate";
-	}
+    @RequestMapping(URL_GET_DETAILS)
+    public String getDetails(@RequestParam(value = "id") String id, Model model) {
 
-	/**
-	 * POST /postCreate --> Create a new user and save it in the database.
-	 */
-	@PostMapping(URL_POST_CREATE)
-	public String postCreate(@ModelAttribute UserGuiEntity user) {
-		Long userId = null;
-		try {
-			userId = userService.insert(user);
-		} catch (Exception ex) {
-			logger.error("Error creating the user: ", ex);
-			return "Error creating the user: " + ex.toString();
-		}
-		logger.debug("User successfully created with id = " + userId);
-		
-		return REDIRECT + USER_GET_ALL_URL;
-	}
-	
-	/**
-	 * @param id user Id
-	 * @param model
-	 * @return User modify view
-	 */
-	@RequestMapping(URL_GET_MODIFY)
-	public String getModify(@RequestParam(value = "id", required = true) String id, Model model) {
-		UserGuiEntity user = userService.findOneUser(id);
-		model.addAttribute("user", user);
-		return "viewUserModify";
-	}
+        UserGuiEntity user = userService.findOneUser(id);
+        model.addAttribute("user", user);
+        return "viewUserDetails";
+    }
 
-	/**
-	 * Saves modified user data to DB
-	 * 
-	 * @param user
-	 * @return
-	 */
-	@PostMapping(URL_POST_MODIFY)
-	public String postModify(@ModelAttribute UserGuiEntity user) {
-		Long userId = null;
-		try {
-			userId = userService.modify(user);
-		} catch (Exception ex) {
-			logger.error("Error updating the user: ", ex);
-			return "Error updating the user: " + ex.toString();
-		}
-		logger.debug("User successfully updated for id = " + userId);
-		return REDIRECT + USER_GET_ALL_URL;
-	}
-	
-	/**
-	 * @param user
-	 * @param model
-	 * @return User modify view
-	 */
-	@RequestMapping(URL_GET_DELETE)
-	public String getDelete(@RequestParam(value = "id", required = true) String id, Model model) {
-		UserGuiEntity user = userService.findOneUser(id);
-		model.addAttribute("user", user);
-		return "viewUserDelete";
-	}
+    @GetMapping(URL_GET_CREATE)
+    public String getCreate(Model model) {
 
-	@PostMapping(URL_POST_DELETE)
-	public String postDelete(@ModelAttribute UserGuiEntity user) {
-		try {
-			userService.delete(user.getId());
-		} catch (Exception ex) {
-			logger.error("Error deleting the user: ", ex);
-			return "Error deleting the user:" + ex.toString();
-		}
-		return REDIRECT + USER_GET_ALL_URL;
-	}
+        model.addAttribute("user", new UserGuiEntity());
+        return "viewUserCreate";
+    }
+
+    /**
+     * POST /postCreate --> Create a new user and save it in the database.
+     */
+    @PostMapping(URL_POST_CREATE)
+    public String postCreate(@ModelAttribute UserGuiEntity user) {
+
+        Long userId;
+        try {
+            userId = userService.insert(user);
+        } catch (Exception ex) {
+            String msg = "Error creating the user: %s".formatted(ex);
+            log.error(msg);
+            return msg;
+        }
+        log.debug("User successfully created with id = %s".formatted(userId));
+        return REDIRECT + USER_GET_ALL_URL;
+    }
+
+    /**
+     * @param id    user Id
+     * @param model
+     * @return User modify view
+     */
+    @RequestMapping(URL_GET_MODIFY)
+    public String getModify(@RequestParam(value = "id") String id, Model model) {
+
+        UserGuiEntity user = userService.findOneUser(id);
+        model.addAttribute("user", user);
+        return "viewUserModify";
+    }
+
+    /**
+     * Saves modified user data to DB
+     *
+     * @param user
+     * @return
+     */
+    @PostMapping(URL_POST_MODIFY)
+    public String postModify(@ModelAttribute UserGuiEntity user) {
+        Long userId = null;
+        try {
+            userId = userService.modify(user);
+        } catch (Exception ex) {
+            String msg = "Error updating the user: %s".formatted(ex);
+            log.error(msg);
+            return msg;
+        }
+        log.debug("User successfully updated for id = %s".formatted(userId));
+        return REDIRECT + USER_GET_ALL_URL;
+    }
+
+    /**
+     * @param id
+     * @param model
+     * @return User modify view
+     */
+    @RequestMapping(URL_GET_DELETE)
+    public String getDelete(@RequestParam(value = "id") String id, Model model) {
+
+        UserGuiEntity user = userService.findOneUser(id);
+        model.addAttribute("user", user);
+        return "viewUserDelete";
+    }
+
+    @PostMapping(URL_POST_DELETE)
+    public String postDelete(@ModelAttribute UserGuiEntity user) {
+        try {
+            userService.delete(user.getId());
+        } catch (Exception ex) {
+            String msg = "Error deleting the user: %s".formatted(ex);
+            log.error(msg);
+            return msg;
+        }
+        return REDIRECT + USER_GET_ALL_URL;
+    }
 }
