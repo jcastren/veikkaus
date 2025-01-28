@@ -1,80 +1,79 @@
 package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
+import fi.joonas.veikkaus.dao.StatusDao;
 import fi.joonas.veikkaus.guientity.StatusGuiEntity;
+import fi.joonas.veikkaus.jpaentity.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import fi.joonas.veikkaus.dao.StatusDao;
-import fi.joonas.veikkaus.jpaentity.Status;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Business logic level class for DB handling of Status
- * @author joonas
  *
+ * @author joonas
  */
 @Service
 public class StatusService {
-	
-	@Autowired
-	StatusDao statusDao;
 
-	public Long insert(StatusGuiEntity status) {
-		return statusDao.save(convertGuiToDb(status)).getId();
-	}
+    @Autowired
+    StatusDao statusDao;
 
-	public Long modify(StatusGuiEntity status) {
-		return statusDao.save(convertGuiToDb(status)).getId();
-	}
+    protected static StatusGuiEntity convertDbToGui(Status db) {
+        StatusGuiEntity ge = new StatusGuiEntity();
 
-	public boolean delete(String id) {
-		boolean succeed = false;
-		statusDao.deleteById(Long.valueOf(id));
-		succeed = true;
-		return succeed;
-	}
+        ge.setId(db.getId().toString());
+        ge.setStatusNumber(db.getStatusNumber());
+        ge.setDescription(db.getDescription());
 
-	public List<StatusGuiEntity> findAllStatuses() {
-		List<StatusGuiEntity> geList = new ArrayList<>();
-		List<Status> dbStatuses =  ImmutableList.copyOf(statusDao.findAll());
+        return ge;
+    }
 
-		for (Status dbStatus : dbStatuses) {
-			geList.add(convertDbToGui(dbStatus));
-		}
+    protected static Status convertGuiToDb(StatusGuiEntity ge) {
+        Status db = new Status();
 
-		return geList;
-	}
+        if (ge.getId() != null && !ge.getId().isEmpty()) {
+            db.setId(Long.valueOf(ge.getId()));
+        } else {
+            db.setId(null);
+        }
+        db.setStatusNumber(ge.getStatusNumber());
+        db.setDescription(ge.getDescription());
 
-	public StatusGuiEntity findOneStatus(String id) {
-		StatusGuiEntity statusGe = convertDbToGui(statusDao.findById(Long.valueOf(id)).get());
-		return statusGe;
-	}
+        return db;
+    }
 
-	protected static StatusGuiEntity convertDbToGui(Status db) {
-		StatusGuiEntity ge = new StatusGuiEntity();
+    public Long insert(StatusGuiEntity status) {
+        return statusDao.save(convertGuiToDb(status)).getId();
+    }
 
-		ge.setId(db.getId().toString());
-		ge.setStatusNumber(db.getStatusNumber());
-		ge.setDescription(db.getDescription());
+    public Long modify(StatusGuiEntity status) {
+        return statusDao.save(convertGuiToDb(status)).getId();
+    }
 
-		return ge;
-	}
+    public boolean delete(String id) {
+        boolean succeed = false;
+        statusDao.deleteById(Long.valueOf(id));
+        succeed = true;
+        return succeed;
+    }
 
-	protected static Status convertGuiToDb(StatusGuiEntity ge) {
-		Status db = new Status();
+    public List<StatusGuiEntity> findAllStatuses() {
+        List<StatusGuiEntity> geList = new ArrayList<>();
+        List<Status> dbStatuses = ImmutableList.copyOf(statusDao.findAll());
 
-		if (ge.getId() != null && !ge.getId().isEmpty()) {
-			db.setId(Long.valueOf(ge.getId()));
-		} else {
-			db.setId(null);
-		}
-		db.setStatusNumber(ge.getStatusNumber());
-		db.setDescription(ge.getDescription());
+        for (Status dbStatus : dbStatuses) {
+            geList.add(convertDbToGui(dbStatus));
+        }
 
-		return db;
-	}
+        return geList;
+    }
+
+    public StatusGuiEntity findOneStatus(String id) {
+        StatusGuiEntity statusGe = convertDbToGui(statusDao.findById(Long.valueOf(id)).get());
+        return statusGe;
+    }
 
 }

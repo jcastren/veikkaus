@@ -1,8 +1,7 @@
 package fi.joonas.veikkaus.dao;
 
-import org.springframework.data.repository.CrudRepository;
-
 import fi.joonas.veikkaus.jpaentity.Team;
+import org.springframework.data.repository.CrudRepository;
 
 public interface TeamDao extends CrudRepository<Team, Long> {
 

@@ -22,8 +22,8 @@ $("<li><a class='showTooltip' href='/bet/getAll' title='Go see bets'>Bets</a>").
 });*/
 
 // However, it's wiser to use classes for this functionality:
-$(".show-tooltip").each(function() {
-		$(this).tooltip();
+$(".show-tooltip").each(function () {
+    $(this).tooltip();
 });
 
 // Adding to href of every anchor object string '/veikkaus' to beginning to get the links work

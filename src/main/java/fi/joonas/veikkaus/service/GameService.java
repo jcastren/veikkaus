@@ -35,6 +35,53 @@ public class GameService {
     @Autowired
     TournamentTeamDao tournamentTeamDao;
 
+    protected static GameGuiEntity convertDbToGui(Game db) {
+        GameGuiEntity ge = new GameGuiEntity();
+
+        ge.setId(db.getId().toString());
+        ge.setTournament(TournamentService.convertDbToGui(db.getTournament()));
+        ge.setHomeTeam(TournamentTeamService.convertDbToGui(db.getHomeTeam()));
+        ge.setAwayTeam(TournamentTeamService.convertDbToGui(db.getAwayTeam()));
+        ge.setHomeScore(Integer.valueOf(db.getHomeScore()).toString());
+        ge.setAwayScore(Integer.valueOf(db.getAwayScore()).toString());
+        ge.setGameDate(VeikkausUtil.getDateAsString(db.getGameDate()));
+        return ge;
+    }
+
+    protected static Game convertGuiToDb(GameGuiEntity ge) throws VeikkausConversionException {
+        Game db = new Game();
+
+        if (ge.getId() != null && !ge.getId().isEmpty()) {
+            db.setId(Long.valueOf(ge.getId()));
+        } else {
+            db.setId(null);
+        }
+
+        try {
+            db.setHomeScore(Integer.parseInt(ge.getHomeScore()));
+        } catch (NumberFormatException nfe) {
+            log.info(String.format("Error while parsing integer '%s' Using integer %d instead", ge.getHomeScore(), INT_NOT_DEFINED), nfe);
+            db.setHomeScore(INT_NOT_DEFINED);
+        }
+        try {
+            db.setAwayScore(Integer.parseInt(ge.getAwayScore()));
+        } catch (NumberFormatException nfe) {
+            log.info(String.format("Error while parsing integer '%s' Using integer %d instead", ge.getAwayScore(), INT_NOT_DEFINED), nfe);
+            db.setAwayScore(INT_NOT_DEFINED);
+        }
+        try {
+            db.setGameDate(VeikkausUtil.getStringAsDate(ge.getGameDate()));
+        } catch (ParseException pe) {
+            log.error("Error while parsing date: " + ge.getGameDate(), pe);
+            throw new VeikkausConversionException("Error while parsing date: " + ge.getGameDate(), pe);
+        }
+        db.setTournament(TournamentService.convertGuiToDb(ge.getTournament()));
+        db.setHomeTeam(TournamentTeamService.convertGuiToDb(ge.getHomeTeam()));
+        db.setAwayTeam(TournamentTeamService.convertGuiToDb(ge.getAwayTeam()));
+
+        return db;
+    }
+
     public Long insert(GameGuiEntity gameGe) throws VeikkausServiceException {
         Long retGameId = null;
 
@@ -155,57 +202,9 @@ public class GameService {
         return geList;
     }
 
-
     public GameGuiEntity findOneGame(String id) {
         GameGuiEntity gameGe = convertDbToGui(gameDao.findById(Long.valueOf(id)).get());
         return gameGe;
-    }
-
-    protected static GameGuiEntity convertDbToGui(Game db) {
-        GameGuiEntity ge = new GameGuiEntity();
-
-        ge.setId(db.getId().toString());
-        ge.setTournament(TournamentService.convertDbToGui(db.getTournament()));
-        ge.setHomeTeam(TournamentTeamService.convertDbToGui(db.getHomeTeam()));
-        ge.setAwayTeam(TournamentTeamService.convertDbToGui(db.getAwayTeam()));
-        ge.setHomeScore(Integer.valueOf(db.getHomeScore()).toString());
-        ge.setAwayScore(Integer.valueOf(db.getAwayScore()).toString());
-        ge.setGameDate(VeikkausUtil.getDateAsString(db.getGameDate()));
-        return ge;
-    }
-
-    protected static Game convertGuiToDb(GameGuiEntity ge) throws VeikkausConversionException {
-        Game db = new Game();
-
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
-        } else {
-            db.setId(null);
-        }
-
-        try {
-            db.setHomeScore(Integer.parseInt(ge.getHomeScore()));
-        } catch (NumberFormatException nfe) {
-            log.info(String.format("Error while parsing integer '%s' Using integer %d instead", ge.getHomeScore(), INT_NOT_DEFINED), nfe);
-            db.setHomeScore(INT_NOT_DEFINED);
-        }
-        try {
-            db.setAwayScore(Integer.parseInt(ge.getAwayScore()));
-        } catch (NumberFormatException nfe) {
-            log.info(String.format("Error while parsing integer '%s' Using integer %d instead", ge.getAwayScore(), INT_NOT_DEFINED), nfe);
-            db.setAwayScore(INT_NOT_DEFINED);
-        }
-        try {
-            db.setGameDate(VeikkausUtil.getStringAsDate(ge.getGameDate()));
-        } catch (ParseException pe) {
-            log.error("Error while parsing date: " + ge.getGameDate(), pe);
-            throw new VeikkausConversionException("Error while parsing date: " + ge.getGameDate(), pe);
-        }
-        db.setTournament(TournamentService.convertGuiToDb(ge.getTournament()));
-        db.setHomeTeam(TournamentTeamService.convertGuiToDb(ge.getHomeTeam()));
-        db.setAwayTeam(TournamentTeamService.convertGuiToDb(ge.getAwayTeam()));
-
-        return db;
     }
 
 }

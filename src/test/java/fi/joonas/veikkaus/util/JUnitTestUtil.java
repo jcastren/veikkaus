@@ -22,15 +22,12 @@ import static fi.joonas.veikkaus.constants.VeikkausConstants.STATUS_UNDER_WORK;
 @Slf4j
 public abstract class JUnitTestUtil {
 
+    public static final boolean CLEAN_BEFORE_RUN_JUNIT_TESTS = false;
+    public static final String CHARSET = java.nio.charset.StandardCharsets.UTF_8.name();
+    public Map<String, String> paramMap;
     @Autowired
     private
     VeikkausServerProperties veikkausServerProperties;
-
-    public static final boolean CLEAN_BEFORE_RUN_JUNIT_TESTS = false;
-    public static final String CHARSET = java.nio.charset.StandardCharsets.UTF_8.name();
-
-    public Map<String, String> paramMap;
-
     @Autowired
     private UserRoleDao userRoleDao;
 

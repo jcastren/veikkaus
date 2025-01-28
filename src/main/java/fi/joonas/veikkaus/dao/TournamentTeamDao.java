@@ -1,13 +1,12 @@
 package fi.joonas.veikkaus.dao;
 
-import java.util.List;
-
+import fi.joonas.veikkaus.jpaentity.TournamentTeam;
 import org.springframework.data.repository.CrudRepository;
 
-import fi.joonas.veikkaus.jpaentity.TournamentTeam;
+import java.util.List;
 
 public interface TournamentTeamDao extends CrudRepository<TournamentTeam, Long> {
-	
-	public List<TournamentTeam> findByTournamentId(Long tournamentId);
+
+    public List<TournamentTeam> findByTournamentId(Long tournamentId);
 
 }

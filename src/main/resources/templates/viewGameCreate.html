@@ -1,60 +1,60 @@
 <!doctype html>
 <html lang="fi" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>VEIKKAUS ### Game create ###</title>
-	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
-	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
-	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
-	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <title>VEIKKAUS ### Game create ###</title>
+    <link rel="stylesheet" th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/veikkaus-jquery-style.css}"/>
+    <script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+    <script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
 </head>
 <body>
-	<h1>Create new game</h1>
-	<p>
-		<a class="show-tooltip" th:href="@{/game/getAll}"
-			title="Go back to game list">Back to game list</a>
-	</p>
-	<br/>
-	
-	<!-- <div id="tournamentListDiv" th:insert="~{fragments/fragTournamentSelect :: tournamentSelectFragment"></div> -->
-	
-	<form action="#" th:action="@{/game/postCreate}"
-		th:object="${game}" method="post">
-		
-		<div id="tournamentListDiv" th:object="${game}">
-			<label id="lblTournament" class="show-tooltip" title="Select a tournament">Select tournament</label>
-			<select id="selTournament" th:field="*{tournament.id}">
-				<option th:each="tournament : ${allTournaments}" 
-						th:value="${tournament.id}" th:text="${tournament.name} + ' ' + ${tournament.year}">
-				</option>
-			</select>
-		</div>
-		
-		<!-- <div th:insert="~{fragments/fragHomeTeams :: homeTeamFragment}"></div> -->
-		<div id="homeTeamDiv"></div>
-		<div id="awayTeamDiv"></div>
-		
-		<div id="textFieldDiv">
-			<p>
-				Home score: <input type="text" th:field="*{homeScore}"/>
-				Away score: <input type="text" th:field="*{awayScore}"/>
-				Game date: <input type="text" th:field="*{gameDate}"/>
-			</p>
-		</div>
-		<div id="buttonDiv">		
-			<p>
-				<button type="submit"
-					class="show-tooltip ui-button ui-corner-all ui-widget" title="Create game">
-					Create game
-				</button>
-				<button type="reset"
-					class="show-tooltip ui-button ui-corner-all ui-widget" title="Reset fields">
-					Reset fields
-				</button>
-			</p>
-		</div>
-	</form>
-	<script th:src="@{/js/game.js}"></script>
-	<script th:src="@{/js/common-navigation.js}"></script>
+<h1>Create new game</h1>
+<p>
+    <a class="show-tooltip" th:href="@{/game/getAll}"
+       title="Go back to game list">Back to game list</a>
+</p>
+<br/>
+
+<!-- <div id="tournamentListDiv" th:insert="~{fragments/fragTournamentSelect :: tournamentSelectFragment"></div> -->
+
+<form action="#" method="post"
+      th:action="@{/game/postCreate}" th:object="${game}">
+
+    <div id="tournamentListDiv" th:object="${game}">
+        <label class="show-tooltip" id="lblTournament" title="Select a tournament">Select tournament</label>
+        <select id="selTournament" th:field="*{tournament.id}">
+            <option th:each="tournament : ${allTournaments}"
+                    th:text="${tournament.name} + ' ' + ${tournament.year}" th:value="${tournament.id}">
+            </option>
+        </select>
+    </div>
+
+    <!-- <div th:insert="~{fragments/fragHomeTeams :: homeTeamFragment}"></div> -->
+    <div id="homeTeamDiv"></div>
+    <div id="awayTeamDiv"></div>
+
+    <div id="textFieldDiv">
+        <p>
+            Home score: <input th:field="*{homeScore}" type="text"/>
+            Away score: <input th:field="*{awayScore}" type="text"/>
+            Game date: <input th:field="*{gameDate}" type="text"/>
+        </p>
+    </div>
+    <div id="buttonDiv">
+        <p>
+            <button class="show-tooltip ui-button ui-corner-all ui-widget"
+                    title="Create game" type="submit">
+                Create game
+            </button>
+            <button class="show-tooltip ui-button ui-corner-all ui-widget"
+                    title="Reset fields" type="reset">
+                Reset fields
+            </button>
+        </p>
+    </div>
+</form>
+<script th:src="@{/js/game.js}"></script>
+<script th:src="@{/js/common-navigation.js}"></script>
 </body>
 </html>

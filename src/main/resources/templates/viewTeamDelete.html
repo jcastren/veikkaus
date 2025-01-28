@@ -1,30 +1,30 @@
 <!doctype html>
 <html lang="fi" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>VEIKKAUS ### Team confirm delete ###</title>
-	<link th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}" rel="stylesheet" />
-	<link th:href="@{/veikkaus-jquery-style.css}" rel="stylesheet" />
-	<script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
-	<script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <title>VEIKKAUS ### Team confirm delete ###</title>
+    <link rel="stylesheet" th:href="@{/jquery-ui-1.12.1.custom/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/veikkaus-jquery-style.css}"/>
+    <script th:src="@{/jquery-ui-1.12.1.custom/external/jquery/jquery.js}"></script>
+    <script th:src="@{/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
 </head>
 <body>
-	<h1>Team delete confirm</h1>
-	<p th:text="'Name: ' + ${team.name}" />
-	<form action="#" th:action="@{/team/postDelete}" th:object="${team}" method="post">
-		<input type="hidden" th:field="*{id}" />
-		<button type="submit"
-			class="ui-button ui-corner-all ui-widget"
-			title="Confirm deleting of team">Confirm deleting team
-		</button>
-	</form>
-	<form action="#" th:action="@{/team/getAll}"
-		th:object="${team}" method="get">
-		<button type="submit"
-			class="ui-button ui-corner-all ui-widget"
-			title="Cancel deleting of team">Cancel deleting team
-		</button>
-	</form>
-	<script th:src="@{/js/common-navigation.js}"></script>
+<h1>Team delete confirm</h1>
+<p th:text="'Name: ' + ${team.name}"/>
+<form action="#" method="post" th:action="@{/team/postDelete}" th:object="${team}">
+    <input th:field="*{id}" type="hidden"/>
+    <button class="ui-button ui-corner-all ui-widget"
+            title="Confirm deleting of team"
+            type="submit">Confirm deleting team
+    </button>
+</form>
+<form action="#" method="get"
+      th:action="@{/team/getAll}" th:object="${team}">
+    <button class="ui-button ui-corner-all ui-widget"
+            title="Cancel deleting of team"
+            type="submit">Cancel deleting team
+    </button>
+</form>
+<script th:src="@{/js/common-navigation.js}"></script>
 </body>
 </html>
