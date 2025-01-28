@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 public abstract class VeikkausUtil {
 
     private static final String DEFAULT_DATE_FORMAT = "dd.MM.yyyy";
@@ -43,6 +45,11 @@ public abstract class VeikkausUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, day, 0, 0, 0);
         return calendar.getTime();
+    }
+
+    public static Long idValue(String id) {
+
+        return isBlank(id) ? null : Long.valueOf(id);
     }
 
 }

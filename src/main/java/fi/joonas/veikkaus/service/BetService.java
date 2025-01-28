@@ -33,22 +33,6 @@ public class BetService {
     @Autowired
     StatusDao statusDao;
 
-    protected static Bet convertGuiToDb(BetGuiEntity betGuiEntity) {
-
-        Bet db = new Bet();
-
-        if (betGuiEntity.getId() != null && !betGuiEntity.getId().isEmpty()) {
-            db.setId(Long.valueOf(betGuiEntity.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setUser(UserService.convertGuiToDb(betGuiEntity.getUser()));
-        db.setTournament(TournamentService.convertGuiToDb(betGuiEntity.getTournament()));
-        db.setStatus(StatusService.convertGuiToDb(betGuiEntity.getStatus()));
-
-        return db;
-    }
-
     public Long insert(BetGuiEntity betGuiEntity) throws VeikkausServiceException {
 
         String userId = betGuiEntity.getUser().getId();
@@ -74,7 +58,7 @@ public class BetService {
         betGuiEntity.setTournament(tournamentDb.get().toGuiEntity());
         betGuiEntity.setStatus(statusDb.get().toGuiEntity());
 
-        return betDao.save(convertGuiToDb(betGuiEntity)).getId();
+        return betDao.save(betGuiEntity.toDbEntity()).getId();
     }
 
     public Long modify(BetGuiEntity betGuiEntity) throws VeikkausServiceException {
@@ -107,7 +91,7 @@ public class BetService {
         betGuiEntity.setTournament(tournamentDb.get().toGuiEntity());
         betGuiEntity.setStatus(statusDb.get().toGuiEntity());
 
-        return betDao.save(convertGuiToDb(betGuiEntity)).getId();
+        return betDao.save(betGuiEntity.toDbEntity()).getId();
     }
 
     public boolean delete(String id) {

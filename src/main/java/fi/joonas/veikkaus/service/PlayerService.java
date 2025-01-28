@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Business logic level class for DB handling of Player
  *
- * @author joona
+ * @author jcastren
  */
 @Service
 public class PlayerService {
@@ -21,39 +21,16 @@ public class PlayerService {
     @Autowired
     PlayerDao playerDao;
 
-    protected static Player convertGuiToDb(PlayerGuiEntity ge) {
-
-        Player db = new Player();
-
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setFirstName(ge.getFirstName());
-        db.setLastName(ge.getLastName());
-
-        return db;
-    }
-
     public Long insert(PlayerGuiEntity player) {
 
-        return playerDao.save(convertGuiToDb(player)).getId();
+        return playerDao.save(player.toDbEntity()).getId();
     }
 
-    /**
-     * @param player
-     * @return
-     */
     public Long modify(PlayerGuiEntity player) {
 
-        return playerDao.save(convertGuiToDb(player)).getId();
+        return playerDao.save(player.toDbEntity()).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) {
 
         boolean succeed;
@@ -62,9 +39,6 @@ public class PlayerService {
         return succeed;
     }
 
-    /**
-     * @return
-     */
     public List<PlayerGuiEntity> findAllPlayers() {
 
         List<PlayerGuiEntity> guiEntityList = new ArrayList<>();
@@ -77,10 +51,6 @@ public class PlayerService {
         return guiEntityList;
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public PlayerGuiEntity findOnePlayer(String id) {
 
         return playerDao.findById(Long.valueOf(id)).get().toGuiEntity();

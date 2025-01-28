@@ -33,25 +33,6 @@ public class TournamentTeamService {
     @Autowired
     TeamDao teamDao;
 
-    protected static TournamentTeam convertGuiToDb(TournamentTeamGuiEntity tournamentTeamGuiEntity) {
-
-        TournamentTeam db = new TournamentTeam();
-
-        if (tournamentTeamGuiEntity.getId() != null && !tournamentTeamGuiEntity.getId().isEmpty()) {
-            db.setId(Long.valueOf(tournamentTeamGuiEntity.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setTournament(TournamentService.convertGuiToDb(tournamentTeamGuiEntity.getTournament()));
-        db.setTeam(TeamService.convertGuiToDb(tournamentTeamGuiEntity.getTeam()));
-
-        return db;
-    }
-
-    /**
-     * @param tournamentTeamGuiEntity
-     * @return
-     */
     public Long insert(TournamentTeamGuiEntity tournamentTeamGuiEntity) throws VeikkausServiceException {
 
         String tournamentId = tournamentTeamGuiEntity.getTournament().getId();
@@ -70,7 +51,7 @@ public class TournamentTeamService {
         tournamentTeamGuiEntity.setTournament(tournamentDb.get().toGuiEntity());
         tournamentTeamGuiEntity.setTeam(teamDb.get().toGuiEntity());
 
-        return tournamentTeamDao.save(convertGuiToDb(tournamentTeamGuiEntity)).getId();
+        return tournamentTeamDao.save(tournamentTeamGuiEntity.toDbEntity()).getId();
     }
 
     /**
@@ -100,7 +81,7 @@ public class TournamentTeamService {
         tournamentTeamGuiEntity.setTournament(tournamentDb.get().toGuiEntity());
         tournamentTeamGuiEntity.setTeam(teamDb.get().toGuiEntity());
 
-        return tournamentTeamDao.save(convertGuiToDb(tournamentTeamGuiEntity)).getId();
+        return tournamentTeamDao.save(tournamentTeamGuiEntity.toDbEntity()).getId();
     }
 
     /**

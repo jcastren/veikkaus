@@ -21,43 +21,16 @@ public class TournamentService {
     @Autowired
     TournamentDao tournamentDao;
 
-    protected static Tournament convertGuiToDb(TournamentGuiEntity ge) {
-
-        Tournament db = new Tournament();
-
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setName(ge.getName());
-        db.setYear(Integer.valueOf(ge.getYear()));
-
-        return db;
-    }
-
-    /**
-     * @param tournament
-     * @return
-     */
     public Long insert(TournamentGuiEntity tournament) {
 
-        return tournamentDao.save(convertGuiToDb(tournament)).getId();
+        return tournamentDao.save(tournament.toDbEntity()).getId();
     }
 
-    /**
-     * @param tournament
-     * @return
-     */
     public Long modify(TournamentGuiEntity tournament) {
 
-        return tournamentDao.save(convertGuiToDb(tournament)).getId();
+        return tournamentDao.save(tournament.toDbEntity()).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) {
 
         boolean succeed;
@@ -66,9 +39,6 @@ public class TournamentService {
         return succeed;
     }
 
-    /**
-     * @return
-     */
     public List<TournamentGuiEntity> findAllTournaments() {
 
         List<TournamentGuiEntity> tournamentGuiEntityList = new ArrayList<>();
@@ -81,13 +51,8 @@ public class TournamentService {
         return tournamentGuiEntityList;
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public TournamentGuiEntity findOneTournament(String id) {
 
         return tournamentDao.findById(Long.valueOf(id)).get().toGuiEntity();
     }
-
 }

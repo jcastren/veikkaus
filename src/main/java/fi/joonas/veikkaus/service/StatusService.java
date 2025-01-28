@@ -21,29 +21,14 @@ public class StatusService {
     @Autowired
     StatusDao statusDao;
 
-    protected static Status convertGuiToDb(StatusGuiEntity ge) {
-
-        Status db = new Status();
-
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setStatusNumber(ge.getStatusNumber());
-        db.setDescription(ge.getDescription());
-
-        return db;
-    }
-
     public Long insert(StatusGuiEntity status) {
 
-        return statusDao.save(convertGuiToDb(status)).getId();
+        return statusDao.save(status.toDbEntity()).getId();
     }
 
     public Long modify(StatusGuiEntity status) {
 
-        return statusDao.save(convertGuiToDb(status)).getId();
+        return statusDao.save(status.toDbEntity()).getId();
     }
 
     public boolean delete(String id) {

@@ -10,17 +10,13 @@ import fi.joonas.veikkaus.guientity.GameGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Game;
 import fi.joonas.veikkaus.jpaentity.Tournament;
 import fi.joonas.veikkaus.jpaentity.TournamentTeam;
-import fi.joonas.veikkaus.util.VeikkausUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static fi.joonas.veikkaus.constants.VeikkausConstants.INT_NOT_DEFINED;
 
 @Service
 @Slf4j
@@ -34,41 +30,6 @@ public class GameService {
 
     @Autowired
     TournamentTeamDao tournamentTeamDao;
-
-    protected static Game convertGuiToDb(GameGuiEntity gameGuiEntity) throws VeikkausConversionException {
-
-        Game db = new Game();
-
-        if (gameGuiEntity.getId() != null && !gameGuiEntity.getId().isEmpty()) {
-            db.setId(Long.valueOf(gameGuiEntity.getId()));
-        } else {
-            db.setId(null);
-        }
-
-        try {
-            db.setHomeScore(Integer.parseInt(gameGuiEntity.getHomeScore()));
-        } catch (NumberFormatException nfe) {
-            log.info(String.format("Error while parsing integer '%s' Using integer %d instead", gameGuiEntity.getHomeScore(), INT_NOT_DEFINED), nfe);
-            db.setHomeScore(INT_NOT_DEFINED);
-        }
-        try {
-            db.setAwayScore(Integer.parseInt(gameGuiEntity.getAwayScore()));
-        } catch (NumberFormatException nfe) {
-            log.info(String.format("Error while parsing integer '%s' Using integer %d instead", gameGuiEntity.getAwayScore(), INT_NOT_DEFINED), nfe);
-            db.setAwayScore(INT_NOT_DEFINED);
-        }
-        try {
-            db.setGameDate(VeikkausUtil.getStringAsDate(gameGuiEntity.getGameDate()));
-        } catch (ParseException pe) {
-            log.error("Error while parsing date: " + gameGuiEntity.getGameDate(), pe);
-            throw new VeikkausConversionException("Error while parsing date: " + gameGuiEntity.getGameDate(), pe);
-        }
-        db.setTournament(TournamentService.convertGuiToDb(gameGuiEntity.getTournament()));
-        db.setHomeTeam(TournamentTeamService.convertGuiToDb(gameGuiEntity.getHomeTeam()));
-        db.setAwayTeam(TournamentTeamService.convertGuiToDb(gameGuiEntity.getAwayTeam()));
-
-        return db;
-    }
 
     public Long insert(GameGuiEntity gameGuiEntity) throws VeikkausServiceException {
 
@@ -101,7 +62,7 @@ public class GameService {
         gameGuiEntity.setAwayTeam(awayTeamDb.get().toGuiEntity());
 
         try {
-            returnedGameId = gameDao.save(convertGuiToDb(gameGuiEntity)).getId();
+            returnedGameId = gameDao.save(gameGuiEntity.toDbEntity()).getId();
         } catch (VeikkausConversionException vce) {
             throw new VeikkausServiceException("Saving game failed.", vce);
         }
@@ -148,7 +109,7 @@ public class GameService {
         gameGuiEntity.setAwayTeam(awayTeamDb.get().toGuiEntity());
 
         try {
-            returnedGameId = gameDao.save(convertGuiToDb(gameGuiEntity)).getId();
+            returnedGameId = gameDao.save(gameGuiEntity.toDbEntity()).getId();
         } catch (VeikkausConversionException vce) {
             throw new VeikkausServiceException("Saving game failed.", vce);
         }

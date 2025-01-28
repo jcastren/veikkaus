@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,8 @@ import static java.lang.String.valueOf;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Tournament {
 
     @Id
@@ -34,7 +38,6 @@ public class Tournament {
                 .id(valueOf(id))
                 .name(name)
                 .year(valueOf(year))
-
                 .build();
     }
 }

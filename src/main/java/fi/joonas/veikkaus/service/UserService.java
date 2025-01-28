@@ -23,27 +23,6 @@ public class UserService {
     @Autowired
     UserRoleDao userRoleDao;
 
-    protected static User convertGuiToDb(UserGuiEntity userGuiEntity) {
-
-        User db = new User();
-
-        if (userGuiEntity.getId() != null && !userGuiEntity.getId().isEmpty()) {
-            db.setId(Long.valueOf(userGuiEntity.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setEmail(userGuiEntity.getEmail());
-        db.setName(userGuiEntity.getName());
-        db.setPassword(userGuiEntity.getPassword());
-        db.setUserRole(UserRoleService.convertGuiToDb(userGuiEntity.getUserRole()));
-
-        return db;
-    }
-
-    /**
-     * @param userGuiEntity
-     * @return
-     */
     public Long insert(UserGuiEntity userGuiEntity) throws VeikkausServiceException {
 
         String userRoleId = userGuiEntity.getUserRole().getId();
@@ -55,13 +34,9 @@ public class UserService {
         /** TODO Why is userRole set again? Did it miss originally some fields????? */
         userGuiEntity.setUserRole(userRoleDb.get().toGuiEntity());
 
-        return userDao.save(convertGuiToDb(userGuiEntity)).getId();
+        return userDao.save(userGuiEntity.toDbEntity()).getId();
     }
 
-    /**
-     * @param userGuiEntity
-     * @return
-     */
     public Long modify(UserGuiEntity userGuiEntity) throws VeikkausServiceException {
 
         String id = userGuiEntity.getId();
@@ -78,13 +53,9 @@ public class UserService {
 
         userGuiEntity.setUserRole(userRoleDb.get().toGuiEntity());
 
-        return userDao.save(convertGuiToDb(userGuiEntity)).getId();
+        return userDao.save(userGuiEntity.toDbEntity()).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) throws VeikkausServiceException {
 
         boolean succeed;
@@ -93,9 +64,6 @@ public class UserService {
         return succeed;
     }
 
-    /**
-     * @return
-     */
     public List<UserGuiEntity> findAllUsers() {
 
         List<UserGuiEntity> guiEntityList = new ArrayList<>();
@@ -108,10 +76,6 @@ public class UserService {
         return guiEntityList;
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public UserGuiEntity findOneUser(String id) {
 
         return userDao.findById(Long.valueOf(id)).get().toGuiEntity();

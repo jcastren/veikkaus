@@ -2,6 +2,8 @@ package fi.joonas.veikkaus.jpaentity;
 
 import fi.joonas.veikkaus.guientity.BetResultGuiEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,8 @@ import static java.lang.String.valueOf;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BetResult {
 
     @Id

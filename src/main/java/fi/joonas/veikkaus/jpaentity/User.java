@@ -3,6 +3,8 @@ package fi.joonas.veikkaus.jpaentity;
 import fi.joonas.veikkaus.guientity.UserGuiEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import static java.lang.String.valueOf;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id

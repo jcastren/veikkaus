@@ -21,27 +21,13 @@ public class TeamService {
     @Autowired
     TeamDao teamDao;
 
-    protected static Team convertGuiToDb(TeamGuiEntity ge) {
-
-        Team db = new Team();
-
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setName(ge.getName());
-
-        return db;
-    }
-
     /**
      * @param team
      * @return
      */
     public Long insert(TeamGuiEntity team) {
 
-        return teamDao.save(convertGuiToDb(team)).getId();
+        return teamDao.save(team.toDbEntity()).getId();
     }
 
     /**
@@ -50,7 +36,7 @@ public class TeamService {
      */
     public Long modify(TeamGuiEntity team) {
 
-        return teamDao.save(convertGuiToDb(team)).getId();
+        return teamDao.save(team.toDbEntity()).getId();
     }
 
     /**

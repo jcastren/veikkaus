@@ -28,22 +28,6 @@ public class TournamentPlayerService {
     @Autowired
     PlayerDao playerDao;
 
-    protected static TournamentPlayer convertGuiToDb(TournamentPlayerGuiEntity ge) {
-
-        TournamentPlayer db = new TournamentPlayer();
-
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setTournamentTeam(TournamentTeamService.convertGuiToDb(ge.getTournamentTeam()));
-        db.setPlayer(PlayerService.convertGuiToDb(ge.getPlayer()));
-        db.setGoals(Integer.valueOf(ge.getGoals()));
-
-        return db;
-    }
-
     public Long insert(TournamentPlayerGuiEntity tournamentPlayerGuiEntity) throws VeikkausServiceException {
 
         String tournamentTeamId = tournamentPlayerGuiEntity.getTournamentTeam().getId();
@@ -62,7 +46,7 @@ public class TournamentPlayerService {
         tournamentPlayerGuiEntity.setTournamentTeam(tournamentTeamDb.get().toGuiEntity());
         tournamentPlayerGuiEntity.setPlayer(playerDb.get().toGuiEntity());
 
-        return tournamentPlayerDao.save(convertGuiToDb(tournamentPlayerGuiEntity)).getId();
+        return tournamentPlayerDao.save(tournamentPlayerGuiEntity.toDbEntity()).getId();
     }
 
     public Long modify(TournamentPlayerGuiEntity tournamentPlayerGuiEntity) throws VeikkausServiceException {
@@ -88,7 +72,7 @@ public class TournamentPlayerService {
         tournamentPlayerGuiEntity.setTournamentTeam(tournamentTeamDb.get().toGuiEntity());
         tournamentPlayerGuiEntity.setPlayer(playerDb.get().toGuiEntity());
 
-        return tournamentPlayerDao.save(convertGuiToDb(tournamentPlayerGuiEntity)).getId();
+        return tournamentPlayerDao.save(tournamentPlayerGuiEntity.toDbEntity()).getId();
     }
 
     public boolean delete(String id) throws VeikkausServiceException {

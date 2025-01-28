@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.BetDao;
 import fi.joonas.veikkaus.dao.BetResultDao;
 import fi.joonas.veikkaus.dao.GameDao;
-import fi.joonas.veikkaus.exception.VeikkausConversionException;
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
 import fi.joonas.veikkaus.guientity.BetResultGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Bet;
@@ -30,27 +29,6 @@ public class BetResultService {
     @Autowired
     GameDao gameDao;
 
-    protected static BetResult convertGuiToDb(BetResultGuiEntity betResultGuiEntity) {
-
-        BetResult db = new BetResult();
-
-        if (betResultGuiEntity.getId() != null && !betResultGuiEntity.getId().isEmpty()) {
-            db.setId(Long.valueOf(betResultGuiEntity.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setBet(BetService.convertGuiToDb(betResultGuiEntity.getBet()));
-        try {
-            db.setGame(GameService.convertGuiToDb(betResultGuiEntity.getGame()));
-        } catch (VeikkausConversionException e) {
-            e.printStackTrace();
-        }
-        db.setHomeScore(betResultGuiEntity.getHomeScore());
-        db.setAwayScore(betResultGuiEntity.getAwayScore());
-
-        return db;
-    }
-
     public Long insert(BetResultGuiEntity betResultGuiEntity) throws VeikkausServiceException {
 
         String betId = betResultGuiEntity.getBet().getId();
@@ -68,7 +46,7 @@ public class BetResultService {
         betResultGuiEntity.setBet(betDb.get().toGuiEntity());
         betResultGuiEntity.setGame(gameDb.get().toGuiEntity());
 
-        return betResultDao.save(convertGuiToDb(betResultGuiEntity)).getId();
+        return betResultDao.save(betResultGuiEntity.toDbEntity()).getId();
     }
 
     public Long modify(BetResultGuiEntity betResultGuiEntity) throws VeikkausServiceException {
@@ -94,7 +72,7 @@ public class BetResultService {
         betResultGuiEntity.setBet(betDb.get().toGuiEntity());
         betResultGuiEntity.setGame(gameDb.get().toGuiEntity());
 
-        return betResultDao.save(convertGuiToDb(betResultGuiEntity)).getId();
+        return betResultDao.save(betResultGuiEntity.toDbEntity()).getId();
     }
 
     public boolean delete(String id) {

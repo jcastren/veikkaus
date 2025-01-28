@@ -16,42 +16,16 @@ public class UserRoleService {
     @Autowired
     UserRoleDao userRoleDao;
 
-    protected static UserRole convertGuiToDb(UserRoleGuiEntity userRoleGuiEntity) {
-
-        UserRole db = new UserRole();
-
-        if (userRoleGuiEntity.getId() != null && !userRoleGuiEntity.getId().isEmpty()) {
-            db.setId(Long.valueOf(userRoleGuiEntity.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setName(userRoleGuiEntity.getName());
-
-        return db;
-    }
-
-    /**
-     * @param userRole
-     * @return
-     */
     public Long insert(UserRoleGuiEntity userRole) {
 
-        return userRoleDao.save(convertGuiToDb(userRole)).getId();
+        return userRoleDao.save(userRole.toDbEntity()).getId();
     }
 
-    /**
-     * @param userRole
-     * @return
-     */
     public Long modify(UserRoleGuiEntity userRole) {
 
-        return userRoleDao.save(convertGuiToDb(userRole)).getId();
+        return userRoleDao.save(userRole.toDbEntity()).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) {
 
         boolean succeed;
@@ -60,9 +34,6 @@ public class UserRoleService {
         return succeed;
     }
 
-    /**
-     * @return
-     */
     public List<UserRoleGuiEntity> findAllUserRoles() {
 
         List<UserRoleGuiEntity> userRoleGuiEntityList = new ArrayList<>();
@@ -75,10 +46,6 @@ public class UserRoleService {
         return userRoleGuiEntityList;
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public UserRoleGuiEntity findOneUserRole(String id) {
 
         return userRoleDao.findById(Long.valueOf(id)).get().toGuiEntity();

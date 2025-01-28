@@ -29,25 +29,6 @@ public class ScorerService {
     @Autowired
     GameDao gameDao;
 
-    protected static Scorer convertGuiToDb(ScorerGuiEntity ge) {
-
-        Scorer db = new Scorer();
-
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setTournamentPlayer(TournamentPlayerService.convertGuiToDb(ge.getTournamentPlayer()));
-        try {
-            db.setGame(GameService.convertGuiToDb(ge.getGame()));
-        } catch (VeikkausConversionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return db;
-    }
-
     public List<ScorerGuiEntity> findAllScorers() {
 
         List<ScorerGuiEntity> scorerGuiEntityList = new ArrayList<>();
@@ -71,7 +52,7 @@ public class ScorerService {
         return scorerDao.save(new Scorer(tournamentPlayer.get(), game.get())).getId();
     }
 
-    public Long insert(ScorerGuiEntity scorerGuiEntity) throws VeikkausServiceException {
+    public Long insert(ScorerGuiEntity scorerGuiEntity) throws VeikkausServiceException, VeikkausConversionException {
 
         String tournamentPlayerId = scorerGuiEntity.getTournamentPlayer().getId();
         Optional<TournamentPlayer> tournamentPlayerDb = tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId));
@@ -90,7 +71,7 @@ public class ScorerService {
         scorerGuiEntity.setTournamentPlayer(tournamentPlayerDb.get().toGuiEntity());
         scorerGuiEntity.setGame(gameDb.get().toGuiEntity());
 
-        return scorerDao.save(convertGuiToDb(scorerGuiEntity)).getId();
+        return scorerDao.save(scorerGuiEntity.toDbEntity()).getId();
     }
 
     public Long modify(String id, String tournamentPlayerId, String gameId) throws VeikkausServiceException {
