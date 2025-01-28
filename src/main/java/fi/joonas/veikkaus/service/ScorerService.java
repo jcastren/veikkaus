@@ -29,15 +29,8 @@ public class ScorerService {
     @Autowired
     GameDao gameDao;
 
-    protected static ScorerGuiEntity convertDbToGui(Scorer db) {
-        ScorerGuiEntity ge = new ScorerGuiEntity();
-        ge.setId(db.getId().toString());
-        ge.setTournamentPlayer(TournamentPlayerService.convertDbToGui(db.getTournamentPlayer()));
-        ge.setGame(GameService.convertDbToGui(db.getGame()));
-        return ge;
-    }
-
     protected static Scorer convertGuiToDb(ScorerGuiEntity ge) {
+
         Scorer db = new Scorer();
 
         if (ge.getId() != null && !ge.getId().isEmpty()) {
@@ -52,18 +45,19 @@ public class ScorerService {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
         return db;
     }
 
     public List<ScorerGuiEntity> findAllScorers() {
-        List<ScorerGuiEntity> geList = new ArrayList<>();
+
+        List<ScorerGuiEntity> scorerGuiEntityList = new ArrayList<>();
         List<Scorer> dbScorers = ImmutableList.copyOf(scorerDao.findAll());
-        dbScorers.forEach(dbScorer -> geList.add(convertDbToGui(dbScorer)));
-        return geList;
+        dbScorers.forEach(dbScorer -> scorerGuiEntityList.add(dbScorer.toGuiEntity()));
+        return scorerGuiEntityList;
     }
 
     public Long insert(String tournamentPlayerId, String gameId) throws VeikkausServiceException {
+
         Optional<TournamentPlayer> tournamentPlayer = tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId));
         if (!tournamentPlayer.isPresent()) {
             throw new VeikkausServiceException("tournamentPlayer with id: " + tournamentPlayerId + " wasn't found, insert failed");
@@ -77,32 +71,30 @@ public class ScorerService {
         return scorerDao.save(new Scorer(tournamentPlayer.get(), game.get())).getId();
     }
 
-    /**
-     * @param scorerGe
-     * @return
-     */
-    public Long insert(ScorerGuiEntity scorerGe) throws VeikkausServiceException {
-        String tournamentPlayerId = scorerGe.getTournamentPlayer().getId();
+    public Long insert(ScorerGuiEntity scorerGuiEntity) throws VeikkausServiceException {
+
+        String tournamentPlayerId = scorerGuiEntity.getTournamentPlayer().getId();
         Optional<TournamentPlayer> tournamentPlayerDb = tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId));
         if (!tournamentPlayerDb.isPresent()) {
             throw new VeikkausServiceException(
                     "Tournament player with id: " + tournamentPlayerId + " wasn't found, insert failed");
         }
 
-        String gameId = scorerGe.getGame().getId();
+        String gameId = scorerGuiEntity.getGame().getId();
         Optional<Game> gameDb = gameDao.findById(Long.valueOf(gameId));
         if (!gameDb.isPresent()) {
             throw new VeikkausServiceException("Game with id: " + gameId + " wasn't found, insert failed");
         } else {
         }
 
-        scorerGe.setTournamentPlayer(TournamentPlayerService.convertDbToGui(tournamentPlayerDb.get()));
-        scorerGe.setGame(GameService.convertDbToGui(gameDb.get()));
+        scorerGuiEntity.setTournamentPlayer(tournamentPlayerDb.get().toGuiEntity());
+        scorerGuiEntity.setGame(gameDb.get().toGuiEntity());
 
-        return scorerDao.save(convertGuiToDb(scorerGe)).getId();
+        return scorerDao.save(convertGuiToDb(scorerGuiEntity)).getId();
     }
 
     public Long modify(String id, String tournamentPlayerId, String gameId) throws VeikkausServiceException {
+
         Optional<TournamentPlayer> tournamentPlayer = tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId));
         if (!tournamentPlayer.isPresent()) {
             throw new VeikkausServiceException("TournamentPlayer with id: " + tournamentPlayerId + " wasn't found, modify failed");
@@ -124,11 +116,10 @@ public class ScorerService {
     }
 
     public boolean delete(String id) {
+
         boolean succeed;
         scorerDao.deleteById(Long.valueOf(id));
         succeed = true;
         return succeed;
     }
-
-
 }

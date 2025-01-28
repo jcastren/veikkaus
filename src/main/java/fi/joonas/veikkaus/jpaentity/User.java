@@ -1,9 +1,12 @@
 package fi.joonas.veikkaus.jpaentity;
 
+import fi.joonas.veikkaus.guientity.UserGuiEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import static java.lang.String.valueOf;
 
 @Entity
 @Data
@@ -32,5 +35,16 @@ public class User {
         this.name = name;
         this.password = password;
         this.userRole = userRole;
+    }
+
+    public UserGuiEntity toGuiEntity() {
+
+        return UserGuiEntity.builder()
+                .id(valueOf(id))
+                .email(email)
+                .name(name)
+                .password(password)
+                .userRole(userRole.toGuiEntity())
+                .build();
     }
 }

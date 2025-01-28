@@ -28,17 +28,8 @@ public class TournamentPlayerService {
     @Autowired
     PlayerDao playerDao;
 
-    protected static TournamentPlayerGuiEntity convertDbToGui(TournamentPlayer db) {
-        TournamentPlayerGuiEntity ge = new TournamentPlayerGuiEntity();
-
-        ge.setId(db.getId().toString());
-        ge.setTournamentTeam(TournamentTeamService.convertDbToGui(db.getTournamentTeam()));
-        ge.setPlayer(PlayerService.convertDbToGui(db.getPlayer()));
-        ge.setGoals(Integer.valueOf(db.getGoals()).toString());
-        return ge;
-    }
-
     protected static TournamentPlayer convertGuiToDb(TournamentPlayerGuiEntity ge) {
+
         TournamentPlayer db = new TournamentPlayer();
 
         if (ge.getId() != null && !ge.getId().isEmpty()) {
@@ -53,83 +44,71 @@ public class TournamentPlayerService {
         return db;
     }
 
-    /**
-     * @param tournamentPlayerGe
-     * @return
-     */
-    public Long insert(TournamentPlayerGuiEntity tournamentPlayerGe) throws VeikkausServiceException {
-        String tournamentTeamId = tournamentPlayerGe.getTournamentTeam().getId();
+    public Long insert(TournamentPlayerGuiEntity tournamentPlayerGuiEntity) throws VeikkausServiceException {
+
+        String tournamentTeamId = tournamentPlayerGuiEntity.getTournamentTeam().getId();
         Optional<TournamentTeam> tournamentTeamDb = tournamentTeamDao.findById(Long.valueOf(tournamentTeamId));
         if (!tournamentTeamDb.isPresent()) {
             throw new VeikkausServiceException(
                     "Tournament team with id: " + tournamentTeamId + " wasn't found, insert failed");
         }
 
-        String playerId = tournamentPlayerGe.getPlayer().getId();
+        String playerId = tournamentPlayerGuiEntity.getPlayer().getId();
         Optional<Player> playerDb = playerDao.findById(Long.valueOf(playerId));
         if (!playerDb.isPresent()) {
             throw new VeikkausServiceException("Player with id: " + playerId + " wasn't found, insert failed");
-        } else {
         }
 
-        tournamentPlayerGe.setTournamentTeam(TournamentTeamService.convertDbToGui(tournamentTeamDb.get()));
-        tournamentPlayerGe.setPlayer(PlayerService.convertDbToGui(playerDb.get()));
+        tournamentPlayerGuiEntity.setTournamentTeam(tournamentTeamDb.get().toGuiEntity());
+        tournamentPlayerGuiEntity.setPlayer(playerDb.get().toGuiEntity());
 
-        return tournamentPlayerDao.save(convertGuiToDb(tournamentPlayerGe)).getId();
+        return tournamentPlayerDao.save(convertGuiToDb(tournamentPlayerGuiEntity)).getId();
     }
 
-    /**
-     * @param tournamentPlayerGe
-     * @return
-     */
-    public Long modify(TournamentPlayerGuiEntity tournamentPlayerGe) throws VeikkausServiceException {
-        String id = tournamentPlayerGe.getId();
+    public Long modify(TournamentPlayerGuiEntity tournamentPlayerGuiEntity) throws VeikkausServiceException {
+
+        String id = tournamentPlayerGuiEntity.getId();
         Optional<TournamentPlayer> tournamentPlayerDb = tournamentPlayerDao.findById(Long.valueOf(id));
         if (!tournamentPlayerDb.isPresent()) {
             throw new VeikkausServiceException("TournamentPlayer with id: " + id + " wasn't found, modify failed");
         }
 
-        String tournamentTeamId = tournamentPlayerGe.getTournamentTeam().getId();
+        String tournamentTeamId = tournamentPlayerGuiEntity.getTournamentTeam().getId();
         Optional<TournamentTeam> tournamentTeamDb = tournamentTeamDao.findById(Long.valueOf(tournamentTeamId));
         if (!tournamentTeamDb.isPresent()) {
             throw new VeikkausServiceException("Tournament team with id: " + id + " wasn't found, modify failed");
         }
 
-        String playerId = tournamentPlayerGe.getPlayer().getId();
+        String playerId = tournamentPlayerGuiEntity.getPlayer().getId();
         Optional<Player> playerDb = playerDao.findById(Long.valueOf(playerId));
         if (!playerDb.isPresent()) {
             throw new VeikkausServiceException("Player with id: " + id + " wasn't found, modify failed");
         }
 
-        tournamentPlayerGe.setTournamentTeam(TournamentTeamService.convertDbToGui(tournamentTeamDb.get()));
-        tournamentPlayerGe.setPlayer(PlayerService.convertDbToGui(playerDb.get()));
+        tournamentPlayerGuiEntity.setTournamentTeam(tournamentTeamDb.get().toGuiEntity());
+        tournamentPlayerGuiEntity.setPlayer(playerDb.get().toGuiEntity());
 
-        return tournamentPlayerDao.save(convertGuiToDb(tournamentPlayerGe)).getId();
+        return tournamentPlayerDao.save(convertGuiToDb(tournamentPlayerGuiEntity)).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) throws VeikkausServiceException {
+
         boolean succeed;
         tournamentPlayerDao.deleteById(Long.valueOf(id));
         succeed = true;
         return succeed;
     }
 
-    /**
-     * @return
-     */
     public List<TournamentPlayerGuiEntity> findAllTournamentPlayers() {
-        List<TournamentPlayerGuiEntity> geList = new ArrayList<>();
-        List<TournamentPlayer> dbTournPlayers = ImmutableList.copyOf(tournamentPlayerDao.findAll());
 
-        for (TournamentPlayer dbTournPlayer : dbTournPlayers) {
-            geList.add(convertDbToGui(dbTournPlayer));
+        List<TournamentPlayerGuiEntity> guiEntityList = new ArrayList<>();
+        List<TournamentPlayer> dbTournamentPlayers = ImmutableList.copyOf(tournamentPlayerDao.findAll());
+
+        for (TournamentPlayer dbTournamentPlayer : dbTournamentPlayers) {
+            guiEntityList.add(dbTournamentPlayer.toGuiEntity());
         }
 
-        return geList;
+        return guiEntityList;
     }
 
     /**
@@ -137,8 +116,8 @@ public class TournamentPlayerService {
      * @return
      */
     public TournamentPlayerGuiEntity findOneTournamentPlayer(String id) {
-        TournamentPlayerGuiEntity tournPlayerGe = convertDbToGui(tournamentPlayerDao.findById(Long.valueOf(id)).get());
-        return tournPlayerGe;
+
+        return tournamentPlayerDao.findById(Long.valueOf(id)).get().toGuiEntity();
     }
 
 }

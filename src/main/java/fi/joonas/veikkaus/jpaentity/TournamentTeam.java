@@ -1,8 +1,11 @@
 package fi.joonas.veikkaus.jpaentity;
 
+import fi.joonas.veikkaus.guientity.TournamentTeamGuiEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import static java.lang.String.valueOf;
 
 @Entity
 @Data
@@ -24,4 +27,15 @@ public class TournamentTeam {
         this.tournament = tournament;
         this.team = team;
     }
+
+    public TournamentTeamGuiEntity toGuiEntity() {
+
+        return TournamentTeamGuiEntity.builder()
+                .id(valueOf(id))
+                .tournament(tournament.toGuiEntity())
+                .team(team.toGuiEntity())
+                .build();
+    }
+
+
 }

@@ -21,17 +21,8 @@ public class StatusService {
     @Autowired
     StatusDao statusDao;
 
-    protected static StatusGuiEntity convertDbToGui(Status db) {
-        StatusGuiEntity ge = new StatusGuiEntity();
-
-        ge.setId(db.getId().toString());
-        ge.setStatusNumber(db.getStatusNumber());
-        ge.setDescription(db.getDescription());
-
-        return ge;
-    }
-
     protected static Status convertGuiToDb(StatusGuiEntity ge) {
+
         Status db = new Status();
 
         if (ge.getId() != null && !ge.getId().isEmpty()) {
@@ -46,34 +37,37 @@ public class StatusService {
     }
 
     public Long insert(StatusGuiEntity status) {
+
         return statusDao.save(convertGuiToDb(status)).getId();
     }
 
     public Long modify(StatusGuiEntity status) {
+
         return statusDao.save(convertGuiToDb(status)).getId();
     }
 
     public boolean delete(String id) {
-        boolean succeed = false;
+
+        boolean succeed;
         statusDao.deleteById(Long.valueOf(id));
         succeed = true;
         return succeed;
     }
 
     public List<StatusGuiEntity> findAllStatuses() {
-        List<StatusGuiEntity> geList = new ArrayList<>();
+
+        List<StatusGuiEntity> statusGuiEntityList = new ArrayList<>();
         List<Status> dbStatuses = ImmutableList.copyOf(statusDao.findAll());
 
         for (Status dbStatus : dbStatuses) {
-            geList.add(convertDbToGui(dbStatus));
+            statusGuiEntityList.add(dbStatus.toGuiEntity());
         }
 
-        return geList;
+        return statusGuiEntityList;
     }
 
     public StatusGuiEntity findOneStatus(String id) {
-        StatusGuiEntity statusGe = convertDbToGui(statusDao.findById(Long.valueOf(id)).get());
-        return statusGe;
-    }
 
+        return statusDao.findById(Long.valueOf(id)).get().toGuiEntity();
+    }
 }

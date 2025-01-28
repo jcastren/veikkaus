@@ -1,8 +1,11 @@
 package fi.joonas.veikkaus.jpaentity;
 
+import fi.joonas.veikkaus.guientity.BetResultGuiEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import static java.lang.String.valueOf;
 
 @Entity
 @Data
@@ -28,5 +31,16 @@ public class BetResult {
         this.game = game;
         this.homeScore = homeScore;
         this.awayScore = awayScore;
+    }
+
+    public BetResultGuiEntity toGuiEntity() {
+
+        return BetResultGuiEntity.builder()
+                .id(valueOf(id))
+                .bet(bet.toGuiEntity())
+                .game(game.toGuiEntity())
+                .homeScore(homeScore)
+                .awayScore(awayScore)
+                .build();
     }
 }

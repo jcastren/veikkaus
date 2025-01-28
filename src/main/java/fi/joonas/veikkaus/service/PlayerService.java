@@ -21,17 +21,8 @@ public class PlayerService {
     @Autowired
     PlayerDao playerDao;
 
-    protected static PlayerGuiEntity convertDbToGui(Player db) {
-        PlayerGuiEntity ge = new PlayerGuiEntity();
-
-        ge.setId(db.getId().toString());
-        ge.setFirstName(db.getFirstName());
-        ge.setLastName(db.getLastName());
-
-        return ge;
-    }
-
     protected static Player convertGuiToDb(PlayerGuiEntity ge) {
+
         Player db = new Player();
 
         if (ge.getId() != null && !ge.getId().isEmpty()) {
@@ -46,6 +37,7 @@ public class PlayerService {
     }
 
     public Long insert(PlayerGuiEntity player) {
+
         return playerDao.save(convertGuiToDb(player)).getId();
     }
 
@@ -54,6 +46,7 @@ public class PlayerService {
      * @return
      */
     public Long modify(PlayerGuiEntity player) {
+
         return playerDao.save(convertGuiToDb(player)).getId();
     }
 
@@ -62,7 +55,8 @@ public class PlayerService {
      * @return
      */
     public boolean delete(String id) {
-        boolean succeed = false;
+
+        boolean succeed;
         playerDao.deleteById(Long.valueOf(id));
         succeed = true;
         return succeed;
@@ -72,14 +66,15 @@ public class PlayerService {
      * @return
      */
     public List<PlayerGuiEntity> findAllPlayers() {
-        List<PlayerGuiEntity> geList = new ArrayList<>();
+
+        List<PlayerGuiEntity> guiEntityList = new ArrayList<>();
         List<Player> dbPlayers = ImmutableList.copyOf(playerDao.findAll());
 
         for (Player dbPlayer : dbPlayers) {
-            geList.add(convertDbToGui(dbPlayer));
+            guiEntityList.add(dbPlayer.toGuiEntity());
         }
 
-        return geList;
+        return guiEntityList;
     }
 
     /**
@@ -87,8 +82,8 @@ public class PlayerService {
      * @return
      */
     public PlayerGuiEntity findOnePlayer(String id) {
-        PlayerGuiEntity playerGe = convertDbToGui(playerDao.findById(Long.valueOf(id)).get());
-        return playerGe;
+
+        return playerDao.findById(Long.valueOf(id)).get().toGuiEntity();
     }
 
 }

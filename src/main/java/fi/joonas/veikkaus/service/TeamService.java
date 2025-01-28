@@ -21,16 +21,8 @@ public class TeamService {
     @Autowired
     TeamDao teamDao;
 
-    protected static TeamGuiEntity convertDbToGui(Team db) {
-        TeamGuiEntity ge = new TeamGuiEntity();
-
-        ge.setId(db.getId().toString());
-        ge.setName(db.getName());
-
-        return ge;
-    }
-
     protected static Team convertGuiToDb(TeamGuiEntity ge) {
+
         Team db = new Team();
 
         if (ge.getId() != null && !ge.getId().isEmpty()) {
@@ -48,6 +40,7 @@ public class TeamService {
      * @return
      */
     public Long insert(TeamGuiEntity team) {
+
         return teamDao.save(convertGuiToDb(team)).getId();
     }
 
@@ -56,6 +49,7 @@ public class TeamService {
      * @return
      */
     public Long modify(TeamGuiEntity team) {
+
         return teamDao.save(convertGuiToDb(team)).getId();
     }
 
@@ -64,7 +58,8 @@ public class TeamService {
      * @return
      */
     public boolean delete(String id) {
-        boolean succeed = false;
+
+        boolean succeed;
         teamDao.deleteById(Long.valueOf(id));
         succeed = true;
         return succeed;
@@ -74,14 +69,15 @@ public class TeamService {
      * @return
      */
     public List<TeamGuiEntity> findAllTeams() {
-        List<TeamGuiEntity> geList = new ArrayList<>();
+
+        List<TeamGuiEntity> teamGuiEntityList = new ArrayList<>();
         List<Team> dbTeams = ImmutableList.copyOf(teamDao.findAll());
 
         for (Team dbTeam : dbTeams) {
-            geList.add(convertDbToGui(dbTeam));
+            teamGuiEntityList.add(dbTeam.toGuiEntity());
         }
 
-        return geList;
+        return teamGuiEntityList;
     }
 
     /**
@@ -89,8 +85,8 @@ public class TeamService {
      * @return
      */
     public TeamGuiEntity findOneTeam(String id) {
-        TeamGuiEntity teamGe = convertDbToGui(teamDao.findById(Long.valueOf(id)).get());
-        return teamGe;
+
+        return teamDao.findById(Long.valueOf(id)).get().toGuiEntity();
     }
 
 }

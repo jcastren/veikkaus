@@ -16,24 +16,16 @@ public class UserRoleService {
     @Autowired
     UserRoleDao userRoleDao;
 
-    protected static UserRoleGuiEntity convertDbToGui(UserRole db) {
-        UserRoleGuiEntity ge = new UserRoleGuiEntity();
+    protected static UserRole convertGuiToDb(UserRoleGuiEntity userRoleGuiEntity) {
 
-        ge.setId(db.getId().toString());
-        ge.setName(db.getName());
-
-        return ge;
-    }
-
-    protected static UserRole convertGuiToDb(UserRoleGuiEntity ge) {
         UserRole db = new UserRole();
 
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
+        if (userRoleGuiEntity.getId() != null && !userRoleGuiEntity.getId().isEmpty()) {
+            db.setId(Long.valueOf(userRoleGuiEntity.getId()));
         } else {
             db.setId(null);
         }
-        db.setName(ge.getName());
+        db.setName(userRoleGuiEntity.getName());
 
         return db;
     }
@@ -43,6 +35,7 @@ public class UserRoleService {
      * @return
      */
     public Long insert(UserRoleGuiEntity userRole) {
+
         return userRoleDao.save(convertGuiToDb(userRole)).getId();
     }
 
@@ -51,6 +44,7 @@ public class UserRoleService {
      * @return
      */
     public Long modify(UserRoleGuiEntity userRole) {
+
         return userRoleDao.save(convertGuiToDb(userRole)).getId();
     }
 
@@ -59,7 +53,8 @@ public class UserRoleService {
      * @return
      */
     public boolean delete(String id) {
-        boolean succeed = false;
+
+        boolean succeed;
         userRoleDao.deleteById(Long.valueOf(id));
         succeed = true;
         return succeed;
@@ -69,14 +64,15 @@ public class UserRoleService {
      * @return
      */
     public List<UserRoleGuiEntity> findAllUserRoles() {
-        List<UserRoleGuiEntity> geList = new ArrayList<>();
-        List<UserRole> dbTourns = ImmutableList.copyOf(userRoleDao.findAll());
 
-        for (UserRole dbTourn : dbTourns) {
-            geList.add(convertDbToGui(dbTourn));
+        List<UserRoleGuiEntity> userRoleGuiEntityList = new ArrayList<>();
+        List<UserRole> dbTournaments = ImmutableList.copyOf(userRoleDao.findAll());
+
+        for (UserRole dbTournament : dbTournaments) {
+            userRoleGuiEntityList.add(dbTournament.toGuiEntity());
         }
 
-        return geList;
+        return userRoleGuiEntityList;
     }
 
     /**
@@ -84,8 +80,8 @@ public class UserRoleService {
      * @return
      */
     public UserRoleGuiEntity findOneUserRole(String id) {
-        UserRoleGuiEntity tournGe = convertDbToGui(userRoleDao.findById(Long.valueOf(id)).get());
-        return tournGe;
+
+        return userRoleDao.findById(Long.valueOf(id)).get().toGuiEntity();
     }
 
 }

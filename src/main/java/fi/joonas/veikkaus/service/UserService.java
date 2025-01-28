@@ -23,70 +23,62 @@ public class UserService {
     @Autowired
     UserRoleDao userRoleDao;
 
-    protected static UserGuiEntity convertDbToGui(User db) {
-        UserGuiEntity ge = new UserGuiEntity();
+    protected static User convertGuiToDb(UserGuiEntity userGuiEntity) {
 
-        ge.setId(db.getId().toString());
-        ge.setEmail(db.getEmail());
-        ge.setName(db.getName());
-        ge.setPassword(db.getPassword());
-        ge.setUserRole(UserRoleService.convertDbToGui(db.getUserRole()));
-        return ge;
-    }
-
-    protected static User convertGuiToDb(UserGuiEntity ge) {
         User db = new User();
 
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
+        if (userGuiEntity.getId() != null && !userGuiEntity.getId().isEmpty()) {
+            db.setId(Long.valueOf(userGuiEntity.getId()));
         } else {
             db.setId(null);
         }
-        db.setEmail(ge.getEmail());
-        db.setName(ge.getName());
-        db.setPassword(ge.getPassword());
-        db.setUserRole(UserRoleService.convertGuiToDb(ge.getUserRole()));
+        db.setEmail(userGuiEntity.getEmail());
+        db.setName(userGuiEntity.getName());
+        db.setPassword(userGuiEntity.getPassword());
+        db.setUserRole(UserRoleService.convertGuiToDb(userGuiEntity.getUserRole()));
 
         return db;
     }
 
     /**
-     * @param userGe
+     * @param userGuiEntity
      * @return
      */
-    public Long insert(UserGuiEntity userGe) throws VeikkausServiceException {
-        String userRoleId = userGe.getUserRole().getId();
+    public Long insert(UserGuiEntity userGuiEntity) throws VeikkausServiceException {
+
+        String userRoleId = userGuiEntity.getUserRole().getId();
         Optional<UserRole> userRoleDb = userRoleDao.findById(Long.valueOf(userRoleId));
         if (!userRoleDb.isPresent()) {
             throw new VeikkausServiceException("User role with id: " + userRoleId + " wasn't found, insert failed");
         }
 
         /** TODO Why is userRole set again? Did it miss originally some fields????? */
-        userGe.setUserRole(UserRoleService.convertDbToGui(userRoleDb.get()));
+        userGuiEntity.setUserRole(userRoleDb.get().toGuiEntity());
 
-        return userDao.save(convertGuiToDb(userGe)).getId();
+        return userDao.save(convertGuiToDb(userGuiEntity)).getId();
     }
 
     /**
-     * @param userGe
+     * @param userGuiEntity
      * @return
      */
-    public Long modify(UserGuiEntity userGe) throws VeikkausServiceException {
-        String id = userGe.getId();
+    public Long modify(UserGuiEntity userGuiEntity) throws VeikkausServiceException {
+
+        String id = userGuiEntity.getId();
         Optional<User> userDb = userDao.findById(Long.valueOf(id));
         if (!userDb.isPresent()) {
             throw new VeikkausServiceException("User with id: " + id + " wasn't found, modify failed");
         }
 
-        String userRoleId = userGe.getUserRole().getId();
+        String userRoleId = userGuiEntity.getUserRole().getId();
         Optional<UserRole> userRoleDb = userRoleDao.findById(Long.valueOf(userRoleId));
         if (!userRoleDb.isPresent()) {
             throw new VeikkausServiceException("User role with id: " + id + " wasn't found, modify failed");
         }
 
-        userGe.setUserRole(UserRoleService.convertDbToGui(userRoleDb.get()));
+        userGuiEntity.setUserRole(userRoleDb.get().toGuiEntity());
 
-        return userDao.save(convertGuiToDb(userGe)).getId();
+        return userDao.save(convertGuiToDb(userGuiEntity)).getId();
     }
 
     /**
@@ -94,7 +86,8 @@ public class UserService {
      * @return
      */
     public boolean delete(String id) throws VeikkausServiceException {
-        boolean succeed = false;
+
+        boolean succeed;
         userDao.deleteById(Long.valueOf(id));
         succeed = true;
         return succeed;
@@ -104,14 +97,15 @@ public class UserService {
      * @return
      */
     public List<UserGuiEntity> findAllUsers() {
-        List<UserGuiEntity> geList = new ArrayList<>();
+
+        List<UserGuiEntity> guiEntityList = new ArrayList<>();
         List<User> dbUsers = ImmutableList.copyOf(userDao.findAll());
 
         for (User dbUser : dbUsers) {
-            geList.add(convertDbToGui(dbUser));
+            guiEntityList.add(dbUser.toGuiEntity());
         }
 
-        return geList;
+        return guiEntityList;
     }
 
     /**
@@ -119,8 +113,8 @@ public class UserService {
      * @return
      */
     public UserGuiEntity findOneUser(String id) {
-        UserGuiEntity userGe = convertDbToGui(userDao.findById(Long.valueOf(id)).get());
-        return userGe;
+
+        return userDao.findById(Long.valueOf(id)).get().toGuiEntity();
     }
 
 }

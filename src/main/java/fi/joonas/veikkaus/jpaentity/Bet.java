@@ -1,9 +1,12 @@
 package fi.joonas.veikkaus.jpaentity;
 
+import fi.joonas.veikkaus.guientity.BetGuiEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import static java.lang.String.valueOf;
 
 @Entity
 @Data
@@ -31,5 +34,15 @@ public class Bet {
         this.user = user;
         this.tournament = tournament;
         this.status = status;
+    }
+
+    public BetGuiEntity toGuiEntity() {
+
+        return BetGuiEntity.builder()
+                .id(valueOf(id))
+                .user(user.toGuiEntity())
+                .tournament(tournament.toGuiEntity())
+                .status(status.toGuiEntity())
+                .build();
     }
 }

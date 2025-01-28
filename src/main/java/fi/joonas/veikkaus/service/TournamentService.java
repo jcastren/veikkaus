@@ -21,17 +21,8 @@ public class TournamentService {
     @Autowired
     TournamentDao tournamentDao;
 
-    protected static TournamentGuiEntity convertDbToGui(Tournament db) {
-        TournamentGuiEntity ge = new TournamentGuiEntity();
-
-        ge.setId(db.getId().toString());
-        ge.setName(db.getName());
-        ge.setYear(Integer.valueOf(db.getYear()).toString());
-
-        return ge;
-    }
-
     protected static Tournament convertGuiToDb(TournamentGuiEntity ge) {
+
         Tournament db = new Tournament();
 
         if (ge.getId() != null && !ge.getId().isEmpty()) {
@@ -50,6 +41,7 @@ public class TournamentService {
      * @return
      */
     public Long insert(TournamentGuiEntity tournament) {
+
         return tournamentDao.save(convertGuiToDb(tournament)).getId();
     }
 
@@ -58,6 +50,7 @@ public class TournamentService {
      * @return
      */
     public Long modify(TournamentGuiEntity tournament) {
+
         return tournamentDao.save(convertGuiToDb(tournament)).getId();
     }
 
@@ -66,7 +59,8 @@ public class TournamentService {
      * @return
      */
     public boolean delete(String id) {
-        boolean succeed = false;
+
+        boolean succeed;
         tournamentDao.deleteById(Long.valueOf(id));
         succeed = true;
         return succeed;
@@ -76,14 +70,15 @@ public class TournamentService {
      * @return
      */
     public List<TournamentGuiEntity> findAllTournaments() {
-        List<TournamentGuiEntity> geList = new ArrayList<>();
-        List<Tournament> dbTourns = ImmutableList.copyOf(tournamentDao.findAll());
 
-        for (Tournament dbTourn : dbTourns) {
-            geList.add(convertDbToGui(dbTourn));
+        List<TournamentGuiEntity> tournamentGuiEntityList = new ArrayList<>();
+        List<Tournament> dbTournaments = ImmutableList.copyOf(tournamentDao.findAll());
+
+        for (Tournament dbTournament : dbTournaments) {
+            tournamentGuiEntityList.add(dbTournament.toGuiEntity());
         }
 
-        return geList;
+        return tournamentGuiEntityList;
     }
 
     /**
@@ -91,8 +86,8 @@ public class TournamentService {
      * @return
      */
     public TournamentGuiEntity findOneTournament(String id) {
-        TournamentGuiEntity tournGe = convertDbToGui(tournamentDao.findById(Long.valueOf(id)).get());
-        return tournGe;
+
+        return tournamentDao.findById(Long.valueOf(id)).get().toGuiEntity();
     }
 
 }

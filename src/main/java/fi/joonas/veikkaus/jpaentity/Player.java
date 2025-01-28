@@ -1,11 +1,14 @@
 package fi.joonas.veikkaus.jpaentity;
 
+import fi.joonas.veikkaus.guientity.PlayerGuiEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import static java.lang.String.valueOf;
 
 @Entity
 @Data
@@ -24,5 +27,14 @@ public class Player {
 
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public PlayerGuiEntity toGuiEntity() {
+
+        return PlayerGuiEntity.builder()
+                .id(valueOf(id))
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
     }
 }

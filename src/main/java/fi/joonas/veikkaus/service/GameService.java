@@ -35,71 +35,60 @@ public class GameService {
     @Autowired
     TournamentTeamDao tournamentTeamDao;
 
-    protected static GameGuiEntity convertDbToGui(Game db) {
-        GameGuiEntity ge = new GameGuiEntity();
+    protected static Game convertGuiToDb(GameGuiEntity gameGuiEntity) throws VeikkausConversionException {
 
-        ge.setId(db.getId().toString());
-        ge.setTournament(TournamentService.convertDbToGui(db.getTournament()));
-        ge.setHomeTeam(TournamentTeamService.convertDbToGui(db.getHomeTeam()));
-        ge.setAwayTeam(TournamentTeamService.convertDbToGui(db.getAwayTeam()));
-        ge.setHomeScore(Integer.valueOf(db.getHomeScore()).toString());
-        ge.setAwayScore(Integer.valueOf(db.getAwayScore()).toString());
-        ge.setGameDate(VeikkausUtil.getDateAsString(db.getGameDate()));
-        return ge;
-    }
-
-    protected static Game convertGuiToDb(GameGuiEntity ge) throws VeikkausConversionException {
         Game db = new Game();
 
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
+        if (gameGuiEntity.getId() != null && !gameGuiEntity.getId().isEmpty()) {
+            db.setId(Long.valueOf(gameGuiEntity.getId()));
         } else {
             db.setId(null);
         }
 
         try {
-            db.setHomeScore(Integer.parseInt(ge.getHomeScore()));
+            db.setHomeScore(Integer.parseInt(gameGuiEntity.getHomeScore()));
         } catch (NumberFormatException nfe) {
-            log.info(String.format("Error while parsing integer '%s' Using integer %d instead", ge.getHomeScore(), INT_NOT_DEFINED), nfe);
+            log.info(String.format("Error while parsing integer '%s' Using integer %d instead", gameGuiEntity.getHomeScore(), INT_NOT_DEFINED), nfe);
             db.setHomeScore(INT_NOT_DEFINED);
         }
         try {
-            db.setAwayScore(Integer.parseInt(ge.getAwayScore()));
+            db.setAwayScore(Integer.parseInt(gameGuiEntity.getAwayScore()));
         } catch (NumberFormatException nfe) {
-            log.info(String.format("Error while parsing integer '%s' Using integer %d instead", ge.getAwayScore(), INT_NOT_DEFINED), nfe);
+            log.info(String.format("Error while parsing integer '%s' Using integer %d instead", gameGuiEntity.getAwayScore(), INT_NOT_DEFINED), nfe);
             db.setAwayScore(INT_NOT_DEFINED);
         }
         try {
-            db.setGameDate(VeikkausUtil.getStringAsDate(ge.getGameDate()));
+            db.setGameDate(VeikkausUtil.getStringAsDate(gameGuiEntity.getGameDate()));
         } catch (ParseException pe) {
-            log.error("Error while parsing date: " + ge.getGameDate(), pe);
-            throw new VeikkausConversionException("Error while parsing date: " + ge.getGameDate(), pe);
+            log.error("Error while parsing date: " + gameGuiEntity.getGameDate(), pe);
+            throw new VeikkausConversionException("Error while parsing date: " + gameGuiEntity.getGameDate(), pe);
         }
-        db.setTournament(TournamentService.convertGuiToDb(ge.getTournament()));
-        db.setHomeTeam(TournamentTeamService.convertGuiToDb(ge.getHomeTeam()));
-        db.setAwayTeam(TournamentTeamService.convertGuiToDb(ge.getAwayTeam()));
+        db.setTournament(TournamentService.convertGuiToDb(gameGuiEntity.getTournament()));
+        db.setHomeTeam(TournamentTeamService.convertGuiToDb(gameGuiEntity.getHomeTeam()));
+        db.setAwayTeam(TournamentTeamService.convertGuiToDb(gameGuiEntity.getAwayTeam()));
 
         return db;
     }
 
-    public Long insert(GameGuiEntity gameGe) throws VeikkausServiceException {
-        Long retGameId = null;
+    public Long insert(GameGuiEntity gameGuiEntity) throws VeikkausServiceException {
 
-        String tournamentId = gameGe.getTournament().getId();
+        Long returnedGameId;
+
+        String tournamentId = gameGuiEntity.getTournament().getId();
         Optional<Tournament> tournamentDb = tournamentDao.findById(Long.valueOf(tournamentId));
         if (!tournamentDb.isPresent()) {
             throw new VeikkausServiceException(
                     String.format("Tournament with id: %s wasn't found, insert failed", tournamentId));
         }
 
-        String homeTeamId = gameGe.getHomeTeam().getId();
+        String homeTeamId = gameGuiEntity.getHomeTeam().getId();
         Optional<TournamentTeam> homeTeamDb = tournamentTeamDao.findById(Long.valueOf(homeTeamId));
         if (!homeTeamDb.isPresent()) {
             throw new VeikkausServiceException(
                     String.format("TournamentTeam (homeTeam) with id: %s wasn't found, insert failed", homeTeamId));
         }
 
-        String awayTeamId = gameGe.getAwayTeam().getId();
+        String awayTeamId = gameGuiEntity.getAwayTeam().getId();
         Optional<TournamentTeam> awayTeamDb = tournamentTeamDao.findById(Long.valueOf(awayTeamId));
         if (!awayTeamDb.isPresent()) {
             throw new VeikkausServiceException(
@@ -107,62 +96,63 @@ public class GameService {
         }
 
         /** TODO Why converting back ??? */
-        gameGe.setTournament(TournamentService.convertDbToGui(tournamentDb.get()));
-        gameGe.setHomeTeam(TournamentTeamService.convertDbToGui(homeTeamDb.get()));
-        gameGe.setAwayTeam(TournamentTeamService.convertDbToGui(awayTeamDb.get()));
+        gameGuiEntity.setTournament(tournamentDb.get().toGuiEntity());
+        gameGuiEntity.setHomeTeam(homeTeamDb.get().toGuiEntity());
+        gameGuiEntity.setAwayTeam(awayTeamDb.get().toGuiEntity());
 
         try {
-            retGameId = gameDao.save(convertGuiToDb(gameGe)).getId();
+            returnedGameId = gameDao.save(convertGuiToDb(gameGuiEntity)).getId();
         } catch (VeikkausConversionException vce) {
             throw new VeikkausServiceException("Saving game failed.", vce);
         }
-        return retGameId;
+        return returnedGameId;
     }
 
     /**
-     * @param gameGe
+     * @param gameGuiEntity
      * @return
      */
-    public Long modify(GameGuiEntity gameGe) throws VeikkausServiceException {
-        Long retGameId = null;
+    public Long modify(GameGuiEntity gameGuiEntity) throws VeikkausServiceException {
 
-        String id = gameGe.getId();
+        Long returnedGameId;
+
+        String id = gameGuiEntity.getId();
         Optional<Game> gameDb = gameDao.findById(Long.valueOf(id));
         if (!gameDb.isPresent()) {
             throw new VeikkausServiceException("Game with id: " + id + " wasn't found, modify failed");
         }
 
-        String tournamentId = gameGe.getTournament().getId();
+        String tournamentId = gameGuiEntity.getTournament().getId();
         Optional<Tournament> tournamentDb = tournamentDao.findById(Long.valueOf(tournamentId));
         if (!tournamentDb.isPresent()) {
             throw new VeikkausServiceException(
                     String.format("Tournament with id: %s wasn't found, modify failed", tournamentId));
         }
 
-        String homeTeamId = gameGe.getHomeTeam().getId();
+        String homeTeamId = gameGuiEntity.getHomeTeam().getId();
         Optional<TournamentTeam> homeTeamDb = tournamentTeamDao.findById(Long.valueOf(homeTeamId));
         if (!homeTeamDb.isPresent()) {
             throw new VeikkausServiceException(
                     String.format("Home team with id: %s wasn't found, modify failed", homeTeamId));
         }
 
-        String awayTeamId = gameGe.getAwayTeam().getId();
+        String awayTeamId = gameGuiEntity.getAwayTeam().getId();
         Optional<TournamentTeam> awayTeamDb = tournamentTeamDao.findById(Long.valueOf(awayTeamId));
         if (!awayTeamDb.isPresent()) {
             throw new VeikkausServiceException(
                     String.format("Away team with id: %s wasn't found, modify failed", awayTeamId));
         }
 
-        gameGe.setTournament(TournamentService.convertDbToGui(tournamentDb.get()));
-        gameGe.setHomeTeam(TournamentTeamService.convertDbToGui(homeTeamDb.get()));
-        gameGe.setAwayTeam(TournamentTeamService.convertDbToGui(awayTeamDb.get()));
+        gameGuiEntity.setTournament(tournamentDb.get().toGuiEntity());
+        gameGuiEntity.setHomeTeam(homeTeamDb.get().toGuiEntity());
+        gameGuiEntity.setAwayTeam(awayTeamDb.get().toGuiEntity());
 
         try {
-            retGameId = gameDao.save(convertGuiToDb(gameGe)).getId();
+            returnedGameId = gameDao.save(convertGuiToDb(gameGuiEntity)).getId();
         } catch (VeikkausConversionException vce) {
             throw new VeikkausServiceException("Saving game failed.", vce);
         }
-        return retGameId;
+        return returnedGameId;
     }
 
     /**
@@ -170,6 +160,7 @@ public class GameService {
      * @return
      */
     public boolean delete(String id) throws VeikkausServiceException {
+
         boolean succeed;
         gameDao.deleteById(Long.valueOf(id));
         succeed = true;
@@ -180,31 +171,32 @@ public class GameService {
      * @return
      */
     public List<GameGuiEntity> findAllGames() {
-        List<GameGuiEntity> geList = new ArrayList<>();
+
+        List<GameGuiEntity> gameGuiEntityList = new ArrayList<>();
         List<Game> dbGames = ImmutableList.copyOf(gameDao.findAll());
 
         for (Game dbGame : dbGames) {
-            geList.add(convertDbToGui(dbGame));
+            gameGuiEntityList.add(dbGame.toGuiEntity());
         }
 
-        return geList;
+        return gameGuiEntityList;
     }
 
     public List<GameGuiEntity> findTournamentGames(String tournamentId) {
+
         Optional<Tournament> dbTournament = tournamentDao.findById(Long.valueOf(tournamentId));
 
-        List<GameGuiEntity> geList = new ArrayList<>();
+        List<GameGuiEntity> gameGuiEntityList = new ArrayList<>();
         List<Game> dbGames = ImmutableList.copyOf(gameDao.findByTournament(dbTournament.get()));
 
         for (Game dbGame : dbGames) {
-            geList.add(convertDbToGui(dbGame));
+            gameGuiEntityList.add(dbGame.toGuiEntity());
         }
-        return geList;
+        return gameGuiEntityList;
     }
 
     public GameGuiEntity findOneGame(String id) {
-        GameGuiEntity gameGe = convertDbToGui(gameDao.findById(Long.valueOf(id)).get());
-        return gameGe;
-    }
 
+        return gameDao.findById(Long.valueOf(id)).get().toGuiEntity();
+    }
 }
