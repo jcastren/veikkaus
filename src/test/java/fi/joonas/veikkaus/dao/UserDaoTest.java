@@ -17,6 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class UserDaoTest extends JUnitTestUtil {
 
+    private final String ROLENAME_ADMIN = "ADMIN";
+
     @Autowired
     private UserDao userDao;
 
@@ -25,8 +27,6 @@ public class UserDaoTest extends JUnitTestUtil {
 
     private User user;
     private UserRole userRole;
-
-    private String ROLENAME_ADMIN = "ADMIN";
 
     @BeforeEach
     public void setup() throws Exception {
@@ -50,7 +50,6 @@ public class UserDaoTest extends JUnitTestUtil {
 
         User findByEmail = userDao.findByEmail(email);
 
-        assertThat(findByEmail.getEmail().equals(email));
         assertThat(findByEmail.getEmail().equals(email));
     }
 

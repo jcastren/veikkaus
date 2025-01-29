@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,9 +26,11 @@ public abstract class JUnitTestUtil {
     public static final boolean CLEAN_BEFORE_RUN_JUNIT_TESTS = false;
     public static final String CHARSET = java.nio.charset.StandardCharsets.UTF_8.name();
     public Map<String, String> paramMap;
+
     @Autowired
     private
     VeikkausServerProperties veikkausServerProperties;
+
     @Autowired
     private UserRoleDao userRoleDao;
 
@@ -73,15 +76,15 @@ public abstract class JUnitTestUtil {
      * @param url   URL called
      * @param getId If true, id is parsed from response and returned
      * @return Id if getId == true. Empty value if getId == false.
-     * @throws Exception
      */
     public String callUrl(String url, boolean getId) throws Exception {
+
         String id = "";
 
         InputStream response;
         try {
             String serverUrl = getServerUrl();
-            response = new URL(serverUrl + url).openStream();
+            response = new URI(serverUrl + url).toURL().openStream();
         } catch (IOException e) {
             log.error("Getting response from URL: " + url + " failed: ", e);
             throw e;
@@ -106,15 +109,17 @@ public abstract class JUnitTestUtil {
     }
 
     public String getQuery(Map<String, String> paramMap) throws UnsupportedEncodingException {
-        String str = "?";
+
+        StringBuilder str = new StringBuilder("?");
         for (Map.Entry<String, String> entry : paramMap.entrySet()) {
-            str += String.format("%s=%s&", entry.getKey(), URLEncoder.encode(entry.getValue(), CHARSET));
+            str.append("%s=%s&".formatted(entry.getKey(), URLEncoder.encode(entry.getValue(), CHARSET)));
         }
-        str = str.substring(0, str.length() - 1);
-        return str;
+        str = new StringBuilder(str.substring(0, str.length() - 1));
+        return str.toString();
     }
 
     public void cleanDb() throws Exception {
+
         if (CLEAN_BEFORE_RUN_JUNIT_TESTS) {
             betResultDao.deleteAll();
             scorerDao.deleteAll();
@@ -132,16 +137,19 @@ public abstract class JUnitTestUtil {
     }
 
     public UserRole addUserRole() throws Exception {
+
         String name = "ADMIN";
         UserRole userRole = new UserRole(name);
         return userRoleDao.save(userRole);
     }
 
     public void deleteUserRole(UserRole userRole) throws Exception {
+
         userRoleDao.deleteById(userRole.getId());
     }
 
     public User addUser() throws Exception {
+
         UserRole userRole = addUserRole();
         String email = "eemeli";
         String name = "nimi";
@@ -150,83 +158,102 @@ public abstract class JUnitTestUtil {
         return userDao.save(new User(email, name, password, userRole));
     }
 
-    public void deleteUser(User user) throws Exception {
-        Long userRoleId = userDao.findById(user.getId()).get().getUserRole().getId();
+    public void deleteUser(User user) throws NoSuchElementException {
+
+        Long userRoleId = userDao.findById(user.getId())
+                .map(User::getUserRole)
+                .map(UserRole::getId)
+                .orElseThrow(() -> new NoSuchElementException("User or UserRole not found"));
         userDao.deleteById(Long.valueOf(user.getId().toString()));
         userRoleDao.deleteById(userRoleId);
     }
 
-    public Status addStatus() throws Exception {
+    public Status addStatus() {
+
         String description = "statuksen kuvaus";
         return statusDao.save(new Status(STATUS_UNDER_WORK, description));
     }
 
-    public void deleteStatus(Status status) throws Exception {
+    public void deleteStatus(Status status) {
+
         statusDao.deleteById(status.getId());
     }
 
     public Bet addBet() throws Exception {
+
         User user = addUser();
         Tournament tournament = addTournament();
         Status status = addStatus();
         return betDao.save(new Bet(user, tournament, status));
     }
 
-    public void deleteBet(Bet bet) throws Exception {
+    public void deleteBet(Bet bet) {
+
         betDao.deleteById(bet.getId());
     }
 
-    public Tournament addTournament() throws Exception {
+    public Tournament addTournament() {
+
         String name = "Brazil World Cup";
         int year = 2014;
         return tournamentDao.save(new Tournament(name, year));
     }
 
-    public void deleteTournament(Tournament tournament) throws Exception {
+    public void deleteTournament(Tournament tournament) {
+
         tournamentDao.deleteById(tournament.getId());
     }
 
-    public Team addTeam() throws Exception {
+    public Team addTeam() {
+
         String name = "KÄPA";
         return teamDao.save(new Team(name));
     }
 
-    public void deleteTeam(Team team) throws Exception {
+    public void deleteTeam(Team team) {
+
         teamDao.deleteById(team.getId());
     }
 
-    public TournamentTeam addTournamentTeam() throws Exception {
+    public TournamentTeam addTournamentTeam() {
+
         Tournament tournament = addTournament();
         Team team = addTeam();
         return tournamentTeamDao.save(new TournamentTeam(tournament, team));
     }
 
-    public void deleteTournamentTeam(TournamentTeam tournamentTeam) throws Exception {
+    public void deleteTournamentTeam(TournamentTeam tournamentTeam) {
+
         tournamentTeamDao.deleteById(tournamentTeam.getId());
     }
 
-    public Player addPlayer() throws Exception {
+    public Player addPlayer() {
+
         String firstName = "Eric";
         String lastName = "Cantona";
         return playerDao.save(new Player(firstName, lastName));
     }
 
-    public void deletePlayer(Player player) throws Exception {
+    public void deletePlayer(Player player) {
+
         playerDao.deleteById(player.getId());
     }
 
-    public TournamentPlayer addTournamentPlayer() throws Exception {
+    public TournamentPlayer addTournamentPlayer() {
+
         TournamentTeam tournamentTeam = addTournamentTeam();
         Player player = addPlayer();
         int goals = 7;
         return tournamentPlayerDao.save(new TournamentPlayer(tournamentTeam, player, goals));
     }
 
-    public void deleteTournamentPlayer(TournamentPlayer tournamentPlayer) throws Exception {
+    public void deleteTournamentPlayer(TournamentPlayer tournamentPlayer) {
+
         tournamentPlayerDao.deleteById(tournamentPlayer.getId());
     }
 
-    public Game addGame() throws Exception {
+    public Game addGame() {
+
         int homeScore = 7;
         int awayScore = 3;
         Date gameDate = new Date();
@@ -238,21 +265,25 @@ public abstract class JUnitTestUtil {
         return gameDao.save(new Game(tournament, homeTeam, awayTeam, homeScore, awayScore, gameDate));
     }
 
-    public void deleteGame(Game game) throws Exception {
+    public void deleteGame(Game game) {
+
         gameDao.deleteById(game.getId());
     }
 
-    public Scorer addScorer() throws Exception {
+    public Scorer addScorer() {
+
         TournamentPlayer tournamentPlayer = addTournamentPlayer();
         Game game = addGame();
         return scorerDao.save(new Scorer(tournamentPlayer, game));
     }
 
-    public void deleteScorer(Scorer scorer) throws Exception {
+    public void deleteScorer(Scorer scorer) {
+
         scorerDao.deleteById(scorer.getId());
     }
 
     public BetResult addBetResult() throws Exception {
+
         Bet bet = addBet();
         Game game = addGame();
         int homeScore = 7;
@@ -261,7 +292,8 @@ public abstract class JUnitTestUtil {
         return betResultDao.save(new BetResult(bet, game, homeScore, awayScore));
     }
 
-    public void deleteBetResult(BetResult betResult) throws Exception {
+    public void deleteBetResult(BetResult betResult) {
+
         betResultDao.deleteById(betResult.getId());
     }
 

@@ -20,17 +20,20 @@ public class UserRoleDaoTest extends JUnitTestUtil {
 
     private UserRole userRole;
 
-    private String NAME_ADMIN = "ADMIN";
+    private final String NAME_ADMIN = "ADMIN";
 
     @BeforeEach
     public void setup() throws Exception {
+
         cleanDb();
     }
 
     @Test
     public void testCreateAndDelete() throws Exception {
+
         userRole = new UserRole(NAME_ADMIN);
         UserRole dbUserRole = userRoleDao.save(userRole);
+
         assertThat(dbUserRole.getId() > 0);
         assertThat(userRole.getName().equals(dbUserRole.getName()));
         assertThat(userRoleDao.findById(dbUserRole.getId()) != null);
@@ -41,6 +44,7 @@ public class UserRoleDaoTest extends JUnitTestUtil {
 
     @Test
     public void testUpdate() throws Exception {
+
         userRole = new UserRole(NAME_ADMIN);
         UserRole dbUserRole = userRoleDao.save(userRole);
 

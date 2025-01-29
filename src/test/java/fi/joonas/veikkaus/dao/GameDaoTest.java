@@ -62,8 +62,7 @@ public class GameDaoTest extends JUnitTestUtil {
         teamList.add(team3);
         teamList.add(team4);
 
-        teamList.forEach(team -> teamDao.save(team)
-        );
+        teamDao.saveAll(teamList);
 
         tournamentTeamList = new ArrayList<>();
 
@@ -77,7 +76,7 @@ public class GameDaoTest extends JUnitTestUtil {
         tournamentTeamList.add(tournamentTeam3);
         tournamentTeamList.add(tournamentTeam4);
 
-        tournamentTeamList.forEach(tournamentTeam -> tournamentTeamDao.save(tournamentTeam));
+        tournamentTeamDao.saveAll(tournamentTeamList);
 
         gameList = new ArrayList<>();
 
@@ -86,7 +85,7 @@ public class GameDaoTest extends JUnitTestUtil {
         gameList.add(new Game(tournament, tournamentTeam1, tournamentTeam3, 6, 1, VeikkausUtil.getDate(2026, 8, 3)));
         gameList.add(new Game(tournament, tournamentTeam2, tournamentTeam4, 5, 5, VeikkausUtil.getDate(2026, 8, 4)));
 
-        gameList.forEach(game -> gameDao.save(game));
+        gameDao.saveAll(gameList);
     }
 
     @AfterEach
