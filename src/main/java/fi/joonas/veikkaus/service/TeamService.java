@@ -1,10 +1,9 @@
 package fi.joonas.veikkaus.service;
 
-import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.TeamDao;
 import fi.joonas.veikkaus.guientity.TeamGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Team;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,63 +15,39 @@ import java.util.List;
  * @author joonas
  */
 @Service
+@RequiredArgsConstructor
 public class TeamService {
 
-    @Autowired
-    TeamDao teamDao;
+    private final TeamDao teamDao;
 
-    /**
-     * @param team
-     * @return
-     */
     public Long insert(TeamGuiEntity team) {
 
         return teamDao.save(team.toDbEntity()).getId();
     }
 
-    /**
-     * @param team
-     * @return
-     */
     public Long modify(TeamGuiEntity team) {
 
         return teamDao.save(team.toDbEntity()).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) {
 
-        boolean succeed;
         teamDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
-    /**
-     * @return
-     */
     public List<TeamGuiEntity> findAllTeams() {
 
         List<TeamGuiEntity> teamGuiEntityList = new ArrayList<>();
-        List<Team> dbTeams = ImmutableList.copyOf(teamDao.findAll());
-
-        for (Team dbTeam : dbTeams) {
-            teamGuiEntityList.add(dbTeam.toGuiEntity());
-        }
-
+        teamDao.findAll().forEach(team -> teamGuiEntityList.add(team.toGuiEntity()));
         return teamGuiEntityList;
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public TeamGuiEntity findOneTeam(String id) {
 
-        return teamDao.findById(Long.valueOf(id)).get().toGuiEntity();
+        return teamDao.findById(Long.valueOf(id))
+                .map(Team::toGuiEntity)
+                .orElse(TeamGuiEntity.builder().build());
     }
 
 }

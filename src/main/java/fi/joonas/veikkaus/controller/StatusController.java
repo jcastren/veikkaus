@@ -50,12 +50,12 @@ public class StatusController {
     /**
      * Method is called by Thymeleaf template to get create status view
      *
-     * @param status
      * @return Status create view
      */
     @GetMapping(URL_GET_CREATE)
-    public String getCreate(@ModelAttribute(value = "status") StatusGuiEntity status) {
+    public String getCreate(Model model) {
 
+        model.addAttribute("status", new StatusGuiEntity());
         return "viewStatusCreate";
     }
 

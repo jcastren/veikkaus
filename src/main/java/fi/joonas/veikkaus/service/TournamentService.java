@@ -1,10 +1,9 @@
 package fi.joonas.veikkaus.service;
 
-import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Tournament;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,10 +15,10 @@ import java.util.List;
  * @author joona
  */
 @Service
+@RequiredArgsConstructor
 public class TournamentService {
 
-    @Autowired
-    TournamentDao tournamentDao;
+    private final TournamentDao tournamentDao;
 
     public Long insert(TournamentGuiEntity tournament) {
 
@@ -33,26 +32,21 @@ public class TournamentService {
 
     public boolean delete(String id) {
 
-        boolean succeed;
         tournamentDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
     public List<TournamentGuiEntity> findAllTournaments() {
 
         List<TournamentGuiEntity> tournamentGuiEntityList = new ArrayList<>();
-        List<Tournament> dbTournaments = ImmutableList.copyOf(tournamentDao.findAll());
-
-        for (Tournament dbTournament : dbTournaments) {
-            tournamentGuiEntityList.add(dbTournament.toGuiEntity());
-        }
-
+        tournamentDao.findAll().forEach(dbTournament -> tournamentGuiEntityList.add(dbTournament.toGuiEntity()));
         return tournamentGuiEntityList;
     }
 
     public TournamentGuiEntity findOneTournament(String id) {
 
-        return tournamentDao.findById(Long.valueOf(id)).get().toGuiEntity();
+        return tournamentDao.findById(Long.valueOf(id))
+                .map(Tournament::toGuiEntity)
+                .orElse(TournamentGuiEntity.builder().build());
     }
 }

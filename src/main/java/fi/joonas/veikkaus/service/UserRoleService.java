@@ -1,20 +1,19 @@
 package fi.joonas.veikkaus.service;
 
-import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.UserRoleDao;
 import fi.joonas.veikkaus.guientity.UserRoleGuiEntity;
 import fi.joonas.veikkaus.jpaentity.UserRole;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserRoleService {
 
-    @Autowired
-    UserRoleDao userRoleDao;
+    private final UserRoleDao userRoleDao;
 
     public Long insert(UserRoleGuiEntity userRole) {
 
@@ -28,27 +27,22 @@ public class UserRoleService {
 
     public boolean delete(String id) {
 
-        boolean succeed;
         userRoleDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
     public List<UserRoleGuiEntity> findAllUserRoles() {
 
         List<UserRoleGuiEntity> userRoleGuiEntityList = new ArrayList<>();
-        List<UserRole> dbTournaments = ImmutableList.copyOf(userRoleDao.findAll());
-
-        for (UserRole dbTournament : dbTournaments) {
-            userRoleGuiEntityList.add(dbTournament.toGuiEntity());
-        }
-
+        userRoleDao.findAll().forEach(userRole -> userRoleGuiEntityList.add(userRole.toGuiEntity()));
         return userRoleGuiEntityList;
     }
 
     public UserRoleGuiEntity findOneUserRole(String id) {
 
-        return userRoleDao.findById(Long.valueOf(id)).get().toGuiEntity();
+        return userRoleDao.findById(Long.valueOf(id))
+                .map(UserRole::toGuiEntity)
+                .orElse(UserRoleGuiEntity.builder().build());
     }
 
 }

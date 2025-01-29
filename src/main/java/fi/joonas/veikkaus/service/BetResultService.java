@@ -9,37 +9,39 @@ import fi.joonas.veikkaus.guientity.BetResultGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Bet;
 import fi.joonas.veikkaus.jpaentity.BetResult;
 import fi.joonas.veikkaus.jpaentity.Game;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 import static fi.joonas.veikkaus.constants.VeikkausConstants.INT_NOT_DEFINED;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.LONG_NOT_DEFINED;
+import static java.lang.Long.valueOf;
 
 @Service
+@RequiredArgsConstructor
 public class BetResultService {
 
-    @Autowired
-    BetResultDao betResultDao;
+    private final BetResultDao betResultDao;
 
-    @Autowired
-    BetDao betDao;
+    private final BetDao betDao;
 
-    @Autowired
-    GameDao gameDao;
+    private final GameDao gameDao;
 
     public Long insert(BetResultGuiEntity betResultGuiEntity) throws VeikkausServiceException {
 
         String betId = betResultGuiEntity.getBet().getId();
-        Optional<Bet> betDb = betDao.findById(Long.valueOf(betId));
-        if (!betDb.isPresent()) {
+        Optional<Bet> betDb = betDao.findById(valueOf(betId));
+        if (betDb.isEmpty()) {
             throw new VeikkausServiceException("Bet with id: " + betId + " wasn't found, insert failed");
         }
 
         String gameId = betResultGuiEntity.getGame().getId();
-        Optional<Game> gameDb = gameDao.findById(Long.valueOf(gameId));
-        if (!gameDb.isPresent()) {
+        Optional<Game> gameDb = gameDao.findById(valueOf(gameId));
+        if (gameDb.isEmpty()) {
             throw new VeikkausServiceException("Game with id: " + gameId + " wasn't found, insert failed");
         }
 
@@ -52,20 +54,20 @@ public class BetResultService {
     public Long modify(BetResultGuiEntity betResultGuiEntity) throws VeikkausServiceException {
 
         String id = betResultGuiEntity.getId();
-        Optional<BetResult> betResultDb = betResultDao.findById(Long.valueOf(id));
-        if (!betResultDb.isPresent()) {
+        Optional<BetResult> betResultDb = betResultDao.findById(valueOf(id));
+        if (betResultDb.isEmpty()) {
             throw new VeikkausServiceException("Bet result with id: " + id + " wasn't found, modify failed");
         }
 
         String betId = betResultGuiEntity.getBet().getId();
-        Optional<Bet> betDb = betDao.findById(Long.valueOf(betId));
-        if (!betDb.isPresent()) {
+        Optional<Bet> betDb = betDao.findById(valueOf(betId));
+        if (betDb.isEmpty()) {
             throw new VeikkausServiceException("Bet with id: " + id + " wasn't found, modify failed");
         }
 
         String gameId = betResultGuiEntity.getGame().getId();
-        Optional<Game> gameDb = gameDao.findById(Long.valueOf(gameId));
-        if (!gameDb.isPresent()) {
+        Optional<Game> gameDb = gameDao.findById(valueOf(gameId));
+        if (gameDb.isEmpty()) {
             throw new VeikkausServiceException("Game with id: " + id + " wasn't found, modify failed");
         }
 
@@ -77,10 +79,8 @@ public class BetResultService {
 
     public boolean delete(String id) {
 
-        boolean succeed;
-        betResultDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        betResultDao.deleteById(valueOf(id));
+        return true;
     }
 
     public List<BetResultGuiEntity> findAllBetResults() {
@@ -96,16 +96,13 @@ public class BetResultService {
 
     /**
      * Method populates betResults list with missing games if user hasn't yet saved a bet result
-     *
-     * @param betId
-     * @return
      */
     public List<BetResultGuiEntity> findBetGamesAndBetResults(String betId) {
 
-        Optional<Bet> dbBet = betDao.findById(Long.valueOf(betId));
-        List<BetResult> betResultListPopulatedWithMissingGames = betResultDao.findByBet(dbBet.get());
+        Bet dbBet = betDao.findById(valueOf(betId)).orElse(Bet.builder().build());
+        List<BetResult> betResultListPopulatedWithMissingGames = betResultDao.findByBet(dbBet);
         List<BetResult> dbBetResults = ImmutableList.copyOf(betResultListPopulatedWithMissingGames);
-        List<Game> dbGames = ImmutableList.copyOf(gameDao.findByTournamentOrderByGameDate(dbBet.get().getTournament()));
+        List<Game> dbGames = ImmutableList.copyOf(gameDao.findByTournamentOrderByGameDate(dbBet.getTournament()));
 
         List<BetResultGuiEntity> betResultGuiEntityList = new ArrayList<>();
         for (Game dbGame : dbGames) {
@@ -122,14 +119,14 @@ public class BetResultService {
             if (match == null) {
                 BetResult betResultWithoutScore = new BetResult();
                 betResultWithoutScore.setId(LONG_NOT_DEFINED);
-                betResultWithoutScore.setBet(dbBet.get());
+                betResultWithoutScore.setBet(dbBet);
                 betResultWithoutScore.setGame(dbGame);
                 betResultWithoutScore.setHomeScore(INT_NOT_DEFINED);
                 betResultWithoutScore.setAwayScore(INT_NOT_DEFINED);
                 betResultListPopulatedWithMissingGames.add(betResultWithoutScore);
             }
         }
-        Collections.sort(betResultListPopulatedWithMissingGames, new SortByGameDate());
+        betResultListPopulatedWithMissingGames.sort(new SortByGameDate());
 
         for (BetResult dbBetResult : betResultListPopulatedWithMissingGames) {
             betResultGuiEntityList.add(dbBetResult.toGuiEntity());
@@ -139,10 +136,12 @@ public class BetResultService {
 
     public BetResultGuiEntity findOneBetResult(String id) {
 
-        return betResultDao.findById(Long.valueOf(id)).get().toGuiEntity();
+        return betResultDao.findById(valueOf(id))
+                .map(BetResult::toGuiEntity)
+                .orElse(BetResultGuiEntity.builder().build());
     }
 
-    private class SortByGameDate implements Comparator<BetResult> {
+    private static class SortByGameDate implements Comparator<BetResult> {
 
         // Used for sorting in ascending order of gameDate of BetResults
         public int compare(BetResult a, BetResult b) {

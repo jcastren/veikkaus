@@ -1,6 +1,5 @@
 package fi.joonas.veikkaus.service;
 
-import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.GameDao;
 import fi.joonas.veikkaus.dao.ScorerDao;
 import fi.joonas.veikkaus.dao.TournamentPlayerDao;
@@ -10,97 +9,73 @@ import fi.joonas.veikkaus.guientity.ScorerGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Game;
 import fi.joonas.veikkaus.jpaentity.Scorer;
 import fi.joonas.veikkaus.jpaentity.TournamentPlayer;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ScorerService {
 
-    @Autowired
-    ScorerDao scorerDao;
+    private final ScorerDao scorerDao;
 
-    @Autowired
-    TournamentPlayerDao tournamentPlayerDao;
+    private final TournamentPlayerDao tournamentPlayerDao;
 
-    @Autowired
-    GameDao gameDao;
+    private final GameDao gameDao;
 
     public List<ScorerGuiEntity> findAllScorers() {
 
         List<ScorerGuiEntity> scorerGuiEntityList = new ArrayList<>();
-        List<Scorer> dbScorers = ImmutableList.copyOf(scorerDao.findAll());
-        dbScorers.forEach(dbScorer -> scorerGuiEntityList.add(dbScorer.toGuiEntity()));
+        scorerDao.findAll().forEach(dbScorer -> scorerGuiEntityList.add(dbScorer.toGuiEntity()));
         return scorerGuiEntityList;
     }
 
     public Long insert(String tournamentPlayerId, String gameId) throws VeikkausServiceException {
 
-        Optional<TournamentPlayer> tournamentPlayer = tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId));
-        if (!tournamentPlayer.isPresent()) {
-            throw new VeikkausServiceException("tournamentPlayer with id: " + tournamentPlayerId + " wasn't found, insert failed");
-        }
+        TournamentPlayer tournamentPlayer = tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId))
+                .orElseThrow(() -> new VeikkausServiceException("tournamentPlayer with id: %s wasn't found, insert failed".formatted(tournamentPlayerId)));
+        Game game = gameDao.findById(Long.valueOf(gameId))
+                .orElseThrow(() -> new VeikkausServiceException("game with id: %s wasn't found, insert failed".formatted(gameId)));
 
-        Optional<Game> game = gameDao.findById(Long.valueOf(gameId));
-        if (!game.isPresent()) {
-            throw new VeikkausServiceException("game with id: " + gameId + " wasn't found, insert failed");
-        }
-
-        return scorerDao.save(new Scorer(tournamentPlayer.get(), game.get())).getId();
+        return scorerDao.save(new Scorer(tournamentPlayer, game)).getId();
     }
 
     public Long insert(ScorerGuiEntity scorerGuiEntity) throws VeikkausServiceException, VeikkausConversionException {
 
         String tournamentPlayerId = scorerGuiEntity.getTournamentPlayer().getId();
-        Optional<TournamentPlayer> tournamentPlayerDb = tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId));
-        if (!tournamentPlayerDb.isPresent()) {
-            throw new VeikkausServiceException(
-                    "Tournament player with id: " + tournamentPlayerId + " wasn't found, insert failed");
-        }
-
+        TournamentPlayer tournamentPlayerDb = tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId))
+                .orElseThrow(() -> new VeikkausServiceException(
+                        "Tournament player with id: %s wasn't found, insert failed".formatted(tournamentPlayerId)));
         String gameId = scorerGuiEntity.getGame().getId();
-        Optional<Game> gameDb = gameDao.findById(Long.valueOf(gameId));
-        if (!gameDb.isPresent()) {
-            throw new VeikkausServiceException("Game with id: " + gameId + " wasn't found, insert failed");
-        } else {
-        }
-
-        scorerGuiEntity.setTournamentPlayer(tournamentPlayerDb.get().toGuiEntity());
-        scorerGuiEntity.setGame(gameDb.get().toGuiEntity());
+        Game gameDb = gameDao.findById(Long.valueOf(gameId))
+                .orElseThrow(() -> new VeikkausServiceException("Game with id: %s wasn't found, insert failed".formatted(gameId)));
+        scorerGuiEntity.setTournamentPlayer(tournamentPlayerDb.toGuiEntity());
+        scorerGuiEntity.setGame(gameDb.toGuiEntity());
 
         return scorerDao.save(scorerGuiEntity.toDbEntity()).getId();
     }
 
     public Long modify(String id, String tournamentPlayerId, String gameId) throws VeikkausServiceException {
 
-        Optional<TournamentPlayer> tournamentPlayer = tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId));
-        if (!tournamentPlayer.isPresent()) {
-            throw new VeikkausServiceException("TournamentPlayer with id: " + tournamentPlayerId + " wasn't found, modify failed");
-        }
+        TournamentPlayer tournamentPlayer = tournamentPlayerDao.findById(Long.valueOf(tournamentPlayerId))
+                .orElseThrow(() -> new VeikkausServiceException("TournamentPlayer with id: %s wasn't found, modify failed".formatted(tournamentPlayerId)));
 
-        Optional<Game> game = gameDao.findById(Long.valueOf(gameId));
-        if (!game.isPresent()) {
-            throw new VeikkausServiceException("Game with id: " + gameId + " wasn't found, insert failed");
-        }
+        Game game = gameDao.findById(Long.valueOf(gameId))
+                .orElseThrow(() -> new VeikkausServiceException("Game with id: %s wasn't found, insert failed".formatted(gameId)));
 
-        Optional<Scorer> scorer = scorerDao.findById(Long.valueOf(id));
-        if (!scorer.isPresent()) {
-            throw new VeikkausServiceException("Scorer with id: " + id + " wasn't found, modify failed");
-        }
+        Scorer scorer = scorerDao.findById(Long.valueOf(id))
+                .orElseThrow(() -> new VeikkausServiceException("Scorer with id: %s wasn't found, modify failed".formatted(id)));
 
-        scorer.get().setTournamentPlayer(tournamentPlayer.get());
-        scorer.get().setGame(game.get());
-        return scorerDao.save(scorer.get()).getId();
+        scorer.setTournamentPlayer(tournamentPlayer);
+        scorer.setGame(game);
+        return scorerDao.save(scorer).getId();
     }
 
     public boolean delete(String id) {
 
-        boolean succeed;
         scorerDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 }

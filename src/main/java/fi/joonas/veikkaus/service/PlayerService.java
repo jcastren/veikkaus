@@ -1,10 +1,9 @@
 package fi.joonas.veikkaus.service;
 
-import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.PlayerDao;
 import fi.joonas.veikkaus.guientity.PlayerGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Player;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,10 +15,10 @@ import java.util.List;
  * @author jcastren
  */
 @Service
+@RequiredArgsConstructor
 public class PlayerService {
 
-    @Autowired
-    PlayerDao playerDao;
+    private final PlayerDao playerDao;
 
     public Long insert(PlayerGuiEntity player) {
 
@@ -33,27 +32,22 @@ public class PlayerService {
 
     public boolean delete(String id) {
 
-        boolean succeed;
         playerDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
     public List<PlayerGuiEntity> findAllPlayers() {
 
         List<PlayerGuiEntity> guiEntityList = new ArrayList<>();
-        List<Player> dbPlayers = ImmutableList.copyOf(playerDao.findAll());
-
-        for (Player dbPlayer : dbPlayers) {
-            guiEntityList.add(dbPlayer.toGuiEntity());
-        }
-
+        playerDao.findAll().forEach(playerEntity -> guiEntityList.add(playerEntity.toGuiEntity()));
         return guiEntityList;
     }
 
     public PlayerGuiEntity findOnePlayer(String id) {
 
-        return playerDao.findById(Long.valueOf(id)).get().toGuiEntity();
+        return playerDao.findById(Long.valueOf(id))
+                .map(Player::toGuiEntity)
+                .orElse(PlayerGuiEntity.builder().build());
     }
 
 }

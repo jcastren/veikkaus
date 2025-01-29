@@ -1,6 +1,5 @@
 package fi.joonas.veikkaus.service;
 
-import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.BetDao;
 import fi.joonas.veikkaus.dao.StatusDao;
 import fi.joonas.veikkaus.dao.TournamentDao;
@@ -11,7 +10,7 @@ import fi.joonas.veikkaus.jpaentity.Bet;
 import fi.joonas.veikkaus.jpaentity.Status;
 import fi.joonas.veikkaus.jpaentity.Tournament;
 import fi.joonas.veikkaus.jpaentity.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,44 +18,34 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BetService {
 
-    @Autowired
-    BetDao betDao;
+    private final BetDao betDao;
 
-    @Autowired
-    UserDao userDao;
+    private final UserDao userDao;
 
-    @Autowired
-    TournamentDao tournamentDao;
+    private final TournamentDao tournamentDao;
 
-    @Autowired
-    StatusDao statusDao;
+    private final StatusDao statusDao;
 
     public Long insert(BetGuiEntity betGuiEntity) throws VeikkausServiceException {
 
         String userId = betGuiEntity.getUser().getId();
-        Optional<User> userDb = userDao.findById(Long.valueOf(userId));
-        if (!userDb.isPresent()) {
-            throw new VeikkausServiceException("User with id: " + userId + " wasn't found, insert failed");
-        }
+        User userDb = userDao.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new VeikkausServiceException("User with id: %s wasn't found, insert failed".formatted(userId)));
 
         String tournamentId = betGuiEntity.getTournament().getId();
-        Optional<Tournament> tournamentDb = tournamentDao.findById(Long.valueOf(tournamentId));
-        if (!tournamentDb.isPresent()) {
-            throw new VeikkausServiceException(
-                    "Tournament with id: " + tournamentId + " wasn't found, insert failed");
-        }
+        Tournament tournamentDb = tournamentDao.findById(Long.valueOf(tournamentId))
+                .orElseThrow(() -> new VeikkausServiceException("Tournament with id: %s wasn't found, insert failed".formatted(tournamentId)));
 
         String statusId = betGuiEntity.getStatus().getId();
-        Optional<Status> statusDb = statusDao.findById(Long.valueOf(statusId));
-        if (!statusDb.isPresent()) {
-            throw new VeikkausServiceException("Status with id: " + statusId + " wasn't found, insert failed");
-        }
+        Status statusDb = statusDao.findById(Long.valueOf(statusId))
+                .orElseThrow(() -> new VeikkausServiceException("Status with id: %s wasn't found, insert failed".formatted(statusId)));
 
-        betGuiEntity.setUser(userDb.get().toGuiEntity());
-        betGuiEntity.setTournament(tournamentDb.get().toGuiEntity());
-        betGuiEntity.setStatus(statusDb.get().toGuiEntity());
+        betGuiEntity.setUser(userDb.toGuiEntity());
+        betGuiEntity.setTournament(tournamentDb.toGuiEntity());
+        betGuiEntity.setStatus(statusDb.toGuiEntity());
 
         return betDao.save(betGuiEntity.toDbEntity()).getId();
     }
@@ -65,57 +54,47 @@ public class BetService {
 
         String id = betGuiEntity.getId();
         Optional<Bet> betDb = betDao.findById(Long.valueOf(id));
-        if (!betDb.isPresent()) {
-            throw new VeikkausServiceException("Bet with id: " + id + " wasn't found, modify failed");
+        if (betDb.isEmpty()) {
+            throw new VeikkausServiceException("Bet with id: %s wasn't found, modify failed".formatted(id));
         }
 
         String userId = betGuiEntity.getUser().getId();
-        Optional<User> userDb = userDao.findById(Long.valueOf(userId));
-        if (!userDb.isPresent()) {
-            throw new VeikkausServiceException("User with id: " + id + " wasn't found, modify failed");
-        }
+        User userDb = userDao.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new VeikkausServiceException("User with id: %s wasn't found, modify failed".formatted(userId)));
 
         String tournamentId = betGuiEntity.getTournament().getId();
-        Optional<Tournament> tournamentDb = tournamentDao.findById(Long.valueOf(tournamentId));
-        if (!tournamentDb.isPresent()) {
-            throw new VeikkausServiceException("Tournament with id: " + tournamentId + " wasn't found, modify failed");
-        }
+        Tournament tournamentDb = tournamentDao.findById(Long.valueOf(tournamentId))
+                .orElseThrow(() -> new VeikkausServiceException("Tournament with id: %s wasn't found, modify failed".formatted(tournamentId)));
 
         String statusId = betGuiEntity.getStatus().getId();
-        Optional<Status> statusDb = statusDao.findById(Long.valueOf(statusId));
-        if (!statusDb.isPresent()) {
-            throw new VeikkausServiceException("Status with id: " + id + " wasn't found, modify failed");
-        }
+        Status statusDb = statusDao.findById(Long.valueOf(statusId))
+                .orElseThrow(() -> new VeikkausServiceException("Status with id: %s wasn't found, modify failed".formatted(statusId)));
 
-        betGuiEntity.setUser(userDb.get().toGuiEntity());
-        betGuiEntity.setTournament(tournamentDb.get().toGuiEntity());
-        betGuiEntity.setStatus(statusDb.get().toGuiEntity());
+        betGuiEntity.setUser(userDb.toGuiEntity());
+        betGuiEntity.setTournament(tournamentDb.toGuiEntity());
+        betGuiEntity.setStatus(statusDb.toGuiEntity());
 
         return betDao.save(betGuiEntity.toDbEntity()).getId();
     }
 
     public boolean delete(String id) {
 
-        boolean succeed;
         betDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
     public List<BetGuiEntity> findAllBets() {
 
         List<BetGuiEntity> betGuiEntityList = new ArrayList<>();
-        List<Bet> dbBets = ImmutableList.copyOf(betDao.findAll());
-
-        for (Bet dbBet : dbBets) {
-            betGuiEntityList.add(dbBet.toGuiEntity());
-        }
+        betDao.findAll().forEach(dbBet -> betGuiEntityList.add(dbBet.toGuiEntity()));
         return betGuiEntityList;
     }
 
     public BetGuiEntity findOneBet(String id) {
 
-        return betDao.findById(Long.valueOf(id)).get().toGuiEntity();
+        return betDao.findById(Long.valueOf(id))
+                .map(Bet::toGuiEntity)
+                .orElse(BetGuiEntity.builder().build());
     }
 
 }
