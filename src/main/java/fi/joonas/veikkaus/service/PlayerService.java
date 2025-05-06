@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Business logic level class for DB handling of Player
  *
- * @author joona
+ * @author jcastren
  */
 @Service
 public class PlayerService {
@@ -49,46 +49,23 @@ public class PlayerService {
         return playerDao.save(convertGuiToDb(player)).getId();
     }
 
-    /**
-     * @param player
-     * @return
-     */
     public Long modify(PlayerGuiEntity player) {
         return playerDao.save(convertGuiToDb(player)).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) {
-        boolean succeed = false;
         playerDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
-    /**
-     * @return
-     */
     public List<PlayerGuiEntity> findAllPlayers() {
         List<PlayerGuiEntity> geList = new ArrayList<>();
-        List<Player> dbPlayers = ImmutableList.copyOf(playerDao.findAll());
-
-        for (Player dbPlayer : dbPlayers) {
-            geList.add(convertDbToGui(dbPlayer));
-        }
-
+        ImmutableList.copyOf(playerDao.findAll()).forEach(player -> geList.add(convertDbToGui(player)));
         return geList;
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public PlayerGuiEntity findOnePlayer(String id) {
-        PlayerGuiEntity playerGe = convertDbToGui(playerDao.findById(Long.valueOf(id)).get());
-        return playerGe;
+        return convertDbToGui(playerDao.findById(Long.valueOf(id)).get());
     }
 
 }

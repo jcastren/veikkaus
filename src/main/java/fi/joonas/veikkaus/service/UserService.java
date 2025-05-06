@@ -50,15 +50,11 @@ public class UserService {
         return db;
     }
 
-    /**
-     * @param userGe
-     * @return
-     */
     public Long insert(UserGuiEntity userGe) throws VeikkausServiceException {
         String userRoleId = userGe.getUserRole().getId();
         Optional<UserRole> userRoleDb = userRoleDao.findById(Long.valueOf(userRoleId));
-        if (!userRoleDb.isPresent()) {
-            throw new VeikkausServiceException("User role with id: " + userRoleId + " wasn't found, insert failed");
+        if (userRoleDb.isEmpty()) {
+            throw new VeikkausServiceException("User role with id: %s wasn't found, insert failed".formatted(userRoleId));
         }
 
         /** TODO Why is userRole set again? Did it miss originally some fields????? */
@@ -67,21 +63,17 @@ public class UserService {
         return userDao.save(convertGuiToDb(userGe)).getId();
     }
 
-    /**
-     * @param userGe
-     * @return
-     */
     public Long modify(UserGuiEntity userGe) throws VeikkausServiceException {
         String id = userGe.getId();
         Optional<User> userDb = userDao.findById(Long.valueOf(id));
-        if (!userDb.isPresent()) {
-            throw new VeikkausServiceException("User with id: " + id + " wasn't found, modify failed");
+        if (userDb.isEmpty()) {
+            throw new VeikkausServiceException("User with id: %s wasn't found, modify failed".formatted(id));
         }
 
         String userRoleId = userGe.getUserRole().getId();
         Optional<UserRole> userRoleDb = userRoleDao.findById(Long.valueOf(userRoleId));
-        if (!userRoleDb.isPresent()) {
-            throw new VeikkausServiceException("User role with id: " + id + " wasn't found, modify failed");
+        if (userRoleDb.isEmpty()) {
+            throw new VeikkausServiceException("User role with id: %s wasn't found, modify failed".formatted(userRoleId));
         }
 
         userGe.setUserRole(UserRoleService.convertDbToGui(userRoleDb.get()));
@@ -89,38 +81,19 @@ public class UserService {
         return userDao.save(convertGuiToDb(userGe)).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) throws VeikkausServiceException {
-        boolean succeed = false;
         userDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
-    /**
-     * @return
-     */
     public List<UserGuiEntity> findAllUsers() {
         List<UserGuiEntity> geList = new ArrayList<>();
-        List<User> dbUsers = ImmutableList.copyOf(userDao.findAll());
-
-        for (User dbUser : dbUsers) {
-            geList.add(convertDbToGui(dbUser));
-        }
-
+        ImmutableList.copyOf(userDao.findAll()).forEach(user -> geList.add(convertDbToGui(user)));
         return geList;
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public UserGuiEntity findOneUser(String id) {
-        UserGuiEntity userGe = convertDbToGui(userDao.findById(Long.valueOf(id)).get());
-        return userGe;
+        return convertDbToGui(userDao.findById(Long.valueOf(id)).get());
     }
 
 }

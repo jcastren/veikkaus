@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Business logic level class for DB handling of Tournament
  *
- * @author joona
+ * @author jcastren
  */
 @Service
 public class TournamentService {
@@ -40,59 +40,32 @@ public class TournamentService {
             db.setId(null);
         }
         db.setName(ge.getName());
-        db.setYear(Integer.valueOf(ge.getYear()));
+        db.setYear(Integer.parseInt(ge.getYear()));
 
         return db;
     }
 
-    /**
-     * @param tournament
-     * @return
-     */
     public Long insert(TournamentGuiEntity tournament) {
         return tournamentDao.save(convertGuiToDb(tournament)).getId();
     }
 
-    /**
-     * @param tournament
-     * @return
-     */
     public Long modify(TournamentGuiEntity tournament) {
         return tournamentDao.save(convertGuiToDb(tournament)).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) {
-        boolean succeed = false;
         tournamentDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
-    /**
-     * @return
-     */
     public List<TournamentGuiEntity> findAllTournaments() {
         List<TournamentGuiEntity> geList = new ArrayList<>();
-        List<Tournament> dbTourns = ImmutableList.copyOf(tournamentDao.findAll());
-
-        for (Tournament dbTourn : dbTourns) {
-            geList.add(convertDbToGui(dbTourn));
-        }
-
+        ImmutableList.copyOf(tournamentDao.findAll()).forEach(tournament -> geList.add(convertDbToGui(tournament)));
         return geList;
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public TournamentGuiEntity findOneTournament(String id) {
-        TournamentGuiEntity tournGe = convertDbToGui(tournamentDao.findById(Long.valueOf(id)).get());
-        return tournGe;
+        return convertDbToGui(tournamentDao.findById(Long.valueOf(id)).get());
     }
 
 }

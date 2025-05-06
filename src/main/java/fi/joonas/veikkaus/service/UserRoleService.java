@@ -38,54 +38,27 @@ public class UserRoleService {
         return db;
     }
 
-    /**
-     * @param userRole
-     * @return
-     */
     public Long insert(UserRoleGuiEntity userRole) {
         return userRoleDao.save(convertGuiToDb(userRole)).getId();
     }
 
-    /**
-     * @param userRole
-     * @return
-     */
     public Long modify(UserRoleGuiEntity userRole) {
         return userRoleDao.save(convertGuiToDb(userRole)).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) {
-        boolean succeed = false;
         userRoleDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
-    /**
-     * @return
-     */
     public List<UserRoleGuiEntity> findAllUserRoles() {
         List<UserRoleGuiEntity> geList = new ArrayList<>();
-        List<UserRole> dbTourns = ImmutableList.copyOf(userRoleDao.findAll());
-
-        for (UserRole dbTourn : dbTourns) {
-            geList.add(convertDbToGui(dbTourn));
-        }
-
+        ImmutableList.copyOf(userRoleDao.findAll()).forEach(userRole -> geList.add(convertDbToGui(userRole)));
         return geList;
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public UserRoleGuiEntity findOneUserRole(String id) {
-        UserRoleGuiEntity tournGe = convertDbToGui(userRoleDao.findById(Long.valueOf(id)).get());
-        return tournGe;
+        return convertDbToGui(userRoleDao.findById(Long.valueOf(id)).get());
     }
 
 }

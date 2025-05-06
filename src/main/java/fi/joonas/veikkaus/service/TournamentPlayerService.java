@@ -48,28 +48,23 @@ public class TournamentPlayerService {
         }
         db.setTournamentTeam(TournamentTeamService.convertGuiToDb(ge.getTournamentTeam()));
         db.setPlayer(PlayerService.convertGuiToDb(ge.getPlayer()));
-        db.setGoals(Integer.valueOf(ge.getGoals()));
+        db.setGoals(Integer.parseInt(ge.getGoals()));
 
         return db;
     }
 
-    /**
-     * @param tournamentPlayerGe
-     * @return
-     */
     public Long insert(TournamentPlayerGuiEntity tournamentPlayerGe) throws VeikkausServiceException {
         String tournamentTeamId = tournamentPlayerGe.getTournamentTeam().getId();
         Optional<TournamentTeam> tournamentTeamDb = tournamentTeamDao.findById(Long.valueOf(tournamentTeamId));
-        if (!tournamentTeamDb.isPresent()) {
+        if (tournamentTeamDb.isEmpty()) {
             throw new VeikkausServiceException(
-                    "Tournament team with id: " + tournamentTeamId + " wasn't found, insert failed");
+                    "Tournament team with id: %s wasn't found, insert failed".formatted(tournamentTeamId));
         }
 
         String playerId = tournamentPlayerGe.getPlayer().getId();
         Optional<Player> playerDb = playerDao.findById(Long.valueOf(playerId));
-        if (!playerDb.isPresent()) {
-            throw new VeikkausServiceException("Player with id: " + playerId + " wasn't found, insert failed");
-        } else {
+        if (playerDb.isEmpty()) {
+            throw new VeikkausServiceException("Player with id: %s wasn't found, insert failed".formatted(playerId));
         }
 
         tournamentPlayerGe.setTournamentTeam(TournamentTeamService.convertDbToGui(tournamentTeamDb.get()));
@@ -78,27 +73,23 @@ public class TournamentPlayerService {
         return tournamentPlayerDao.save(convertGuiToDb(tournamentPlayerGe)).getId();
     }
 
-    /**
-     * @param tournamentPlayerGe
-     * @return
-     */
     public Long modify(TournamentPlayerGuiEntity tournamentPlayerGe) throws VeikkausServiceException {
         String id = tournamentPlayerGe.getId();
         Optional<TournamentPlayer> tournamentPlayerDb = tournamentPlayerDao.findById(Long.valueOf(id));
-        if (!tournamentPlayerDb.isPresent()) {
-            throw new VeikkausServiceException("TournamentPlayer with id: " + id + " wasn't found, modify failed");
+        if (tournamentPlayerDb.isEmpty()) {
+            throw new VeikkausServiceException("TournamentPlayer with id: %s wasn't found, modify failed".formatted(id));
         }
 
         String tournamentTeamId = tournamentPlayerGe.getTournamentTeam().getId();
         Optional<TournamentTeam> tournamentTeamDb = tournamentTeamDao.findById(Long.valueOf(tournamentTeamId));
-        if (!tournamentTeamDb.isPresent()) {
-            throw new VeikkausServiceException("Tournament team with id: " + id + " wasn't found, modify failed");
+        if (tournamentTeamDb.isEmpty()) {
+            throw new VeikkausServiceException("Tournament team with id: %s wasn't found, modify failed".formatted(id));
         }
 
         String playerId = tournamentPlayerGe.getPlayer().getId();
         Optional<Player> playerDb = playerDao.findById(Long.valueOf(playerId));
-        if (!playerDb.isPresent()) {
-            throw new VeikkausServiceException("Player with id: " + id + " wasn't found, modify failed");
+        if (playerDb.isEmpty()) {
+            throw new VeikkausServiceException("Player with id: %s wasn't found, modify failed".formatted(id));
         }
 
         tournamentPlayerGe.setTournamentTeam(TournamentTeamService.convertDbToGui(tournamentTeamDb.get()));
@@ -107,38 +98,19 @@ public class TournamentPlayerService {
         return tournamentPlayerDao.save(convertGuiToDb(tournamentPlayerGe)).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) throws VeikkausServiceException {
-        boolean succeed;
         tournamentPlayerDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
-    /**
-     * @return
-     */
     public List<TournamentPlayerGuiEntity> findAllTournamentPlayers() {
         List<TournamentPlayerGuiEntity> geList = new ArrayList<>();
-        List<TournamentPlayer> dbTournPlayers = ImmutableList.copyOf(tournamentPlayerDao.findAll());
-
-        for (TournamentPlayer dbTournPlayer : dbTournPlayers) {
-            geList.add(convertDbToGui(dbTournPlayer));
-        }
-
+        ImmutableList.copyOf(tournamentPlayerDao.findAll()).forEach(tournamentPlayer -> geList.add(convertDbToGui(tournamentPlayer)));
         return geList;
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public TournamentPlayerGuiEntity findOneTournamentPlayer(String id) {
-        TournamentPlayerGuiEntity tournPlayerGe = convertDbToGui(tournamentPlayerDao.findById(Long.valueOf(id)).get());
-        return tournPlayerGe;
+        return convertDbToGui(tournamentPlayerDao.findById(Long.valueOf(id)).get());
     }
 
 }

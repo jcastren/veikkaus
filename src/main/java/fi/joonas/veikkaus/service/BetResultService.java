@@ -10,6 +10,7 @@ import fi.joonas.veikkaus.guientity.BetResultGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Bet;
 import fi.joonas.veikkaus.jpaentity.BetResult;
 import fi.joonas.veikkaus.jpaentity.Game;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import static fi.joonas.veikkaus.constants.VeikkausConstants.INT_NOT_DEFINED;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.LONG_NOT_DEFINED;
 
 @Service
+@Slf4j
 public class BetResultService {
 
     @Autowired
@@ -51,8 +53,8 @@ public class BetResultService {
         db.setBet(BetService.convertGuiToDb(ge.getBet()));
         try {
             db.setGame(GameService.convertGuiToDb(ge.getGame()));
-        } catch (VeikkausConversionException e) {
-            e.printStackTrace();
+        } catch (VeikkausConversionException vce) {
+            log.error("Error while converting BetResultGuiEntity to DbEntity",  vce);
         }
         db.setHomeScore(ge.getHomeScore());
         db.setAwayScore(ge.getAwayScore());
@@ -63,14 +65,14 @@ public class BetResultService {
     public Long insert(BetResultGuiEntity betResultGe) throws VeikkausServiceException {
         String betId = betResultGe.getBet().getId();
         Optional<Bet> betDb = betDao.findById(Long.valueOf(betId));
-        if (!betDb.isPresent()) {
-            throw new VeikkausServiceException("Bet with id: " + betId + " wasn't found, insert failed");
+        if (betDb.isEmpty()) {
+            throw new VeikkausServiceException("Bet with id: %s wasn't found, insert failed".formatted(betId));
         }
 
         String gameId = betResultGe.getGame().getId();
         Optional<Game> gameDb = gameDao.findById(Long.valueOf(gameId));
-        if (!gameDb.isPresent()) {
-            throw new VeikkausServiceException("Game with id: " + gameId + " wasn't found, insert failed");
+        if (gameDb.isEmpty()) {
+            throw new VeikkausServiceException("Game with id: %s wasn't found, insert failed".formatted(gameId));
         }
 
         betResultGe.setBet(BetService.convertDbToGui(betDb.get()));
@@ -82,20 +84,20 @@ public class BetResultService {
     public Long modify(BetResultGuiEntity betResultGe) throws VeikkausServiceException {
         String id = betResultGe.getId();
         Optional<BetResult> betResultDb = betResultDao.findById(Long.valueOf(id));
-        if (!betResultDb.isPresent()) {
-            throw new VeikkausServiceException("Bet result with id: " + id + " wasn't found, modify failed");
+        if (betResultDb.isEmpty()) {
+            throw new VeikkausServiceException("Bet result with id: %s wasn't found, modify failed".formatted(id));
         }
 
         String betId = betResultGe.getBet().getId();
         Optional<Bet> betDb = betDao.findById(Long.valueOf(betId));
-        if (!betDb.isPresent()) {
-            throw new VeikkausServiceException("Bet with id: " + id + " wasn't found, modify failed");
+        if (betDb.isEmpty()) {
+            throw new VeikkausServiceException("Bet with id: %s wasn't found, modify failed".formatted(betId));
         }
 
         String gameId = betResultGe.getGame().getId();
         Optional<Game> gameDb = gameDao.findById(Long.valueOf(gameId));
-        if (!gameDb.isPresent()) {
-            throw new VeikkausServiceException("Game with id: " + id + " wasn't found, modify failed");
+        if (gameDb.isEmpty()) {
+            throw new VeikkausServiceException("Game with id: %s wasn't found, modify failed".formatted(gameId));
         }
 
         betResultGe.setBet(BetService.convertDbToGui(betDb.get()));
@@ -105,19 +107,15 @@ public class BetResultService {
     }
 
     public boolean delete(String id) {
-        boolean succeed;
         betResultDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
     public List<BetResultGuiEntity> findAllBetResults() {
         List<BetResultGuiEntity> geList = new ArrayList<>();
-        List<BetResult> dbBetResults = ImmutableList.copyOf(betResultDao.findAll());
-
-        for (BetResult dbBetResult : dbBetResults) {
-            geList.add(convertDbToGui(dbBetResult));
-        }
+        ImmutableList.copyOf(betResultDao.findAll()).forEach(betResult -> {
+            geList.add(convertDbToGui(betResult));
+        });
         return geList;
     }
 
@@ -164,11 +162,10 @@ public class BetResultService {
     }
 
     public BetResultGuiEntity findOneBetResult(String id) {
-        BetResultGuiEntity betResultGe = convertDbToGui(betResultDao.findById(Long.valueOf(id)).get());
-        return betResultGe;
+        return convertDbToGui(betResultDao.findById(Long.valueOf(id)).get());
     }
 
-    private class SortByGameDate implements Comparator<BetResult> {
+    private static class SortByGameDate implements Comparator<BetResult> {
         // Used for sorting in ascending order of gameDate of BetResults
         public int compare(BetResult a, BetResult b) {
             return a.getGame().getGameDate().compareTo(b.getGame().getGameDate());

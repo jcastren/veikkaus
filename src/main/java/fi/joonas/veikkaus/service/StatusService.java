@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Business logic level class for DB handling of Status
  *
- * @author joonas
+ * @author jcastren
  */
 @Service
 public class StatusService {
@@ -54,26 +54,18 @@ public class StatusService {
     }
 
     public boolean delete(String id) {
-        boolean succeed = false;
         statusDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
     public List<StatusGuiEntity> findAllStatuses() {
         List<StatusGuiEntity> geList = new ArrayList<>();
-        List<Status> dbStatuses = ImmutableList.copyOf(statusDao.findAll());
-
-        for (Status dbStatus : dbStatuses) {
-            geList.add(convertDbToGui(dbStatus));
-        }
-
+        ImmutableList.copyOf(statusDao.findAll()).forEach(status -> geList.add(convertDbToGui(status)));
         return geList;
     }
 
     public StatusGuiEntity findOneStatus(String id) {
-        StatusGuiEntity statusGe = convertDbToGui(statusDao.findById(Long.valueOf(id)).get());
-        return statusGe;
+        return convertDbToGui(statusDao.findById(Long.valueOf(id)).get());
     }
 
 }

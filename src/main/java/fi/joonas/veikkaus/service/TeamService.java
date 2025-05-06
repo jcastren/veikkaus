@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Business logic level class for DB handling of Team
  *
- * @author joonas
+ * @author jcastren
  */
 @Service
 public class TeamService {
@@ -43,54 +43,27 @@ public class TeamService {
         return db;
     }
 
-    /**
-     * @param team
-     * @return
-     */
     public Long insert(TeamGuiEntity team) {
         return teamDao.save(convertGuiToDb(team)).getId();
     }
 
-    /**
-     * @param team
-     * @return
-     */
     public Long modify(TeamGuiEntity team) {
         return teamDao.save(convertGuiToDb(team)).getId();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public boolean delete(String id) {
-        boolean succeed = false;
         teamDao.deleteById(Long.valueOf(id));
-        succeed = true;
-        return succeed;
+        return true;
     }
 
-    /**
-     * @return
-     */
     public List<TeamGuiEntity> findAllTeams() {
         List<TeamGuiEntity> geList = new ArrayList<>();
-        List<Team> dbTeams = ImmutableList.copyOf(teamDao.findAll());
-
-        for (Team dbTeam : dbTeams) {
-            geList.add(convertDbToGui(dbTeam));
-        }
-
+        ImmutableList.copyOf(teamDao.findAll()).forEach(team -> geList.add(convertDbToGui(team)));
         return geList;
     }
 
-    /**
-     * @param id
-     * @return
-     */
     public TeamGuiEntity findOneTeam(String id) {
-        TeamGuiEntity teamGe = convertDbToGui(teamDao.findById(Long.valueOf(id)).get());
-        return teamGe;
+        return convertDbToGui(teamDao.findById(Long.valueOf(id)).get());
     }
 
 }
