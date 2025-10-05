@@ -53,9 +53,9 @@ public class TournamentService {
         return tournamentDao.save(convertGuiToDb(tournament)).getId();
     }
 
-    public boolean delete(String id) {
-        tournamentDao.deleteById(Long.valueOf(id));
-        return true;
+    public void delete(Long id) {
+        Tournament tournament = tournamentDao.findById(id).orElseThrow(() -> new RuntimeException("Tournament with id %s not found".formatted(id)));
+        tournamentDao.delete(tournament);
     }
 
     public List<TournamentGuiEntity> findAllTournaments() {
