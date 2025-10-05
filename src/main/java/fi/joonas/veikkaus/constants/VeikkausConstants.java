@@ -225,6 +225,13 @@ public abstract class VeikkausConstants {
     public static final String TOURNAMENT_PLAYER_MODIFY_URL = TOURNAMENT_PLAYER_URL + URL_MODIFY;
 
     /**
+     * Tournament URLs
+     */
+    public static final String TOURNAMENT_CREATE_URL = TOURNAMENT_URL + URL_CREATE;
+    public static final String TOURNAMENT_DELETE_URL = TOURNAMENT_URL + URL_DELETE;
+    public static final String TOURNAMENT_MODIFY_URL = TOURNAMENT_URL + URL_MODIFY;
+
+    /**
      * Scorer URLs
      */
     public static final String SCORER_CREATE_URL = SCORER_URL + URL_CREATE;
