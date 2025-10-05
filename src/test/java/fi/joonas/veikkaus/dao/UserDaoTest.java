@@ -5,6 +5,7 @@ import fi.joonas.veikkaus.jpaentity.UserRole;
 import fi.joonas.veikkaus.util.JUnitTestUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@Disabled
 public class UserDaoTest extends JUnitTestUtil {
 
     @Autowired

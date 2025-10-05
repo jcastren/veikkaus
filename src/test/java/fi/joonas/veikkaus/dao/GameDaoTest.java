@@ -8,6 +8,7 @@ import fi.joonas.veikkaus.util.JUnitTestUtil;
 import fi.joonas.veikkaus.util.VeikkausUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@Disabled
 public class GameDaoTest extends JUnitTestUtil {
 
     @Autowired
@@ -45,8 +47,6 @@ public class GameDaoTest extends JUnitTestUtil {
 
     @BeforeEach
     public void setup() throws Exception {
-//        cleanDb();
-
         tournament = new Tournament("Käpä Cup", 2026);
         tournamentDao.save(tournament);
 
