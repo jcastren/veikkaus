@@ -1,18 +1,23 @@
 package fi.joonas.veikkaus.exception;
 
-public abstract class VeikkausBaseException extends Exception {
-    private static final long serialVersionUID = 6226784588127450781L;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
-    public VeikkausBaseException(String s) {
-        super(s);
+@Getter
+public abstract class VeikkausBaseException extends RuntimeException {
+
+    private HttpStatus status = HttpStatus.OK;
+
+    protected VeikkausBaseException(HttpStatus status, String message) {
+        super(message);
+        this.status = status;
     }
 
-    public VeikkausBaseException(String s, Throwable cause) {
-        super(s, cause);
+    public VeikkausBaseException(String message) {
+        super(message);
     }
 
-    public VeikkausBaseException(String s, Exception e) {
-        super(s, e.getCause());
+    public VeikkausBaseException(String message, Throwable cause) {
+        super(message, cause);
     }
-
 }

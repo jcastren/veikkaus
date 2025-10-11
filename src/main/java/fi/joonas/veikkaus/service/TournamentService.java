@@ -2,6 +2,7 @@ package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.TournamentDao;
+import fi.joonas.veikkaus.exception.VeikkausNotFoundException;
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Tournament;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,27 +46,29 @@ public class TournamentService {
         return db;
     }
 
-    public Long insert(TournamentGuiEntity tournament) {
-        return tournamentDao.save(convertGuiToDb(tournament)).getId();
-    }
-
-    public Long modify(TournamentGuiEntity tournament) {
-        return tournamentDao.save(convertGuiToDb(tournament)).getId();
-    }
-
-    public void delete(Long id) {
-        Tournament tournament = tournamentDao.findById(id).orElseThrow(() -> new RuntimeException("Tournament with id %s not found".formatted(id)));
-        tournamentDao.delete(tournament);
-    }
-
     public List<TournamentGuiEntity> findAllTournaments() {
         List<TournamentGuiEntity> geList = new ArrayList<>();
         ImmutableList.copyOf(tournamentDao.findAll()).forEach(tournament -> geList.add(convertDbToGui(tournament)));
         return geList;
     }
 
-    public TournamentGuiEntity findOneTournament(String id) {
-        return convertDbToGui(tournamentDao.findById(Long.valueOf(id)).get());
+    public TournamentGuiEntity findOneTournament(Long id) {
+        Tournament db = tournamentDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, id));
+        return convertDbToGui(db);
+    }
+
+    public Long insert(TournamentGuiEntity gui) {
+        return tournamentDao.save(convertGuiToDb(gui)).getId();
+    }
+
+    public Long update(TournamentGuiEntity gui) {
+        Tournament db = tournamentDao.findById(Long.parseLong(gui.getId())).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, gui.getId()));
+        return tournamentDao.save(db).getId();
+    }
+
+    public void delete(Long id) {
+        Tournament tournament = tournamentDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, id));
+        tournamentDao.delete(tournament);
     }
 
 }
