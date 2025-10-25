@@ -63,7 +63,7 @@ public class TournamentService {
 
     public Long update(TournamentGuiEntity gui) {
         Tournament db = tournamentDao.findById(Long.parseLong(gui.getId())).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, gui.getId()));
-        return tournamentDao.save(db).getId();
+        return tournamentDao.save(convertGuiToDb(gui)).getId();
     }
 
     public void delete(Long id) {

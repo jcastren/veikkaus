@@ -2,6 +2,7 @@ package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.TeamDao;
+import fi.joonas.veikkaus.exception.VeikkausNotFoundException;
 import fi.joonas.veikkaus.guientity.TeamGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Team;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,31 @@ public class TeamService {
 
     @Autowired
     TeamDao teamDao;
+
+    public List<TeamGuiEntity> findAllTeams() {
+        List<TeamGuiEntity> geList = new ArrayList<>();
+        ImmutableList.copyOf(teamDao.findAll()).forEach(team -> geList.add(convertDbToGui(team)));
+        return geList;
+    }
+
+    public TeamGuiEntity findOneTeam(Long id) {
+        Team db = teamDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Team.class, id));
+        return convertDbToGui(db);
+    }
+
+    public Long insert(TeamGuiEntity team) {
+        return teamDao.save(convertGuiToDb(team)).getId();
+    }
+
+    public Long update(TeamGuiEntity team) {
+        Team db = teamDao.findById(Long.parseLong(team.getId())).orElseThrow(() -> new VeikkausNotFoundException(Team.class, team.getId()));
+        return teamDao.save(convertGuiToDb(team)).getId();
+    }
+
+    public void delete(Long id) {
+        Team team = teamDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Team.class, id));
+        teamDao.delete(team);
+    }
 
     protected static TeamGuiEntity convertDbToGui(Team db) {
         TeamGuiEntity ge = new TeamGuiEntity();
@@ -43,27 +69,5 @@ public class TeamService {
         return db;
     }
 
-    public Long insert(TeamGuiEntity team) {
-        return teamDao.save(convertGuiToDb(team)).getId();
-    }
-
-    public Long modify(TeamGuiEntity team) {
-        return teamDao.save(convertGuiToDb(team)).getId();
-    }
-
-    public boolean delete(String id) {
-        teamDao.deleteById(Long.valueOf(id));
-        return true;
-    }
-
-    public List<TeamGuiEntity> findAllTeams() {
-        List<TeamGuiEntity> geList = new ArrayList<>();
-        ImmutableList.copyOf(teamDao.findAll()).forEach(team -> geList.add(convertDbToGui(team)));
-        return geList;
-    }
-
-    public TeamGuiEntity findOneTeam(String id) {
-        return convertDbToGui(teamDao.findById(Long.valueOf(id)).get());
-    }
 
 }
