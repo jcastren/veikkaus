@@ -33,13 +33,13 @@ public class TeamService {
         return convertDbToGui(db);
     }
 
-    public Long insert(TeamGuiEntity team) {
-        return teamDao.save(convertGuiToDb(team)).getId();
+    public TeamGuiEntity insert(TeamGuiEntity team) {
+        return convertDbToGui(teamDao.save(convertGuiToDb(team)));
     }
 
-    public Long update(TeamGuiEntity team) {
-        Team db = teamDao.findById(Long.parseLong(team.getId())).orElseThrow(() -> new VeikkausNotFoundException(Team.class, team.getId()));
-        return teamDao.save(convertGuiToDb(team)).getId();
+    public TeamGuiEntity update(TeamGuiEntity team) {
+        teamDao.findById(Long.parseLong(team.getId())).orElseThrow(() -> new VeikkausNotFoundException(Team.class, team.getId()));
+        return convertDbToGui(teamDao.save(convertGuiToDb(team)));
     }
 
     public void delete(Long id) {
