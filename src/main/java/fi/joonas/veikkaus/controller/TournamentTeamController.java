@@ -10,25 +10,43 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.ALL_TEAMS;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.ALL_TOURNAMENTS;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.REDIRECT;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_TEAM_GET_ALL_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.TOURNAMENT_TEAM_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
 
 @Controller
 @RequestMapping(TOURNAMENT_TEAM_URL)
 @Slf4j
 public class TournamentTeamController {
 
-    @Autowired
-    private TournamentTeamService tournamentTeamService;
+    private final TournamentTeamService tournamentTeamService;
+    private final TournamentService tournamentService;
+    private final TeamService teamService;
 
     @Autowired
-    private TournamentService tournamentService;
-
-    @Autowired
-    private TeamService teamService;
+    public TournamentTeamController(TournamentTeamService tournamentTeamService, TournamentService tournamentService, TeamService teamService) {
+        this.tournamentTeamService = tournamentTeamService;
+        this.tournamentService = tournamentService;
+        this.teamService = teamService;
+    }
 
     @ModelAttribute(ALL_TOURNAMENTS)
     public List<TournamentGuiEntity> populateTournaments() {

@@ -12,15 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Business logic level class for DB handling of Team
+ * Business logic level class for DB handling of teams
  *
  * @author jcastren
  */
 @Service
 public class TeamService {
 
+    private final TeamDao teamDao;
+
     @Autowired
-    TeamDao teamDao;
+    public TeamService(TeamDao teamDao) {
+        this.teamDao = teamDao;
+    }
 
     public List<TeamGuiEntity> findAllTeams() {
         List<TeamGuiEntity> geList = new ArrayList<>();

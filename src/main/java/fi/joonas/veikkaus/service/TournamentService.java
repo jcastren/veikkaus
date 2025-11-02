@@ -14,15 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Business logic level class for DB handling of Tournament
+ * Business logic level class for DB handling of tournaments
  *
  * @author jcastren
  */
 @Service
 public class TournamentService {
 
+    private final TournamentDao tournamentDao;
+
     @Autowired
-    TournamentDao tournamentDao;
+    public TournamentService(TournamentDao tournamentDao) {
+        this.tournamentDao = tournamentDao;
+    }
 
     public List<TournamentGuiEntity> findAllTournaments() {
         List<TournamentGuiEntity> geList = new ArrayList<>();

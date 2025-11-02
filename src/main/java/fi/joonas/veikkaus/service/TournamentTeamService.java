@@ -17,21 +17,23 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Business logic level class for DB handling of Tournament
+ * Business logic level class for DB handling of tournament teams
  *
  * @author jcastren
  */
 @Service
 public class TournamentTeamService {
 
-    @Autowired
-    TournamentTeamDao tournamentTeamDao;
+    private final TournamentTeamDao tournamentTeamDao;
+    private final TournamentDao tournamentDao;
+    private final TeamDao teamDao;
 
     @Autowired
-    TournamentDao tournamentDao;
-
-    @Autowired
-    TeamDao teamDao;
+    public TournamentTeamService(TournamentTeamDao tournamentTeamDao, TournamentDao tournamentDao, TeamDao teamDao) {
+        this.tournamentTeamDao = tournamentTeamDao;
+        this.tournamentDao = tournamentDao;
+        this.teamDao = teamDao;
+    }
 
     protected static TournamentTeamGuiEntity convertDbToGui(TournamentTeam db) {
         TournamentTeamGuiEntity ge = new TournamentTeamGuiEntity();

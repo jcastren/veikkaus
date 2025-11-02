@@ -3,6 +3,7 @@ package fi.joonas.veikkaus.controller;
 import fi.joonas.veikkaus.guientity.TeamGuiEntity;
 import fi.joonas.veikkaus.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ public class TeamController {
 
     private final TeamService teamService;
 
+    @Autowired
     public TeamController(TeamService TeamService) {
         this.teamService = TeamService;
     }
@@ -57,5 +59,5 @@ public class TeamController {
         teamService.delete(id);
         return ResponseEntity.noContent().build();
     }
-    
+
 }
