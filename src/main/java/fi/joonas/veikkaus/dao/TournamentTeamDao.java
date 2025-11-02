@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface TournamentTeamDao extends CrudRepository<TournamentTeam, Long> {
 
-    public List<TournamentTeam> findByTournamentId(Long tournamentId);
+    List<TournamentTeam> findByTournamentId(Long tournamentId);
 
 }

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 /**
  * Business logic level class for DB handling of teams
  *
@@ -63,7 +65,7 @@ public class TeamService {
     protected static Team convertGuiToDb(TeamGuiEntity ge) {
         Team db = new Team();
 
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
+        if (isNotBlank(ge.getId())) {
             db.setId(Long.valueOf(ge.getId()));
         } else {
             db.setId(null);

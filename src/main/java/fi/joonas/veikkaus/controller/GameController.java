@@ -11,12 +11,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.ALL_TOURNAMENTS;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.GAME_GET_ALL_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.GAME_URL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.REDIRECT;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.STRING_NOT_DEFINED;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
+import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
 
 @Controller
 @RequestMapping(GAME_URL)
@@ -46,29 +62,30 @@ public class GameController {
         return tournamentList;
     }
 
-    @RequestMapping(value = "/getFragHomeTeams/{tournamentId}", method = RequestMethod.GET)
-    public String getFragHomeTeams(Model model, @PathVariable("tournamentId") String tournamentId) {
-
-        List<TournamentTeamGuiEntity> teamList = new ArrayList<>();
-        if (Long.valueOf(tournamentId) > 0) {
-            teamList = tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId);
-        }
-        model.addAttribute("homeTeamList", teamList);
-        model.addAttribute("homeTeam", new TournamentTeamGuiEntity());
-        return "fragments/fragHomeTeams :: homeTeamFragment";
-    }
-
-    @RequestMapping(value = "/getFragAwayTeams/{tournamentId}", method = RequestMethod.GET)
-    public String getFragAwayTeams(Model model, @PathVariable("tournamentId") String tournamentId) {
-
-        List<TournamentTeamGuiEntity> teamList = new ArrayList<>();
-        if (Long.valueOf(tournamentId) > 0) {
-            teamList = tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId);
-        }
-        model.addAttribute("awayTeamList", teamList);
-        model.addAttribute("awayTeam", new TournamentTeamGuiEntity());
-        return "fragments/fragAwayTeams :: awayTeamFragment";
-    }
+    // TODO: fix when refactoring GameController
+//    @RequestMapping(value = "/getFragHomeTeams/{tournamentId}", method = RequestMethod.GET)
+//    public String getFragHomeTeams(Model model, @PathVariable("tournamentId") String tournamentId) {
+//
+//        List<TournamentTeamGuiEntity> teamList = new ArrayList<>();
+//        if (Long.valueOf(tournamentId) > 0) {
+//            teamList = tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId);
+//        }
+//        model.addAttribute("homeTeamList", teamList);
+//        model.addAttribute("homeTeam", new TournamentTeamGuiEntity());
+//        return "fragments/fragHomeTeams :: homeTeamFragment";
+//    }
+//
+//    @RequestMapping(value = "/getFragAwayTeams/{tournamentId}", method = RequestMethod.GET)
+//    public String getFragAwayTeams(Model model, @PathVariable("tournamentId") String tournamentId) {
+//
+//        List<TournamentTeamGuiEntity> teamList = new ArrayList<>();
+//        if (Long.valueOf(tournamentId) > 0) {
+//            teamList = tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId);
+//        }
+//        model.addAttribute("awayTeamList", teamList);
+//        model.addAttribute("awayTeam", new TournamentTeamGuiEntity());
+//        return "fragments/fragAwayTeams :: awayTeamFragment";
+//    }
 
     @GetMapping(URL_GET_ALL)
     public String getAll(Model model) {

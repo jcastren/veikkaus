@@ -46,7 +46,8 @@ public class TournamentPlayerService {
         } else {
             db.setId(null);
         }
-        db.setTournamentTeam(TournamentTeamService.convertGuiToDb(ge.getTournamentTeam()));
+        // TODO: fix when refactoring TournamentPlayerService
+//        db.setTournamentTeam(TournamentTeamService.convertGuiToDb(ge.getTournamentTeam()));
         db.setPlayer(PlayerService.convertGuiToDb(ge.getPlayer()));
         db.setGoals(Integer.parseInt(ge.getGoals()));
 

@@ -76,8 +76,9 @@ public class GameService {
             throw new VeikkausConversionException("Error while parsing date: " + ge.getGameDate(), pe);
         }
         db.setTournament(TournamentService.convertGuiToDb(ge.getTournament()));
-        db.setHomeTeam(TournamentTeamService.convertGuiToDb(ge.getHomeTeam()));
-        db.setAwayTeam(TournamentTeamService.convertGuiToDb(ge.getAwayTeam()));
+        // TODO: fix when refactoring GameService
+//        db.setHomeTeam(TournamentTeamService.convertGuiToDb(ge.getHomeTeam()));
+//        db.setAwayTeam(TournamentTeamService.convertGuiToDb(ge.getAwayTeam()));
 
         return db;
     }
@@ -106,7 +107,7 @@ public class GameService {
                     "TournamentTeam (awayTeam) with id: %s wasn't found, insert failed".formatted(awayTeamId));
         }
 
-        /** TODO Why converting back ??? */
+        // TODO Why converting back
         gameGe.setTournament(TournamentService.convertDbToGui(tournamentDb.get()));
         gameGe.setHomeTeam(TournamentTeamService.convertDbToGui(homeTeamDb.get()));
         gameGe.setAwayTeam(TournamentTeamService.convertDbToGui(awayTeamDb.get()));

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 /**
  * Business logic level class for DB handling of tournaments
  *
@@ -66,7 +68,7 @@ public class TournamentService {
     protected static Tournament convertGuiToDb(TournamentGuiEntity ge) {
         Tournament db = new Tournament();
 
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
+        if (isNotBlank(ge.getId())) {
             db.setId(Long.valueOf(ge.getId()));
         } else {
             db.setId(null);
@@ -77,7 +79,6 @@ public class TournamentService {
         } catch (NumberFormatException e) {
             throw new VeikkausBadRequestException(Tournament.class, ge.getId() != null ? ge.getId() : "", "Year must be a number");
         }
-
         return db;
     }
 }
