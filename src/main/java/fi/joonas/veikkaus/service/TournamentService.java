@@ -2,6 +2,7 @@ package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.TournamentDao;
+import fi.joonas.veikkaus.exception.VeikkausBadRequestException;
 import fi.joonas.veikkaus.exception.VeikkausNotFoundException;
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Team;
@@ -67,7 +68,11 @@ public class TournamentService {
             db.setId(null);
         }
         db.setName(ge.getName());
-        db.setYear(Integer.parseInt(ge.getYear()));
+        try {
+            db.setYear(Integer.parseInt(ge.getYear()));
+        } catch (NumberFormatException e) {
+            throw new VeikkausBadRequestException(Tournament.class, ge.getId() != null ? ge.getId() : "", "Year must be a number");
+        }
 
         return db;
     }
