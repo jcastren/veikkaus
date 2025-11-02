@@ -2,7 +2,6 @@ package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.TournamentDao;
-import fi.joonas.veikkaus.exception.VeikkausBadRequestException;
 import fi.joonas.veikkaus.exception.VeikkausNotFoundException;
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Team;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Business logic level class for DB handling of tournaments
@@ -46,7 +43,7 @@ public class TournamentService {
     }
 
     public TournamentGuiEntity update(TournamentGuiEntity tournament) {
-        tournamentDao.findById(Long.parseLong(tournament.getId())).orElseThrow(() -> new VeikkausNotFoundException(Team.class, tournament.getId()));
+        tournamentDao.findById(tournament.getId()).orElseThrow(() -> new VeikkausNotFoundException(Team.class, tournament.getId()));
         return convertDbToGui(tournamentDao.save(convertGuiToDb(tournament)));
     }
 
@@ -58,9 +55,9 @@ public class TournamentService {
     protected static TournamentGuiEntity convertDbToGui(Tournament db) {
         TournamentGuiEntity ge = new TournamentGuiEntity();
 
-        ge.setId(db.getId().toString());
+        ge.setId(db.getId());
         ge.setName(db.getName());
-        ge.setYear(Integer.valueOf(db.getYear()).toString());
+        ge.setYear(db.getYear());
 
         return ge;
     }
@@ -68,17 +65,9 @@ public class TournamentService {
     protected static Tournament convertGuiToDb(TournamentGuiEntity ge) {
         Tournament db = new Tournament();
 
-        if (isNotBlank(ge.getId())) {
-            db.setId(Long.valueOf(ge.getId()));
-        } else {
-            db.setId(null);
-        }
+        db.setId(ge.getId());
         db.setName(ge.getName());
-        try {
-            db.setYear(Integer.parseInt(ge.getYear()));
-        } catch (NumberFormatException e) {
-            throw new VeikkausBadRequestException(Tournament.class, ge.getId() != null ? ge.getId() : "", "Year must be a number");
-        }
+        db.setYear(ge.getYear());
         return db;
     }
 }

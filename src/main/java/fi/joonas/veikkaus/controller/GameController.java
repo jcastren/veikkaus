@@ -3,7 +3,6 @@ package fi.joonas.veikkaus.controller;
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
 import fi.joonas.veikkaus.guientity.GameGuiEntity;
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
-import fi.joonas.veikkaus.guientity.TournamentTeamGuiEntity;
 import fi.joonas.veikkaus.service.GameService;
 import fi.joonas.veikkaus.service.TournamentService;
 import fi.joonas.veikkaus.service.TournamentTeamService;
@@ -24,7 +23,6 @@ import static fi.joonas.veikkaus.constants.VeikkausConstants.ALL_TOURNAMENTS;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.GAME_GET_ALL_URL;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.GAME_URL;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.REDIRECT;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.STRING_NOT_DEFINED;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
 import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
@@ -53,9 +51,9 @@ public class GameController {
 
         List<TournamentGuiEntity> tournamentList = new ArrayList<>();
         TournamentGuiEntity emptyEntry = TournamentGuiEntity.builder()
-                .id(STRING_NOT_DEFINED)
+                .id(0L)
                 .name("-- empty choice --")
-                .year("")
+                .year(-9999)
                 .build();
         tournamentList.add(emptyEntry);
         tournamentList.addAll(tournamentService.findAllTournaments());
@@ -114,7 +112,7 @@ public class GameController {
 
         Long gameId;
         try {
-            initGame(game);
+//            initGame(game);
             game.setId(null);
             gameId = gameService.insert(game);
         } catch (Exception ex) {
@@ -139,7 +137,7 @@ public class GameController {
 
         String gameId = game.getId();
         try {
-            initGame(game);
+//            initGame(game);
             game.setId(gameId);
             gameId = gameService.modify(game).toString();
         } catch (Exception ex) {
@@ -172,15 +170,15 @@ public class GameController {
         return REDIRECT + GAME_GET_ALL_URL;
     }
 
-    private void initGame(GameGuiEntity game) {
-
-        game.setTournament(new TournamentGuiEntity());
-        game.setHomeTeam(new TournamentTeamGuiEntity());
-        game.setAwayTeam(new TournamentTeamGuiEntity());
-        String[] split = game.getId().split(",");
-        game.getTournament().setId(split[0]);
-        game.getHomeTeam().setId(split[1]);
-        game.getAwayTeam().setId(split[2]);
-    }
+//    private void initGame(GameGuiEntity game) {
+//
+//        game.setTournament(new TournamentGuiEntity());
+//        game.setHomeTeam(new TournamentTeamGuiEntity());
+//        game.setAwayTeam(new TournamentTeamGuiEntity());
+//        String[] split = game.getId().split(",");
+//        game.getTournament().setId(split[0]);
+//        game.getHomeTeam().setId(split[1]);
+//        game.getAwayTeam().setId(split[2]);
+//    }
 
 }

@@ -48,7 +48,7 @@ public class TournamentTeamController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TournamentTeamGuiEntity> updateTournamentTeam(@PathVariable Long id, @RequestBody TournamentTeamGuiEntity tournamentTeam) {
-        tournamentTeam.setId(id.toString());
+        tournamentTeam.setId(id);
         TournamentTeamGuiEntity updatedTournamentTeam = tournamentTeamService.update(tournamentTeam);
         return ResponseEntity.ok(updatedTournamentTeam);
     }

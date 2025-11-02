@@ -49,7 +49,7 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TeamGuiEntity> updateTeam(@PathVariable Long id, @RequestBody TeamGuiEntity team) {
-        team.setId(id.toString());
+        team.setId(id);
         TeamGuiEntity updatedTeam = teamService.update(team);
         return ResponseEntity.ok(updatedTeam);
     }

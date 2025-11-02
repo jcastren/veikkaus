@@ -55,8 +55,8 @@ public class TournamentPlayerService {
     }
 
     public Long insert(TournamentPlayerGuiEntity tournamentPlayerGe) throws VeikkausServiceException {
-        String tournamentTeamId = tournamentPlayerGe.getTournamentTeam().getId();
-        Optional<TournamentTeam> tournamentTeamDb = tournamentTeamDao.findById(Long.valueOf(tournamentTeamId));
+        Long tournamentTeamId = tournamentPlayerGe.getTournamentTeam().getId();
+        Optional<TournamentTeam> tournamentTeamDb = tournamentTeamDao.findById(tournamentTeamId);
         if (tournamentTeamDb.isEmpty()) {
             throw new VeikkausServiceException(
                     "Tournament team with id: %s wasn't found, insert failed".formatted(tournamentTeamId));
@@ -81,8 +81,8 @@ public class TournamentPlayerService {
             throw new VeikkausServiceException("TournamentPlayer with id: %s wasn't found, modify failed".formatted(id));
         }
 
-        String tournamentTeamId = tournamentPlayerGe.getTournamentTeam().getId();
-        Optional<TournamentTeam> tournamentTeamDb = tournamentTeamDao.findById(Long.valueOf(tournamentTeamId));
+        Long tournamentTeamId = tournamentPlayerGe.getTournamentTeam().getId();
+        Optional<TournamentTeam> tournamentTeamDb = tournamentTeamDao.findById(tournamentTeamId);
         if (tournamentTeamDb.isEmpty()) {
             throw new VeikkausServiceException("Tournament team with id: %s wasn't found, modify failed".formatted(id));
         }

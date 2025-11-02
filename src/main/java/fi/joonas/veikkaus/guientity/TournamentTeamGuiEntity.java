@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class TournamentTeamGuiEntity {
 
-    private String id;
+    private Long id;
     private TournamentGuiEntity tournament;
     private TeamGuiEntity team;
 }

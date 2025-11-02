@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
 /**
  * Business logic level class for DB handling of teams
  *
@@ -44,7 +42,7 @@ public class TeamService {
     }
 
     public TeamGuiEntity update(TeamGuiEntity team) {
-        teamDao.findById(Long.parseLong(team.getId())).orElseThrow(() -> new VeikkausNotFoundException(Team.class, team.getId()));
+        teamDao.findById(team.getId()).orElseThrow(() -> new VeikkausNotFoundException(Team.class, team.getId()));
         return convertDbToGui(teamDao.save(convertGuiToDb(team)));
     }
 
@@ -56,7 +54,7 @@ public class TeamService {
     protected static TeamGuiEntity convertDbToGui(Team db) {
         TeamGuiEntity ge = new TeamGuiEntity();
 
-        ge.setId(db.getId().toString());
+        ge.setId(db.getId());
         ge.setName(db.getName());
 
         return ge;
@@ -65,11 +63,7 @@ public class TeamService {
     protected static Team convertGuiToDb(TeamGuiEntity ge) {
         Team db = new Team();
 
-        if (isNotBlank(ge.getId())) {
-            db.setId(Long.valueOf(ge.getId()));
-        } else {
-            db.setId(null);
-        }
+        db.setId(ge.getId());
         db.setName(ge.getName());
 
         return db;

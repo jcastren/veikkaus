@@ -65,8 +65,8 @@ public class BetService {
             throw new VeikkausServiceException("User with id: %s wasn't found, insert failed".formatted(userId));
         }
 
-        String tournamentId = betGe.getTournament().getId();
-        Optional<Tournament> tournamentDb = tournamentDao.findById(Long.valueOf(tournamentId));
+        Long tournamentId = betGe.getTournament().getId();
+        Optional<Tournament> tournamentDb = tournamentDao.findById(tournamentId);
         if (tournamentDb.isEmpty()) {
             throw new VeikkausServiceException(
                     "Tournament with id: %s wasn't found, insert failed".formatted(tournamentId));
@@ -98,8 +98,8 @@ public class BetService {
             throw new VeikkausServiceException("User with id: %s wasn't found, modify failed".formatted(userId));
         }
 
-        String tournamentId = betGe.getTournament().getId();
-        Optional<Tournament> tournamentDb = tournamentDao.findById(Long.valueOf(tournamentId));
+        Long tournamentId = betGe.getTournament().getId();
+        Optional<Tournament> tournamentDb = tournamentDao.findById(tournamentId);
         if (tournamentDb.isEmpty()) {
             throw new VeikkausServiceException("Tournament with id: %s wasn't found, modify failed".formatted(tournamentId));
         }

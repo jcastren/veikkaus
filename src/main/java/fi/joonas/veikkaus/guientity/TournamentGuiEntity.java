@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class TournamentGuiEntity {
+
     @NotNull
-    private String id;
+    private Long id;
     @NotNull
     private String name;
     @NotNull
-    private String year;
+    private Integer year;
 }
