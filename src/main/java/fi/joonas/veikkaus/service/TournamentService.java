@@ -68,6 +68,7 @@ public class TournamentService {
         db.setId(ge.getId());
         db.setName(ge.getName());
         db.setYear(ge.getYear());
+
         return db;
     }
 }

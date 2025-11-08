@@ -11,16 +11,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Tournament {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private int year;
 
     public Tournament(String name, int year) {
-
         this.name = name;
         this.year = year;
     }

@@ -62,8 +62,8 @@ public class TournamentPlayerService {
                     "Tournament team with id: %s wasn't found, insert failed".formatted(tournamentTeamId));
         }
 
-        String playerId = tournamentPlayerGe.getPlayer().getId();
-        Optional<Player> playerDb = playerDao.findById(Long.valueOf(playerId));
+        Long playerId = tournamentPlayerGe.getPlayer().getId();
+        Optional<Player> playerDb = playerDao.findById(playerId);
         if (playerDb.isEmpty()) {
             throw new VeikkausServiceException("Player with id: %s wasn't found, insert failed".formatted(playerId));
         }
@@ -87,8 +87,8 @@ public class TournamentPlayerService {
             throw new VeikkausServiceException("Tournament team with id: %s wasn't found, modify failed".formatted(id));
         }
 
-        String playerId = tournamentPlayerGe.getPlayer().getId();
-        Optional<Player> playerDb = playerDao.findById(Long.valueOf(playerId));
+        Long playerId = tournamentPlayerGe.getPlayer().getId();
+        Optional<Player> playerDb = playerDao.findById(playerId);
         if (playerDb.isEmpty()) {
             throw new VeikkausServiceException("Player with id: %s wasn't found, modify failed".formatted(id));
         }

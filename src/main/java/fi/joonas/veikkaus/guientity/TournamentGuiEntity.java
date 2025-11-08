@@ -14,8 +14,10 @@ public class TournamentGuiEntity {
 
     @NotNull
     private Long id;
+
     @NotNull
     private String name;
+
     @NotNull
     private Integer year;
 }

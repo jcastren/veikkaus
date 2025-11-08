@@ -55,21 +55,17 @@ public abstract class VeikkausConstants {
      * Tournament URLs
      */
     public static final String TOURNAMENT_URL = "/tournament";
-    public static final String TOURNAMENT_GET_ALL_URL = TOURNAMENT_URL + URL_GET_ALL;
     public static final String ALL_TOURNAMENTS = "allTournaments";
 
     /**
      * Team URLs
      */
     public static final String TEAM_URL = "/team";
-    public static final String TEAM_GET_ALL_URL = TEAM_URL + URL_GET_ALL;
-    public static final String ALL_TEAMS = "allTeams";
 
     /**
      * TournamentTeam URLs
      */
     public static final String TOURNAMENT_TEAM_URL = "/tournamentTeam";
-    public static final String TOURNAMENT_TEAM_GET_ALL_URL = TOURNAMENT_TEAM_URL + URL_GET_ALL;
     public static final String ALL_TOURNAMENT_TEAMS = "allTournamentTeams";
 
     /**
@@ -84,13 +80,11 @@ public abstract class VeikkausConstants {
      */
     public static final String BET_RESULT_URL = "/betResult";
     public static final String BET_RESULT_GET_ALL_URL = BET_RESULT_URL + URL_GET_ALL;
-    public static final String ALL_BET_RESULTS = "allBetResults";
 
     /**
      * Player URLs
      */
     public static final String PLAYER_URL = "/player";
-    public static final String PLAYER_GET_ALL_URL = PLAYER_URL + URL_GET_ALL;
     public static final String ALL_PLAYERS = "allPlayers";
 
     /**
@@ -112,7 +106,6 @@ public abstract class VeikkausConstants {
     public static final String PARAM_NAME_AWAY_SCORE = "awayScore";
     public static final String PARAM_NAME_AWAY_TEAM_ID = "awayTeamId";
     public static final String PARAM_NAME_BET_ID = "betId";
-    public static final String PARAM_NAME_BET_RESULT_ID = "betResultId";
     public static final String PARAM_NAME_DESCRIPTION = "description";
     public static final String PARAM_NAME_EMAIL = "email";
     public static final String PARAM_NAME_FIRST_NAME = "firstName";

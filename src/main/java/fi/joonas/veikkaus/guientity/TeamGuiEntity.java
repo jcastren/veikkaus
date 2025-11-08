@@ -14,6 +14,7 @@ public class TeamGuiEntity {
 
     @NotNull
     private Long id;
+
     @NotNull
     private String name;
 }

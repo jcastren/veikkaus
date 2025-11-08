@@ -2,6 +2,7 @@ package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.PlayerDao;
+import fi.joonas.veikkaus.exception.VeikkausNotFoundException;
 import fi.joonas.veikkaus.guientity.PlayerGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,42 @@ import java.util.List;
 @Service
 public class PlayerService {
 
+    private final PlayerDao playerDao;
+
     @Autowired
-    PlayerDao playerDao;
+    public PlayerService(PlayerDao playerDao) {
+        this.playerDao = playerDao;
+    }
+
+    public List<PlayerGuiEntity> findAllPlayers() {
+        List<PlayerGuiEntity> geList = new ArrayList<>();
+        ImmutableList.copyOf(playerDao.findAll()).forEach(player -> geList.add(convertDbToGui(player)));
+        return geList;
+    }
+
+    public PlayerGuiEntity findOnePlayer(Long id) {
+        Player db = playerDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Player.class, id));
+        return convertDbToGui(db);
+    }
+
+    public PlayerGuiEntity insert(PlayerGuiEntity player) {
+        return convertDbToGui(playerDao.save(convertGuiToDb(player)));
+    }
+
+    public PlayerGuiEntity update(PlayerGuiEntity player) {
+        playerDao.findById(player.getId()).orElseThrow(() -> new VeikkausNotFoundException(Player.class, player.getId()));
+        return convertDbToGui(playerDao.save(convertGuiToDb(player)));
+    }
+
+    public void delete(Long id) {
+        Player player = playerDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Player.class, id));
+        playerDao.delete(player);
+    }
 
     protected static PlayerGuiEntity convertDbToGui(Player db) {
         PlayerGuiEntity ge = new PlayerGuiEntity();
 
-        ge.setId(db.getId().toString());
+        ge.setId(db.getId());
         ge.setFirstName(db.getFirstName());
         ge.setLastName(db.getLastName());
 
@@ -34,38 +64,11 @@ public class PlayerService {
     protected static Player convertGuiToDb(PlayerGuiEntity ge) {
         Player db = new Player();
 
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
-        } else {
-            db.setId(null);
-        }
+        db.setId(ge.getId());
         db.setFirstName(ge.getFirstName());
         db.setLastName(ge.getLastName());
 
         return db;
-    }
-
-    public Long insert(PlayerGuiEntity player) {
-        return playerDao.save(convertGuiToDb(player)).getId();
-    }
-
-    public Long modify(PlayerGuiEntity player) {
-        return playerDao.save(convertGuiToDb(player)).getId();
-    }
-
-    public boolean delete(String id) {
-        playerDao.deleteById(Long.valueOf(id));
-        return true;
-    }
-
-    public List<PlayerGuiEntity> findAllPlayers() {
-        List<PlayerGuiEntity> geList = new ArrayList<>();
-        ImmutableList.copyOf(playerDao.findAll()).forEach(player -> geList.add(convertDbToGui(player)));
-        return geList;
-    }
-
-    public PlayerGuiEntity findOnePlayer(String id) {
-        return convertDbToGui(playerDao.findById(Long.valueOf(id)).get());
     }
 
 }

@@ -4,118 +4,58 @@ import fi.joonas.veikkaus.guientity.PlayerGuiEntity;
 import fi.joonas.veikkaus.service.PlayerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import java.net.URI;
+import java.util.List;
 
-@Controller
-@RequestMapping(PLAYER_URL)
+@RestController
+@RequestMapping("/api/v2/players")
 @Slf4j
 public class PlayerController {
 
+    private final PlayerService playerService;
+
     @Autowired
-    private PlayerService playerService;
-
-    @GetMapping(URL_GET_ALL)
-    public String getAll(Model model) {
-
-        model.addAttribute("players", playerService.findAllPlayers());
-        return "viewPlayerList";
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
     }
 
-    @RequestMapping(URL_GET_DETAILS)
-    public String getDetails(@RequestParam(value = "id", required = true) String id, Model model) {
-
-        PlayerGuiEntity player = playerService.findOnePlayer(id);
-        model.addAttribute("player", player);
-        return "viewPlayerDetails";
+    @GetMapping()
+    public ResponseEntity<List<PlayerGuiEntity>> getPlayers() {
+        return ResponseEntity.ok(playerService.findAllPlayers());
     }
 
-    @GetMapping(URL_GET_CREATE)
-    public String getCreate(Model model) {
-
-        model.addAttribute("player", new PlayerGuiEntity());
-        return "viewPlayerCreate";
+    @GetMapping("/{id}")
+    public ResponseEntity<PlayerGuiEntity> getPlayer(@PathVariable Long id) {
+        return ResponseEntity.ok(playerService.findOnePlayer(id));
     }
 
-    /**
-     * POST /postCreate --> Create a new player and save it in the database.
-     */
-    @PostMapping(URL_POST_CREATE)
-    public String postCreate(@ModelAttribute PlayerGuiEntity player) {
-
-        Long playerId;
-        try {
-            playerId = playerService.insert(player);
-        } catch (Exception ex) {
-            String msg = "Error creating the player: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        log.debug("Player successfully created with id = %s".formatted(playerId));
-        return REDIRECT + PLAYER_GET_ALL_URL;
+    @PostMapping
+    public ResponseEntity<PlayerGuiEntity> createPlayer(@RequestBody PlayerGuiEntity tournament) {
+        PlayerGuiEntity savedPlayer = playerService.insert(tournament);
+        URI location = URI.create("/api/v2/tournaments/" + savedPlayer.getId());
+        return ResponseEntity.created(location).body(savedPlayer);
     }
 
-    /**
-     * @param id    player Id
-     * @param model
-     * @return Player modify view
-     */
-    @RequestMapping(URL_GET_MODIFY)
-    public String getModify(@RequestParam(value = "id") String id, Model model) {
-
-        PlayerGuiEntity player = playerService.findOnePlayer(id);
-        model.addAttribute("player", player);
-        return "viewPlayerModify";
+    @PutMapping("/{id}")
+    public ResponseEntity<PlayerGuiEntity> updatePlayer(@PathVariable Long id, @RequestBody PlayerGuiEntity tournament) {
+        tournament.setId(id);
+        PlayerGuiEntity updatedPlayer = playerService.update(tournament);
+        return ResponseEntity.ok(updatedPlayer);
     }
 
-    /**
-     * Saves modified player data to DB
-     *
-     * @param player
-     * @return
-     */
-    @PostMapping(URL_POST_MODIFY)
-    public String postModify(@ModelAttribute PlayerGuiEntity player) {
-
-        Long playerId;
-        try {
-            playerId = playerService.modify(player);
-        } catch (Exception ex) {
-            String msg = "Error updating the player: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        log.debug("Player successfully updated for id = %s".formatted(playerId));
-        return REDIRECT + PLAYER_GET_ALL_URL;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePlayer(@PathVariable Long id) {
+        playerService.delete(id);
+        return ResponseEntity.noContent().build();
     }
-
-    /**
-     * @param id
-     * @param model
-     * @return
-     */
-    @RequestMapping(URL_GET_DELETE)
-    public String getDelete(@RequestParam(value = "id") String id, Model model) {
-
-        PlayerGuiEntity player = playerService.findOnePlayer(id);
-        model.addAttribute("player", player);
-        return "viewPlayerDelete";
-    }
-
-    @PostMapping(URL_POST_DELETE)
-    public String postDelete(@ModelAttribute PlayerGuiEntity player) {
-
-        try {
-            playerService.delete(player.getId());
-        } catch (Exception ex) {
-            String msg = "Error deleting the player: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        return REDIRECT + PLAYER_GET_ALL_URL;
-    }
-
 }
