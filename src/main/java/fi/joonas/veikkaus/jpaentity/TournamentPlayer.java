@@ -1,6 +1,10 @@
 package fi.joonas.veikkaus.jpaentity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +26,6 @@ public class TournamentPlayer {
     private int goals;
 
     public TournamentPlayer(TournamentTeam tournamentTeam, Player player, int goals) {
-
         this.tournamentTeam = tournamentTeam;
         this.player = player;
         this.goals = goals;

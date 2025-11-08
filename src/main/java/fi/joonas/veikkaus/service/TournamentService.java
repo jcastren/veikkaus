@@ -12,11 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Business logic level class for DB handling of tournaments
- *
- * @author jcastren
- */
 @Service
 public class TournamentService {
 

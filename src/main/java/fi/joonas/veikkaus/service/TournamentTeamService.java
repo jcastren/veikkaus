@@ -15,11 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Business logic level class for DB handling of tournament teams
- *
- * @author jcastren
- */
 @Service
 public class TournamentTeamService {
 
@@ -47,7 +42,7 @@ public class TournamentTeamService {
 
     public List<TournamentTeamGuiEntity> findTournamentTeamsByTournamentId(Long tournamentId) {
         List<TournamentTeamGuiEntity> geList = new ArrayList<>();
-        tournamentTeamDao.findByTournamentId(tournamentId).forEach(tournamentTeam -> geList.add(convertDbToGui(tournamentTeam)));
+        ImmutableList.copyOf(tournamentTeamDao.findByTournamentId(tournamentId)).forEach(tournamentTeam -> geList.add(convertDbToGui(tournamentTeam)));
         return geList;
     }
 
@@ -61,7 +56,7 @@ public class TournamentTeamService {
 
     public TournamentTeamGuiEntity update(TournamentTeamGuiEntity tournamentTeam) {
         Long tournamentTeamId = tournamentTeam.getId();
-        tournamentTeamDao.findById(Long.valueOf(tournamentTeamId)).orElseThrow(() -> new VeikkausNotFoundException(TournamentTeam.class, tournamentTeamId));
+        tournamentTeamDao.findById(tournamentTeamId).orElseThrow(() -> new VeikkausNotFoundException(TournamentTeam.class, tournamentTeamId));
         Long tournamentId = tournamentTeam.getTournament().getId();
         Tournament tournamentDb = tournamentDao.findById(tournamentId).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, tournamentId));
         Long teamId = tournamentTeam.getTeam().getId();

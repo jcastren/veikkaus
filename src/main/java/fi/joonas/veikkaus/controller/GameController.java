@@ -1,184 +1,61 @@
 package fi.joonas.veikkaus.controller;
 
-import fi.joonas.veikkaus.exception.VeikkausServiceException;
 import fi.joonas.veikkaus.guientity.GameGuiEntity;
-import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
 import fi.joonas.veikkaus.service.GameService;
-import fi.joonas.veikkaus.service.TournamentService;
-import fi.joonas.veikkaus.service.TournamentTeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.ALL_TOURNAMENTS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.GAME_GET_ALL_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.GAME_URL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.REDIRECT;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_ALL;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_DETAILS;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_GET_MODIFY;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_CREATE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_DELETE;
-import static fi.joonas.veikkaus.constants.VeikkausConstants.URL_POST_MODIFY;
-
-@Controller
-@RequestMapping(GAME_URL)
+@RestController
+@RequestMapping("/api/v2/games")
 @Slf4j
 public class GameController {
 
-    @Autowired
-    private GameService gameService;
+    private final GameService gameService;
 
     @Autowired
-    private TournamentService tournamentService;
-
-    @Autowired
-    private TournamentTeamService tournamentTeamService;
-
-    @ModelAttribute(ALL_TOURNAMENTS)
-    public List<TournamentGuiEntity> populateTournaments() {
-
-        List<TournamentGuiEntity> tournamentList = new ArrayList<>();
-        TournamentGuiEntity emptyEntry = TournamentGuiEntity.builder()
-                .id(0L)
-                .name("-- empty choice --")
-                .year(-9999)
-                .build();
-        tournamentList.add(emptyEntry);
-        tournamentList.addAll(tournamentService.findAllTournaments());
-        return tournamentList;
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
     }
 
-    // TODO: fix when refactoring GameController
-//    @RequestMapping(value = "/getFragHomeTeams/{tournamentId}", method = RequestMethod.GET)
-//    public String getFragHomeTeams(Model model, @PathVariable("tournamentId") String tournamentId) {
-//
-//        List<TournamentTeamGuiEntity> teamList = new ArrayList<>();
-//        if (Long.valueOf(tournamentId) > 0) {
-//            teamList = tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId);
-//        }
-//        model.addAttribute("homeTeamList", teamList);
-//        model.addAttribute("homeTeam", new TournamentTeamGuiEntity());
-//        return "fragments/fragHomeTeams :: homeTeamFragment";
-//    }
-//
-//    @RequestMapping(value = "/getFragAwayTeams/{tournamentId}", method = RequestMethod.GET)
-//    public String getFragAwayTeams(Model model, @PathVariable("tournamentId") String tournamentId) {
-//
-//        List<TournamentTeamGuiEntity> teamList = new ArrayList<>();
-//        if (Long.valueOf(tournamentId) > 0) {
-//            teamList = tournamentTeamService.findTournamentTeamsByTournamentId(tournamentId);
-//        }
-//        model.addAttribute("awayTeamList", teamList);
-//        model.addAttribute("awayTeam", new TournamentTeamGuiEntity());
-//        return "fragments/fragAwayTeams :: awayTeamFragment";
-//    }
-
-    @GetMapping(URL_GET_ALL)
-    public String getAll(Model model) {
-
-        model.addAttribute("games", gameService.findAllGames());
-        return "viewGameList";
+    @GetMapping()
+    public ResponseEntity<List<GameGuiEntity>> getGames() {
+        return ResponseEntity.ok(gameService.findAllGames());
     }
 
-    @RequestMapping(URL_GET_DETAILS)
-    public String getDetails(@RequestParam(value = "id") String id, Model model) {
-
-        GameGuiEntity game = gameService.findOneGame(id);
-        model.addAttribute("game", game);
-        return "viewGameDetails";
+    @GetMapping("/{id}")
+    public ResponseEntity<GameGuiEntity> getGame(@PathVariable Long id) {
+        return ResponseEntity.ok(gameService.findOneGame(id));
     }
 
-    @GetMapping(URL_GET_CREATE)
-    public String getCreate(Model model) {
-
-        model.addAttribute("game", new GameGuiEntity());
-        return "viewGameCreate";
+    @PostMapping
+    public ResponseEntity<GameGuiEntity> createGame(@RequestBody GameGuiEntity game) {
+        GameGuiEntity savedGame = gameService.insert(game);
+        URI location = URI.create("/api/v2/games/" + savedGame.getId());
+        return ResponseEntity.created(location).body(savedGame);
     }
 
-    @PostMapping(URL_POST_CREATE)
-    public String postCreate(@ModelAttribute GameGuiEntity game) {
-
-        Long gameId;
-        try {
-//            initGame(game);
-            game.setId(null);
-            gameId = gameService.insert(game);
-        } catch (Exception ex) {
-            String msg = "Error creating the game: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        log.debug("Game successfully created with id = %s".formatted(gameId));
-        return REDIRECT + GAME_GET_ALL_URL;
+    @PutMapping("/{id}")
+    public ResponseEntity<GameGuiEntity> updateGame(@PathVariable Long id, @RequestBody GameGuiEntity game) {
+        game.setId(id);
+        GameGuiEntity updatedGame = gameService.update(game);
+        return ResponseEntity.ok(updatedGame);
     }
 
-    @RequestMapping(URL_GET_MODIFY)
-    public String getModify(@RequestParam(value = "id") String id, Model model) {
-
-        GameGuiEntity game = gameService.findOneGame(id);
-        model.addAttribute("game", game);
-        return "viewGameModify";
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGame(@PathVariable Long id) {
+        gameService.delete(id);
+        return ResponseEntity.noContent().build();
     }
-
-    @PostMapping(URL_POST_MODIFY)
-    public String postModify(@ModelAttribute GameGuiEntity game) {
-
-        String gameId = game.getId();
-        try {
-//            initGame(game);
-            game.setId(gameId);
-            gameId = gameService.modify(game).toString();
-        } catch (Exception ex) {
-            String msg = "Error updating the game: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        log.debug("Game successfully updated for id = %s".formatted(gameId));
-        return REDIRECT + GAME_GET_ALL_URL;
-    }
-
-    @RequestMapping(URL_GET_DELETE)
-    public String getDelete(@RequestParam(value = "id") String id, Model model) {
-
-        GameGuiEntity game = gameService.findOneGame(id);
-        model.addAttribute("game", game);
-        return "viewGameDelete";
-    }
-
-    @PostMapping(URL_POST_DELETE)
-    public String postDelete(@ModelAttribute GameGuiEntity game) {
-
-        try {
-            gameService.delete(game.getId());
-        } catch (VeikkausServiceException vse) {
-            String msg = "Error deleting the game: %s".formatted(vse);
-            log.error(msg);
-            return msg;
-        }
-        return REDIRECT + GAME_GET_ALL_URL;
-    }
-
-//    private void initGame(GameGuiEntity game) {
-//
-//        game.setTournament(new TournamentGuiEntity());
-//        game.setHomeTeam(new TournamentTeamGuiEntity());
-//        game.setAwayTeam(new TournamentTeamGuiEntity());
-//        String[] split = game.getId().split(",");
-//        game.getTournament().setId(split[0]);
-//        game.getHomeTeam().setId(split[1]);
-//        game.getAwayTeam().setId(split[2]);
-//    }
-
 }
