@@ -21,7 +21,6 @@ public class Status {
     private String description;
 
     public Status(int statusNumber, String description) {
-
         this.statusNumber = statusNumber;
         this.description = description;
     }

@@ -4,118 +4,58 @@ import fi.joonas.veikkaus.guientity.UserRoleGuiEntity;
 import fi.joonas.veikkaus.service.UserRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import java.net.URI;
+import java.util.List;
 
-@Controller
-@RequestMapping(USER_ROLE_URL)
+@RestController
+@RequestMapping("/api/v2/user-roles")
 @Slf4j
 public class UserRoleController {
 
+    private final UserRoleService userRoleService;
+
     @Autowired
-    private UserRoleService userRoleService;
-
-    @GetMapping(URL_GET_ALL)
-    public String getAll(Model model) {
-
-        model.addAttribute("userRoles", userRoleService.findAllUserRoles());
-        return "viewUserRoleList";
+    public UserRoleController(UserRoleService userRoleService) {
+        this.userRoleService = userRoleService;
     }
 
-    @RequestMapping(URL_GET_DETAILS)
-    public String getDetails(@RequestParam(value = "id") String id, Model model) {
-
-        UserRoleGuiEntity userRole = userRoleService.findOneUserRole(id);
-        model.addAttribute("userRole", userRole);
-        return "viewUserRoleDetails";
+    @GetMapping()
+    public ResponseEntity<List<UserRoleGuiEntity>> getUserRoles() {
+        return ResponseEntity.ok(userRoleService.findAllUserRoles());
     }
 
-    @GetMapping(URL_GET_CREATE)
-    public String getCreate(Model model) {
-
-        model.addAttribute("userRole", new UserRoleGuiEntity());
-        return "viewUserRoleCreate";
+    @GetMapping("/{id}")
+    public ResponseEntity<UserRoleGuiEntity> getUserRole(@PathVariable Long id) {
+        return ResponseEntity.ok(userRoleService.findOneUserRole(id));
     }
 
-    /**
-     * POST /postCreate --> Create a new userRole and save it in the database.
-     */
-    @PostMapping(URL_POST_CREATE)
-    public String postCreate(@ModelAttribute UserRoleGuiEntity userRole) {
-
-        Long userRoleId;
-        try {
-            userRoleId = userRoleService.insert(userRole);
-        } catch (Exception ex) {
-            String msg = "Error creating the userRole: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        log.debug("UserRole successfully created with id = %s".formatted(userRoleId));
-        return REDIRECT + USER_ROLE_GET_ALL_URL;
+    @PostMapping
+    public ResponseEntity<UserRoleGuiEntity> createUserRole(@RequestBody UserRoleGuiEntity tournamentTeam) {
+        UserRoleGuiEntity savedUserRole = userRoleService.insert(tournamentTeam);
+        URI location = URI.create("/api/v2/user-roles/" + savedUserRole.getId());
+        return ResponseEntity.created(location).body(savedUserRole);
     }
 
-    /**
-     * @param id    userRole Id
-     * @param model
-     * @return UserRole modify view
-     */
-    @RequestMapping(URL_GET_MODIFY)
-    public String getModify(@RequestParam(value = "id") String id, Model model) {
-
-        UserRoleGuiEntity userRole = userRoleService.findOneUserRole(id);
-        model.addAttribute("userRole", userRole);
-        return "viewUserRoleModify";
+    @PutMapping("/{id}")
+    public ResponseEntity<UserRoleGuiEntity> updateUserRole(@PathVariable Long id, @RequestBody UserRoleGuiEntity tournamentTeam) {
+        tournamentTeam.setId(id);
+        UserRoleGuiEntity updatedUserRole = userRoleService.update(tournamentTeam);
+        return ResponseEntity.ok(updatedUserRole);
     }
 
-    /**
-     * Saves modified userRole data to DB
-     *
-     * @param userRole
-     * @return
-     */
-    @PostMapping(URL_POST_MODIFY)
-    public String postModify(@ModelAttribute UserRoleGuiEntity userRole) {
-
-        Long userRoleId;
-        try {
-            userRoleId = userRoleService.modify(userRole);
-        } catch (Exception ex) {
-            String msg = "Error updating the userRole: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        log.debug("UserRole successfully updated for id = %s".formatted(userRoleId));
-        return REDIRECT + USER_ROLE_GET_ALL_URL;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUserRole(@PathVariable Long id) {
+        userRoleService.delete(id);
+        return ResponseEntity.noContent().build();
     }
-
-    /**
-     * @param id    userRole Id
-     * @param model
-     * @return UserRole modify view
-     */
-    @RequestMapping(URL_GET_DELETE)
-    public String getDelete(@RequestParam(value = "id") String id, Model model) {
-
-        UserRoleGuiEntity userRole = userRoleService.findOneUserRole(id);
-        model.addAttribute("userRole", userRole);
-        return "viewUserRoleDelete";
-    }
-
-    @PostMapping(URL_POST_DELETE)
-    public String postDelete(@ModelAttribute UserRoleGuiEntity userRole) {
-
-        try {
-            userRoleService.delete(userRole.getId());
-        } catch (Exception ex) {
-            String msg = "Error deleting the userRole: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        return REDIRECT + USER_ROLE_GET_ALL_URL;
-    }
-
 }

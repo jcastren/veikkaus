@@ -1,124 +1,61 @@
 package fi.joonas.veikkaus.controller;
 
-import fi.joonas.veikkaus.guientity.BetGuiEntity;
 import fi.joonas.veikkaus.guientity.BetResultGuiEntity;
-import fi.joonas.veikkaus.guientity.GameGuiEntity;
 import fi.joonas.veikkaus.service.BetResultService;
-import fi.joonas.veikkaus.service.BetService;
-import fi.joonas.veikkaus.service.GameService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
-
-@Controller
-@RequestMapping(BET_RESULT_URL)
+@RestController
+@RequestMapping("/api/v2/bet-results")
 @Slf4j
 public class BetResultController {
 
-    @Autowired
-    private BetResultService betResultService;
+    private final BetResultService betResultService;
 
     @Autowired
-    private BetService betService;
-
-    @Autowired
-    private GameService gameService;
-
-    @ModelAttribute(ALL_BETS)
-    public List<BetGuiEntity> populateBets() {
-        return betService.findAllBets();
+    public BetResultController(BetResultService betResultService) {
+        this.betResultService = betResultService;
     }
 
-    @ModelAttribute(ALL_GAMES)
-    public List<GameGuiEntity> populateGames() {
-        return gameService.findAllGames();
+    @GetMapping()
+    public ResponseEntity<List<BetResultGuiEntity>> getBetResults() {
+        return ResponseEntity.ok(betResultService.findAllBetResults());
     }
 
-    @GetMapping(URL_GET_ALL)
-    public String getAll(Model model) {
-
-        model.addAttribute("betResults", betResultService.findAllBetResults());
-        return "viewBetResultList";
+    @GetMapping("/{id}")
+    public ResponseEntity<BetResultGuiEntity> getBetResult(@PathVariable Long id) {
+        return ResponseEntity.ok(betResultService.findOneBetResult(id));
     }
 
-    @RequestMapping(URL_GET_DETAILS)
-    public String getDetails(@RequestParam(value = "id") String id, Model model) {
-
-        BetResultGuiEntity betResult = betResultService.findOneBetResult(id);
-        model.addAttribute("betResult", betResult);
-        return "viewBetResultDetails";
+    @PostMapping
+    public ResponseEntity<BetResultGuiEntity> createBetResult(@RequestBody BetResultGuiEntity BetResult) {
+        BetResultGuiEntity savedBetResult = betResultService.insert(BetResult);
+        URI location = URI.create("/api/v2/bet-results/" + savedBetResult.getId());
+        return ResponseEntity.created(location).body(savedBetResult);
     }
 
-    @GetMapping(URL_GET_CREATE)
-    public String getCreate(Model model) {
-
-        model.addAttribute("betResult", new BetResultGuiEntity());
-        return "viewBetResultCreate";
+    @PutMapping("/{id}")
+    public ResponseEntity<BetResultGuiEntity> updateBetResult(@PathVariable Long id, @RequestBody BetResultGuiEntity BetResult) {
+        BetResult.setId(id);
+        BetResultGuiEntity updatedBetResult = betResultService.update(BetResult);
+        return ResponseEntity.ok(updatedBetResult);
     }
 
-    @PostMapping(URL_POST_CREATE)
-    public String postCreate(@ModelAttribute BetResultGuiEntity betResult) {
-
-        Long betResultId;
-        try {
-            betResultId = betResultService.insert(betResult);
-        } catch (Exception ex) {
-            String msg = "Error creating the bet result: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        log.debug("Bet result successfully created with id = %s".formatted(betResultId));
-        return REDIRECT + BET_RESULT_GET_ALL_URL;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBetResult(@PathVariable Long id) {
+        betResultService.delete(id);
+        return ResponseEntity.noContent().build();
     }
-
-    @RequestMapping(URL_GET_MODIFY)
-    public String getModify(@RequestParam(value = "id") String id, Model model) {
-
-        BetResultGuiEntity betResult = betResultService.findOneBetResult(id);
-        model.addAttribute("betResult", betResult);
-        return "viewBetResultModify";
-    }
-
-    @PostMapping(URL_POST_MODIFY)
-    public String postModify(@ModelAttribute BetResultGuiEntity betResult) {
-
-        Long betResultId;
-        try {
-            betResultId = betResultService.modify(betResult);
-        } catch (Exception ex) {
-            String msg = "Error updating the bet result: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        log.debug("Bet result successfully updated for id = %s".formatted(betResultId));
-        return REDIRECT + BET_GET_DETAILS_URL + betResult.getBet().getId();
-    }
-
-    @RequestMapping(URL_GET_DELETE)
-    public String getDelete(@RequestParam(value = "id") String id, Model model) {
-
-        BetResultGuiEntity betResult = betResultService.findOneBetResult(id);
-        model.addAttribute("betResult", betResult);
-        return "viewBetResultDelete";
-    }
-
-    @PostMapping(URL_POST_DELETE)
-    public String postDelete(@ModelAttribute BetResultGuiEntity betResult) {
-
-        try {
-            betResultService.delete(betResult.getId());
-        } catch (Exception ex) {
-            String msg = "Error deleting the bet result: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        return REDIRECT + BET_GET_DETAILS_URL + betResult.getBet().getId();
-    }
-
 }

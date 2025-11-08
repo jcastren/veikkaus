@@ -3,7 +3,6 @@ package fi.joonas.veikkaus.service;
 import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.GameDao;
 import fi.joonas.veikkaus.dao.TournamentDao;
-import fi.joonas.veikkaus.dao.TournamentTeamDao;
 import fi.joonas.veikkaus.exception.VeikkausConversionException;
 import fi.joonas.veikkaus.exception.VeikkausNotFoundException;
 import fi.joonas.veikkaus.exception.VeikkausServiceException;
@@ -24,13 +23,15 @@ public class GameService {
 
     private final GameDao gameDao;
     private final TournamentDao tournamentDao;
-    private final TournamentTeamDao tournamentTeamDao;
+    private final TournamentService tournamentService;
+    private final TournamentTeamService tournamentTeamService;
 
     @Autowired
-    public GameService(GameDao gameDao, TournamentDao tournamentDao, TournamentTeamDao tournamentTeamDao) {
+    public GameService(GameDao gameDao, TournamentDao tournamentDao, TournamentService tournamentService, TournamentTeamService tournamentTeamService) {
         this.gameDao = gameDao;
         this.tournamentDao = tournamentDao;
-        this.tournamentTeamDao = tournamentTeamDao;
+        this.tournamentService = tournamentService;
+        this.tournamentTeamService = tournamentTeamService;
     }
 
     public List<GameGuiEntity> findAllGames() {
@@ -40,8 +41,7 @@ public class GameService {
     }
 
     public GameGuiEntity findOneGame(Long id) {
-        Game db = gameDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Game.class, id));
-        return convertDbToGui(db);
+        return convertDbToGui(getFromDb(id));
     }
 
     public List<GameGuiEntity> findTournamentGames(Long tournamentId) {
@@ -52,30 +52,27 @@ public class GameService {
     }
 
     public GameGuiEntity insert(GameGuiEntity game) throws VeikkausServiceException {
-        Long tournamentId = game.getTournament().getId();
-        Tournament tournamentDb = tournamentDao.findById(tournamentId).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, tournamentId));
-        Long homeTeamId = game.getHomeTeam().getId();
-        TournamentTeam homeTeamDb = tournamentTeamDao.findById(homeTeamId).orElseThrow(() -> new VeikkausNotFoundException(TournamentTeam.class, homeTeamId));
-        Long awayTeamId = game.getAwayTeam().getId();
-        TournamentTeam awayTeamDb = tournamentTeamDao.findById(awayTeamId).orElseThrow(() -> new VeikkausNotFoundException(TournamentTeam.class, awayTeamId));
-        return convertDbToGui(gameDao.save(convertGuiToDb(game, tournamentDb, homeTeamDb, awayTeamDb)));
+        return save(game);
     }
 
     public GameGuiEntity update(GameGuiEntity game) throws VeikkausServiceException {
-        Long gameId = game.getId();
-        gameDao.findById(gameId).orElseThrow(() -> new VeikkausNotFoundException(Game.class, gameId));
-        Long tournamentId = game.getTournament().getId();
-        Tournament tournamentDb = tournamentDao.findById(tournamentId).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, tournamentId));
-        Long homeTeamId = game.getHomeTeam().getId();
-        TournamentTeam homeTeamDb = tournamentTeamDao.findById(homeTeamId).orElseThrow(() -> new VeikkausNotFoundException(TournamentTeam.class, homeTeamId));
-        Long awayTeamId = game.getAwayTeam().getId();
-        TournamentTeam awayTeamDb = tournamentTeamDao.findById(awayTeamId).orElseThrow(() -> new VeikkausNotFoundException(TournamentTeam.class, awayTeamId));
-        return convertDbToGui(gameDao.save(convertGuiToDb(game, tournamentDb, homeTeamDb, awayTeamDb)));
+        getFromDb(game.getId());
+        return save(game);
     }
 
     public void delete(Long id) throws VeikkausServiceException {
-        Game game = gameDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Game.class, id));
-        gameDao.delete(game);
+        gameDao.delete(getFromDb(id));
+    }
+
+    public Game getFromDb(Long id) {
+        return gameDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Game.class, id));
+    }
+
+    private GameGuiEntity save(GameGuiEntity game) {
+        Tournament tournamentDb = tournamentService.getFromDb(game.getTournament().getId());
+        TournamentTeam homeTeamDb = tournamentTeamService.getFromDb(game.getHomeTeam().getId());
+        TournamentTeam awayTeamDb = tournamentTeamService.getFromDb(game.getAwayTeam().getId());
+        return convertDbToGui(gameDao.save(convertGuiToDb(game, tournamentDb, homeTeamDb, awayTeamDb)));
     }
 
     protected static GameGuiEntity convertDbToGui(Game db) {

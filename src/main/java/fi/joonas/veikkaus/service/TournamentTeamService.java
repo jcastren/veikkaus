@@ -1,8 +1,6 @@
 package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
-import fi.joonas.veikkaus.dao.TeamDao;
-import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.dao.TournamentTeamDao;
 import fi.joonas.veikkaus.exception.VeikkausNotFoundException;
 import fi.joonas.veikkaus.guientity.TournamentTeamGuiEntity;
@@ -19,14 +17,14 @@ import java.util.List;
 public class TournamentTeamService {
 
     private final TournamentTeamDao tournamentTeamDao;
-    private final TournamentDao tournamentDao;
-    private final TeamDao teamDao;
+    private final TournamentService tournamentService;
+    private final TeamService teamService;
 
     @Autowired
-    public TournamentTeamService(TournamentTeamDao tournamentTeamDao, TournamentDao tournamentDao, TeamDao teamDao) {
+    public TournamentTeamService(TournamentTeamDao tournamentTeamDao, TournamentService tournamentService, TeamService teamService) {
         this.tournamentTeamDao = tournamentTeamDao;
-        this.tournamentDao = tournamentDao;
-        this.teamDao = teamDao;
+        this.tournamentService = tournamentService;
+        this.teamService = teamService;
     }
 
     public List<TournamentTeamGuiEntity> findAllTournamentTeams() {
@@ -36,8 +34,7 @@ public class TournamentTeamService {
     }
 
     public TournamentTeamGuiEntity findOneTournamentTeam(Long id) {
-        TournamentTeam db = tournamentTeamDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(TournamentTeam.class, id));
-        return convertDbToGui(db);
+        return convertDbToGui(getFromDb(id));
     }
 
     public List<TournamentTeamGuiEntity> findTournamentTeamsByTournamentId(Long tournamentId) {
@@ -47,31 +44,30 @@ public class TournamentTeamService {
     }
 
     public TournamentTeamGuiEntity insert(TournamentTeamGuiEntity tournamentTeam) {
-        Long tournamentId = tournamentTeam.getTournament().getId();
-        Tournament tournamentDb = tournamentDao.findById(tournamentId).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, tournamentId));
-        Long teamId = tournamentTeam.getTeam().getId();
-        Team teamDb = teamDao.findById(teamId).orElseThrow(() -> new VeikkausNotFoundException(Team.class, teamId));
-        return convertDbToGui(tournamentTeamDao.save(convertGuiToDb(tournamentTeam, tournamentDb, teamDb)));
+        return save(tournamentTeam);
     }
 
     public TournamentTeamGuiEntity update(TournamentTeamGuiEntity tournamentTeam) {
-        Long tournamentTeamId = tournamentTeam.getId();
-        tournamentTeamDao.findById(tournamentTeamId).orElseThrow(() -> new VeikkausNotFoundException(TournamentTeam.class, tournamentTeamId));
-        Long tournamentId = tournamentTeam.getTournament().getId();
-        Tournament tournamentDb = tournamentDao.findById(tournamentId).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, tournamentId));
-        Long teamId = tournamentTeam.getTeam().getId();
-        Team teamDb = teamDao.findById(teamId).orElseThrow(() -> new VeikkausNotFoundException(Team.class, teamId));
-        return convertDbToGui(tournamentTeamDao.save(convertGuiToDb(tournamentTeam, tournamentDb, teamDb)));
+        getFromDb(tournamentTeam.getId());
+        return save(tournamentTeam);
     }
 
     public void delete(Long id) {
-        TournamentTeam tournamentTeam = tournamentTeamDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(TournamentTeam.class, id));
-        tournamentTeamDao.delete(tournamentTeam);
+        tournamentTeamDao.delete(getFromDb(id));
+    }
+
+    public TournamentTeam getFromDb(Long id) {
+        return tournamentTeamDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(TournamentTeam.class, id));
+    }
+
+    private TournamentTeamGuiEntity save(TournamentTeamGuiEntity tournamentTeam) {
+        Tournament tournamentDb = tournamentService.getFromDb(tournamentTeam.getTournament().getId());
+        Team teamDb = teamService.getFromDb(tournamentTeam.getTeam().getId());
+        return convertDbToGui(tournamentTeamDao.save(convertGuiToDb(tournamentTeam, tournamentDb, teamDb)));
     }
 
     protected static TournamentTeamGuiEntity convertDbToGui(TournamentTeam db) {
         TournamentTeamGuiEntity ge = new TournamentTeamGuiEntity();
-
         ge.setId(db.getId());
         ge.setTournament(TournamentService.convertDbToGui(db.getTournament()));
         ge.setTeam(TeamService.convertDbToGui(db.getTeam()));
@@ -85,5 +81,4 @@ public class TournamentTeamService {
         db.setTeam(teamDb);
         return db;
     }
-
 }

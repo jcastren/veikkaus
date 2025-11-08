@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.TournamentDao;
 import fi.joonas.veikkaus.exception.VeikkausNotFoundException;
 import fi.joonas.veikkaus.guientity.TournamentGuiEntity;
-import fi.joonas.veikkaus.jpaentity.Team;
 import fi.joonas.veikkaus.jpaentity.Tournament;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,22 +28,28 @@ public class TournamentService {
     }
 
     public TournamentGuiEntity findOneTournament(Long id) {
-        Tournament db = tournamentDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, id));
-        return convertDbToGui(db);
+        return convertDbToGui(getFromDb(id));
     }
 
     public TournamentGuiEntity insert(TournamentGuiEntity tournament) {
-        return convertDbToGui(tournamentDao.save(convertGuiToDb(tournament)));
+        return save(tournament);
     }
 
     public TournamentGuiEntity update(TournamentGuiEntity tournament) {
-        tournamentDao.findById(tournament.getId()).orElseThrow(() -> new VeikkausNotFoundException(Team.class, tournament.getId()));
-        return convertDbToGui(tournamentDao.save(convertGuiToDb(tournament)));
+        getFromDb(tournament.getId());
+        return save(tournament);
     }
 
     public void delete(Long id) {
-        Tournament tournament = tournamentDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, id));
-        tournamentDao.delete(tournament);
+        tournamentDao.delete(getFromDb(id));
+    }
+
+    public Tournament getFromDb(Long id) {
+        return tournamentDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Tournament.class, id));
+    }
+
+    private TournamentGuiEntity save(TournamentGuiEntity tournament) {
+        return convertDbToGui(tournamentDao.save(convertGuiToDb(tournament)));
     }
 
     protected static TournamentGuiEntity convertDbToGui(Tournament db) {

@@ -2,10 +2,7 @@ package fi.joonas.veikkaus.service;
 
 import com.google.common.collect.ImmutableList;
 import fi.joonas.veikkaus.dao.BetDao;
-import fi.joonas.veikkaus.dao.StatusDao;
-import fi.joonas.veikkaus.dao.TournamentDao;
-import fi.joonas.veikkaus.dao.UserDao;
-import fi.joonas.veikkaus.exception.VeikkausServiceException;
+import fi.joonas.veikkaus.exception.VeikkausNotFoundException;
 import fi.joonas.veikkaus.guientity.BetGuiEntity;
 import fi.joonas.veikkaus.jpaentity.Bet;
 import fi.joonas.veikkaus.jpaentity.Status;
@@ -16,110 +13,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BetService {
 
-    @Autowired
-    BetDao betDao;
+    private final BetDao betDao;
+    private final UserService userService;
+    private final TournamentService tournamentService;
+    private final StatusService statusService;
 
     @Autowired
-    UserDao userDao;
-
-    @Autowired
-    TournamentDao tournamentDao;
-
-    @Autowired
-    StatusDao statusDao;
-
-    protected static BetGuiEntity convertDbToGui(Bet db) {
-        BetGuiEntity ge = new BetGuiEntity();
-
-        ge.setId(db.getId().toString());
-        ge.setUser(UserService.convertDbToGui(db.getUser()));
-        ge.setTournament(TournamentService.convertDbToGui(db.getTournament()));
-        ge.setStatus(StatusService.convertDbToGui(db.getStatus()));
-        return ge;
-    }
-
-    protected static Bet convertGuiToDb(BetGuiEntity ge) {
-        Bet db = new Bet();
-
-        if (ge.getId() != null && !ge.getId().isEmpty()) {
-            db.setId(Long.valueOf(ge.getId()));
-        } else {
-            db.setId(null);
-        }
-        db.setUser(UserService.convertGuiToDb(ge.getUser()));
-        db.setTournament(TournamentService.convertGuiToDb(ge.getTournament()));
-        db.setStatus(StatusService.convertGuiToDb(ge.getStatus()));
-
-        return db;
-    }
-
-    public Long insert(BetGuiEntity betGe) throws VeikkausServiceException {
-        String userId = betGe.getUser().getId();
-        Optional<User> userDb = userDao.findById(Long.valueOf(userId));
-        if (userDb.isEmpty()) {
-            throw new VeikkausServiceException("User with id: %s wasn't found, insert failed".formatted(userId));
-        }
-
-        Long tournamentId = betGe.getTournament().getId();
-        Optional<Tournament> tournamentDb = tournamentDao.findById(tournamentId);
-        if (tournamentDb.isEmpty()) {
-            throw new VeikkausServiceException(
-                    "Tournament with id: %s wasn't found, insert failed".formatted(tournamentId));
-        }
-
-        String statusId = betGe.getStatus().getId();
-        Optional<Status> statusDb = statusDao.findById(Long.valueOf(statusId));
-        if (statusDb.isEmpty()) {
-            throw new VeikkausServiceException("Status with id: %s wasn't found, insert failed".formatted(statusId));
-        }
-
-        betGe.setUser(UserService.convertDbToGui(userDb.get()));
-        betGe.setTournament(TournamentService.convertDbToGui(tournamentDb.get()));
-        betGe.setStatus(StatusService.convertDbToGui(statusDb.get()));
-
-        return betDao.save(convertGuiToDb(betGe)).getId();
-    }
-
-    public Long modify(BetGuiEntity betGe) throws VeikkausServiceException {
-        String id = betGe.getId();
-        Optional<Bet> betDb = betDao.findById(Long.valueOf(id));
-        if (betDb.isEmpty()) {
-            throw new VeikkausServiceException("Bet with id: %s wasn't found, modify failed".formatted(id));
-        }
-
-        String userId = betGe.getUser().getId();
-        Optional<User> userDb = userDao.findById(Long.valueOf(userId));
-        if (userDb.isEmpty()) {
-            throw new VeikkausServiceException("User with id: %s wasn't found, modify failed".formatted(userId));
-        }
-
-        Long tournamentId = betGe.getTournament().getId();
-        Optional<Tournament> tournamentDb = tournamentDao.findById(tournamentId);
-        if (tournamentDb.isEmpty()) {
-            throw new VeikkausServiceException("Tournament with id: %s wasn't found, modify failed".formatted(tournamentId));
-        }
-
-        String statusId = betGe.getStatus().getId();
-        Optional<Status> statusDb = statusDao.findById(Long.valueOf(statusId));
-        if (statusDb.isEmpty()) {
-            throw new VeikkausServiceException("Status with id: %s wasn't found, modify failed".formatted(statusId));
-        }
-
-        betGe.setUser(UserService.convertDbToGui(userDb.get()));
-        betGe.setTournament(TournamentService.convertDbToGui(tournamentDb.get()));
-        betGe.setStatus(StatusService.convertDbToGui(statusDb.get()));
-
-        return betDao.save(convertGuiToDb(betGe)).getId();
-    }
-
-    public boolean delete(String id) {
-        betDao.deleteById(Long.valueOf(id));
-        return true;
+    public BetService(BetDao betDao, UserService userService, TournamentService tournamentService, StatusService statusService) {
+        this.betDao = betDao;
+        this.userService = userService;
+        this.tournamentService = tournamentService;
+        this.statusService = statusService;
     }
 
     public List<BetGuiEntity> findAllBets() {
@@ -128,8 +36,51 @@ public class BetService {
         return geList;
     }
 
-    public BetGuiEntity findOneBet(String id) {
-        return convertDbToGui(betDao.findById(Long.valueOf(id)).get());
+    public BetGuiEntity findOneBet(Long id) {
+        return convertDbToGui(getFromDb(id));
     }
 
+    public BetGuiEntity insert(BetGuiEntity bet) {
+        return save(bet);
+    }
+
+    public BetGuiEntity update(BetGuiEntity bet) {
+        getFromDb(bet.getId());
+        return save(bet);
+    }
+
+    public void delete(Long id) {
+        betDao.delete(getFromDb(id));
+    }
+
+    public Bet getFromDb(Long id) {
+        return betDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Bet.class, id));
+    }
+
+    private BetGuiEntity save(BetGuiEntity bet) {
+        User userDb = userService.getFromDb(bet.getUser().getId());
+        Tournament tournamentDb = tournamentService.getFromDb(bet.getTournament().getId());
+        Status statusDb = statusService.getFromDb(bet.getStatus().getId());
+        return convertDbToGui(betDao.save(convertGuiToDb(bet, userDb, tournamentDb, statusDb)));
+    }
+
+    protected static BetGuiEntity convertDbToGui(Bet db) {
+        BetGuiEntity ge = new BetGuiEntity();
+
+        ge.setId(db.getId());
+        ge.setUser(UserService.convertDbToGui(db.getUser()));
+        ge.setTournament(TournamentService.convertDbToGui(db.getTournament()));
+        ge.setStatus(StatusService.convertDbToGui(db.getStatus()));
+        return ge;
+    }
+
+    protected static Bet convertGuiToDb(BetGuiEntity ge, User userDb, Tournament tournamentDb, Status statusDb) {
+        Bet db = new Bet();
+
+        db.setId(ge.getId());
+        db.setUser(userDb);
+        db.setTournament(tournamentDb);
+        db.setStatus(statusDb);
+        return db;
+    }
 }

@@ -1,6 +1,10 @@
 package fi.joonas.veikkaus.jpaentity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +27,6 @@ public class BetResult {
     private int awayScore;
 
     public BetResult(Bet bet, Game game, int homeScore, int awayScore) {
-
         this.bet = bet;
         this.game = game;
         this.homeScore = homeScore;

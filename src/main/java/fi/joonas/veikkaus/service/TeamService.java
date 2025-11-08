@@ -33,22 +33,28 @@ public class TeamService {
     }
 
     public TeamGuiEntity findOneTeam(Long id) {
-        Team db = teamDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Team.class, id));
-        return convertDbToGui(db);
+        return convertDbToGui(getFromDb(id));
     }
 
     public TeamGuiEntity insert(TeamGuiEntity team) {
-        return convertDbToGui(teamDao.save(convertGuiToDb(team)));
+        return save(team);
     }
 
     public TeamGuiEntity update(TeamGuiEntity team) {
-        teamDao.findById(team.getId()).orElseThrow(() -> new VeikkausNotFoundException(Team.class, team.getId()));
-        return convertDbToGui(teamDao.save(convertGuiToDb(team)));
+        getFromDb(team.getId());
+        return save(team);
     }
 
     public void delete(Long id) {
-        Team team = teamDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Team.class, id));
-        teamDao.delete(team);
+        teamDao.delete(getFromDb(id));
+    }
+
+    public Team getFromDb(Long id) {
+        return teamDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Team.class, id));
+    }
+
+    private TeamGuiEntity save(TeamGuiEntity team) {
+        return convertDbToGui(teamDao.save(convertGuiToDb(team)));
     }
 
     protected static TeamGuiEntity convertDbToGui(Team db) {

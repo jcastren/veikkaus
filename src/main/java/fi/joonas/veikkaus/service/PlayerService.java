@@ -11,11 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Business logic level class for DB handling of Player
- *
- * @author jcastren
- */
 @Service
 public class PlayerService {
 
@@ -33,22 +28,29 @@ public class PlayerService {
     }
 
     public PlayerGuiEntity findOnePlayer(Long id) {
-        Player db = playerDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Player.class, id));
-        return convertDbToGui(db);
+        return convertDbToGui(getFromDb(id));
     }
 
     public PlayerGuiEntity insert(PlayerGuiEntity player) {
-        return convertDbToGui(playerDao.save(convertGuiToDb(player)));
+        return save(player);
     }
 
     public PlayerGuiEntity update(PlayerGuiEntity player) {
-        playerDao.findById(player.getId()).orElseThrow(() -> new VeikkausNotFoundException(Player.class, player.getId()));
-        return convertDbToGui(playerDao.save(convertGuiToDb(player)));
+        getFromDb(player.getId());
+        return save(player);
     }
 
     public void delete(Long id) {
         Player player = playerDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Player.class, id));
         playerDao.delete(player);
+    }
+
+    public Player getFromDb(Long id) {
+        return playerDao.findById(id).orElseThrow(() -> new VeikkausNotFoundException(Player.class, id));
+    }
+
+    private PlayerGuiEntity save(PlayerGuiEntity player) {
+        return convertDbToGui(playerDao.save(convertGuiToDb(player)));
     }
 
     protected static PlayerGuiEntity convertDbToGui(Player db) {
@@ -57,7 +59,6 @@ public class PlayerService {
         ge.setId(db.getId());
         ge.setFirstName(db.getFirstName());
         ge.setLastName(db.getLastName());
-
         return ge;
     }
 
@@ -67,8 +68,6 @@ public class PlayerService {
         db.setId(ge.getId());
         db.setFirstName(ge.getFirstName());
         db.setLastName(ge.getLastName());
-
         return db;
     }
-
 }

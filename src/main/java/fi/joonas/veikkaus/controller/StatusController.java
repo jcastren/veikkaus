@@ -2,157 +2,60 @@ package fi.joonas.veikkaus.controller;
 
 import fi.joonas.veikkaus.guientity.StatusGuiEntity;
 import fi.joonas.veikkaus.service.StatusService;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static fi.joonas.veikkaus.constants.VeikkausConstants.*;
+import java.net.URI;
+import java.util.List;
 
-@Controller
-@RequestMapping(STATUS_URL)
+@RestController
+@RequestMapping("/api/v2/statuses")
 @Slf4j
 public class StatusController {
 
+    private final StatusService statusService;
+
     @Autowired
-    private StatusService statusService;
-
-    /**
-     * Method is called by Thymeleaf view to get status list view
-     *
-     * @param model UI model
-     * @return Status list view
-     */
-    @GetMapping(URL_GET_ALL)
-    public String getAll(Model model) {
-
-        model.addAttribute("statuses", statusService.findAllStatuses());
-        return "viewStatusList";
+    public StatusController(StatusService statusService) {
+        this.statusService = statusService;
     }
 
-    /**
-     * Method is called by Thymeleaf view to get status details view
-     *
-     * @param model UI model
-     * @return Status details view
-     */
-    @RequestMapping(URL_GET_DETAILS)
-    public String getDetails(@RequestParam(value = "id") String id, Model model) {
-
-        StatusGuiEntity status = statusService.findOneStatus(id);
-        model.addAttribute("status", status);
-        return "viewStatusDetails";
+    @GetMapping()
+    public ResponseEntity<List<StatusGuiEntity>> getStatuss() {
+        return ResponseEntity.ok(statusService.findAllStatuses());
     }
 
-    /**
-     * Method is called by Thymeleaf template to get create status view
-     *
-     * @param status
-     * @return Status create view
-     */
-    @GetMapping(URL_GET_CREATE)
-    public String getCreate(@ModelAttribute(value = "status") StatusGuiEntity status) {
-
-        return "viewStatusCreate";
+    @GetMapping("/{id}")
+    public ResponseEntity<StatusGuiEntity> getStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(statusService.findOneStatus(id));
     }
 
-    /**
-     * Saves created status data to DB
-     *
-     * @param status        Status UI entity
-     * @param bindingResult Used for checking validation errors
-     * @return Redirect URL for getting all statuses
-     */
-    @PostMapping(URL_POST_CREATE)
-    public String postCreate(@Valid @ModelAttribute(value = "status") StatusGuiEntity status, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            return "viewStatusCreate";
-        }
-
-        Long statusId;
-        try {
-            statusId = statusService.insert(status);
-        } catch (Exception ex) {
-            String msg = "Error creating the status: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        log.debug("Status successfully created with id = %s".formatted(statusId));
-        return REDIRECT + STATUS_GET_ALL_URL;
+    @PostMapping
+    public ResponseEntity<StatusGuiEntity> createStatus(@RequestBody StatusGuiEntity status) {
+        StatusGuiEntity savedStatus = statusService.insert(status);
+        URI location = URI.create("/api/v2/bet-results/" + savedStatus.getId());
+        return ResponseEntity.created(location).body(savedStatus);
     }
 
-    /**
-     * Method is called by Thymeleaf view to get modify status view
-     *
-     * @param id    Status id
-     * @param model UI model
-     * @return Status modify view
-     */
-    @RequestMapping(URL_GET_MODIFY)
-    public String getModify(@RequestParam(value = "id") String id, Model model) {
-
-        StatusGuiEntity status = statusService.findOneStatus(id);
-        model.addAttribute("status", status);
-        return "viewStatusModify";
+    @PutMapping("/{id}")
+    public ResponseEntity<StatusGuiEntity> updateStatus(@PathVariable Long id, @RequestBody StatusGuiEntity status) {
+        status.setId(id);
+        StatusGuiEntity updatedStatus = statusService.update(status);
+        return ResponseEntity.ok(updatedStatus);
     }
 
-    /**
-     * Saves modified status data to DB
-     *
-     * @param status Status UI entity
-     * @return Redirect URL for getting all statuses
-     */
-    @PostMapping(URL_POST_MODIFY)
-    public String postModify(@ModelAttribute StatusGuiEntity status) {
-
-        Long statusId;
-        try {
-            statusId = statusService.modify(status);
-        } catch (Exception ex) {
-            String msg = "Error updating the status: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        log.debug("Status successfully updated for id = " + statusId);
-        return REDIRECT + STATUS_GET_ALL_URL;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStatus(@PathVariable Long id) {
+        statusService.delete(id);
+        return ResponseEntity.noContent().build();
     }
-
-    /**
-     * Method is called by Thymeleaf view to get delete status view
-     *
-     * @param id    Status id
-     * @param model UI model
-     * @return Status delete view
-     */
-    @RequestMapping(URL_GET_DELETE)
-    public String getDelete(@RequestParam(value = "id") String id, Model model) {
-
-        StatusGuiEntity status = statusService.findOneStatus(id);
-        model.addAttribute("status", status);
-        return "viewStatusDelete";
-    }
-
-    /**
-     * Deletes status from DB
-     *
-     * @param status Status UI entity
-     * @return Redirect URL for getting all statuses
-     */
-    @PostMapping(URL_POST_DELETE)
-    public String postDelete(@ModelAttribute StatusGuiEntity status) {
-
-        try {
-            statusService.delete(status.getId());
-        } catch (Exception ex) {
-            String msg = "Error deleting the status: %s".formatted(ex);
-            log.error(msg);
-            return msg;
-        }
-        return REDIRECT + STATUS_GET_ALL_URL;
-    }
-
 }

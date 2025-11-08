@@ -1,6 +1,10 @@
 package fi.joonas.veikkaus.jpaentity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +31,6 @@ public class Bet {
     private Status status;
 
     public Bet(User user, Tournament tournament, Status status) {
-
         this.user = user;
         this.tournament = tournament;
         this.status = status;
