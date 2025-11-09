@@ -1,5 +1,6 @@
 package fi.joonas.veikkaus.jpaentity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,7 @@ public class UserRole {
     private Long id;
 
     @NotNull
+    @Column(nullable = false)
     private String name;
 
     public UserRole(String name) {
