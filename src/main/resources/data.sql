@@ -66,8 +66,6 @@ VALUES ('Wales');
 INSERT INTO tournament_team (team_id, tournament_id)
 VALUES (1, 1);
 INSERT INTO tournament_team (team_id, tournament_id)
-VALUES (1, 2);
-INSERT INTO tournament_team (team_id, tournament_id)
 VALUES (2, 1);
 INSERT INTO tournament_team (team_id, tournament_id)
 VALUES (3, 1);
@@ -114,9 +112,9 @@ VALUES (23, 1);
 INSERT INTO tournament_team (team_id, tournament_id)
 VALUES (24, 1);
 INSERT INTO tournament_team (team_id, tournament_id)
-VALUES (14, 2);
-INSERT INTO tournament_team (team_id, tournament_id)
 VALUES (1, 2);
+INSERT INTO tournament_team (team_id, tournament_id)
+VALUES (14, 2);
 
 INSERT INTO game (tournament_id, home_team_id, away_team_id, game_date, home_score, away_score)
 VALUES (1, 1, 16, '2016-06-10', -999, -999);
@@ -209,6 +207,6 @@ VALUES (3, 2, 26);
 INSERT INTO tournament_player (goals, player_id, tournament_team_id)
 VALUES (6, 4, 1);
 INSERT INTO tournament_player (goals, player_id, tournament_team_id)
-VALUES (4, 3, 27);
+VALUES (4, 3, 25);
 INSERT INTO tournament_player (goals, player_id, tournament_team_id)
-VALUES (5, 4, 27);
+VALUES (5, 4, 25);
